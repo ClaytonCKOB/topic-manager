@@ -32,19 +32,19 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true 
 
-  api:
-    build:
-      dockerfile: Dockerfile
-      context: "./service"
-    ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - ./service:/app
-    command: >
-      sh -c "rm -rf node_modules package-lock.json && npm install && npm run start:db && npm run dev"
+  # api:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: "./service"
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./service:/app
+  #   command: >
+  #     sh -c "rm -rf node_modules package-lock.json && npm install && npm run start:db && npm run dev"
 
 volumes:
   database:
