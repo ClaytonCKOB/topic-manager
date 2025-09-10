@@ -1,6 +1,7 @@
 package com.topicmanager.topicmanager.entities;
 
 
+import com.topicmanager.topicmanager.enums.UserAccountRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,9 +11,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user_account")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class UserAccount {
 
     @Id
@@ -30,15 +32,23 @@ public class UserAccount {
     private String password;
 
     @Column(nullable = false)
-    private Integer role;
+    private UserAccountRole role;
 
     @Column(nullable = false)
-    private Integer active;
+    private Boolean active;
 
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToMany(mappedBy = "participants")
     private Set<Meeting> meetings = new HashSet<>();
+
+    public UserAccount(String username, String encryptedPassword, UserAccountRole role) {
+        this.username = username;
+        this.password = encryptedPassword;
+        this.role = role;
+    }
+
+
 }
 
