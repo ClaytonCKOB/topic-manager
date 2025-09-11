@@ -57,5 +57,9 @@ public class Meeting {
         this.endDate = meeting.end_date();
         this.status = new MeetingStatus(Long.valueOf(MeetingStatusEnum.CRIADO.getCode()));
     }
+
+    public Meeting(Long meeting_id) {
+        this.id = meeting_id;
+    }
 }
 

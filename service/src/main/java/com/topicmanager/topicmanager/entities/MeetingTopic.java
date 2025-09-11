@@ -1,5 +1,6 @@
 package com.topicmanager.topicmanager.entities;
 
+import com.topicmanager.topicmanager.dto.MeetingTopicDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,4 +24,10 @@ public class MeetingTopic {
     private String title;
 
     private String description;
+
+    public MeetingTopic(MeetingTopicDTO meetingTopicDTO) {
+        this.meeting = new Meeting(meetingTopicDTO.meeting_id());
+        this.title = meetingTopicDTO.title();
+        this.description = meetingTopicDTO.description();
+    }
 }
