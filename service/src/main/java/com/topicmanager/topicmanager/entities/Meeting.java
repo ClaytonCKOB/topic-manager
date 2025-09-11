@@ -1,5 +1,7 @@
 package com.topicmanager.topicmanager.entities;
 
+import com.topicmanager.topicmanager.dto.MeetingDTO;
+import com.topicmanager.topicmanager.enums.MeetingStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -47,5 +49,13 @@ public class Meeting {
 
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MeetingVote> votes = new HashSet<>();
+
+    public Meeting(MeetingDTO meeting) {
+        this.title = meeting.title();
+        this.description = meeting.description();
+        this.startDate = meeting.start_date();
+        this.endDate = meeting.end_date();
+        this.status = new MeetingStatus(Long.valueOf(MeetingStatusEnum.CRIADO.getCode()));
+    }
 }
 

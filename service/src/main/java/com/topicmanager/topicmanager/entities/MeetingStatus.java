@@ -17,4 +17,8 @@ public class MeetingStatus {
 
     @Column(nullable = false)
     private String description;
+
+    public MeetingStatus(Long code) {
+        this.id = code;
+    }
 }
