@@ -41,23 +41,27 @@ public class AuthorizationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO data) {
-        if (data.username().isEmpty() || data.password().isEmpty()) {
-            return ResponseEntity.badRequest().body("Usuário e senha são obrigatórios.");
+        try {
+            if (data.username().isEmpty() || data.password().isEmpty() || data.email().isEmpty()) {
+                return ResponseEntity.badRequest().body("Usuário e senha são obrigatórios.");
+            }
+
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+            UserAccount user = (UserAccount) userAccountRepository.findByUsername(data.username());
+            if (user != null) {
+                user.setActive(true);
+                user.setPassword(encryptedPassword);
+                user.setRole(data.role());
+                userAccountRepository.save(user);
+            } else {
+                user = new UserAccount(data.username(), encryptedPassword, data.role(), data.email());
+                userAccountRepository.save(user);
+            }
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserAccount user = (UserAccount) userAccountRepository.findByUsername(data.username());
-        if (user != null) {
-            // reuse disabled user
-            user.setActive(true);
-            user.setPassword(encryptedPassword);
-            user.setRole(data.role());
-            userAccountRepository.save(user);
-        } else {
-            user = new UserAccount(data.username(), encryptedPassword, data.role());
-            userAccountRepository.save(user);
-        }
-
-        return ResponseEntity.ok().build();
     }
 }

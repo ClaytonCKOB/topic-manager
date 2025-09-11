@@ -9,7 +9,7 @@ CREATE TABLE user_account (
 	email VARCHAR NOT NULL UNIQUE,
 	password VARCHAR NOT NULL,
 	role INT NOT NULL,
-	active INT NOT NULL,
+	active BOOLEAN DEFAULT TRUE,
 	created_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -42,3 +42,6 @@ CREATE TABLE meeting_vote (
 	user_account_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
 	updated_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+
+INSERT INTO meeting_status (meeting_status_id, description) VALUES (1, 'Criado'), (2, 'Em andamento'), (3, 'Finalizado');
