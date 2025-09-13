@@ -1,32 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useMemo, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './pages/user/Login';
+import Page from './base/route/Page';
+import DefaultNavigation from './base/route/DefaultNavigation';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const routesList = useMemo(() => [
+      { path: "/meeting/list", name: "Reuniões", allowedRoles: ['ADMIN'], component: null },
+      { path: "/meeting/create", name: "Criar Reunião", allowedRoles: ['ADMIN'], component: null },
+      { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN'], component: null },
+
+      { path: "/configuracao/usuarios", name: "Usuários", allowedRoles: ['ADMIN'], component: null }
+  ], []);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <BrowserRouter>
+        <Routes>
+            {routesList.map((route) => {
+                const Component = route.component;
+                return (
+                    <Route
+                        key={route.path}
+                        path={route.path}
+                        element={
+                            <Page name={route.name} allowedRoles={route.allowedRoles}>
+                                <Component />
+                            </Page>
+                        }
+                    />
+                );
+            })}
+
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<DefaultNavigation />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
