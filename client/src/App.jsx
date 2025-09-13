@@ -8,11 +8,11 @@ import DefaultNavigation from './base/route/DefaultNavigation';
 function App() {
 
   const routesList = useMemo(() => [
-      { path: "/meeting/list", name: "Reuniões", allowedRoles: ['ADMIN'], component: null },
-      { path: "/meeting/create", name: "Criar Reunião", allowedRoles: ['ADMIN'], component: null },
-      { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN'], component: null },
+      { path: "/meeting/list", name: "Reuniões", allowedRoles: ['ADMIN', 'USER'], component: null },
+      { path: "/meeting/create", name: "Criar Reunião", allowedRoles: ['ADMIN', 'USER'], component: null },
+      { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN', 'USER'], component: null },
 
-      { path: "/configuracao/usuarios", name: "Usuários", allowedRoles: ['ADMIN'], component: null }
+      { path: "/configuracao/usuarios", name: "Usuários", allowedRoles: ['ADMIN', 'USER'], component: null }
   ], []);
 
   return (
@@ -35,7 +35,6 @@ function App() {
             })}
 
             <Route path="/login" element={<Login />} />
-            <Route path="*" element={<DefaultNavigation />} />
         </Routes>
       </BrowserRouter>
     </>
