@@ -1,5 +1,6 @@
 package com.topicmanager.topicmanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.topicmanager.topicmanager.dto.MeetingTopicDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,8 +17,9 @@ public class MeetingTopic {
     @Column(name = "meeting_topic_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "meeting_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meeting_id", referencedColumnName = "meeting_id", nullable = false)
+    @JsonBackReference
     private Meeting meeting;
 
     @Column(nullable = false)

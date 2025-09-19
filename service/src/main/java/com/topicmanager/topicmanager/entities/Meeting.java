@@ -1,12 +1,14 @@
 package com.topicmanager.topicmanager.entities;
 
-import com.topicmanager.topicmanager.dto.MeetingDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.enums.MeetingStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,8 +38,9 @@ public class Meeting {
     @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MeetingTopic> topics = new HashSet<>();
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<MeetingTopic> topics;
 
     @ManyToMany
     @JoinTable(
@@ -45,12 +48,12 @@ public class Meeting {
             joinColumns = @JoinColumn(name = "meeting_id"),
             inverseJoinColumns = @JoinColumn(name = "user_account_id")
     )
-    private Set<UserAccount> participants = new HashSet<>();
+    private List<UserAccount> participants;
 
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MeetingVote> votes = new HashSet<>();
+    private List<MeetingVote> votes;
 
-    public Meeting(MeetingDTO meeting) {
+    public Meeting(MeetingCreationDTO meeting) {
         this.title = meeting.title();
         this.description = meeting.description();
         this.startDate = meeting.start_date();

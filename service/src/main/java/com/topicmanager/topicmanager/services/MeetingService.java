@@ -1,13 +1,14 @@
 package com.topicmanager.topicmanager.services;
 
-import com.topicmanager.topicmanager.dto.MeetingDTO;
+import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.repositories.MeetingRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MeetingService {
@@ -15,7 +16,7 @@ public class MeetingService {
     @Autowired
     MeetingRepository meetingRepository;
 
-    public void createMeeting(MeetingDTO meeting) {
+    public void createMeeting(MeetingCreationDTO meeting) {
         Meeting newMeeting = new Meeting(meeting);
 
         meetingRepository.save(newMeeting);
@@ -25,7 +26,9 @@ public class MeetingService {
         return meetingRepository.findAll();
     }
 
-    public Optional<Meeting> getMeetingById(Long id) {
-        return meetingRepository.findById(id);
+    @Transactional(readOnly = true)
+    public Meeting getMeetingById(Long id) {
+        return meetingRepository.findByIdWithTopics(id)
+                .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
     }
 }

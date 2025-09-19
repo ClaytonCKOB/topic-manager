@@ -1,6 +1,6 @@
 package com.topicmanager.topicmanager.controllers;
 
-import com.topicmanager.topicmanager.dto.MeetingDTO;
+import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.services.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class MeetingController {
     MeetingService meetingService;
 
     @PostMapping
-    public ResponseEntity createMeeting(@RequestBody MeetingDTO meetingDTO) {
+    public ResponseEntity createMeeting(@RequestBody MeetingCreationDTO meetingDTO) {
         meetingService.createMeeting(meetingDTO);
 
         return ResponseEntity.ok().build();
@@ -30,8 +30,12 @@ public class MeetingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Meeting> getMeeting(@PathVariable Long id) {
-        Meeting meeting = meetingService.getMeetingById(id).orElse(null);
-        return ResponseEntity.ok(meeting);
+        try {
+            Meeting meeting = meetingService.getMeetingById(id);
+            return ResponseEntity.ok(meeting);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
