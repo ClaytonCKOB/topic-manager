@@ -1,5 +1,6 @@
 package com.topicmanager.topicmanager.entities;
 
+import com.topicmanager.topicmanager.dto.MeetingVoteDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,17 @@ public class MeetingVote {
     @JoinColumn(name = "user_account_id", nullable = false)
     private UserAccount user;
 
+    @Column(name = "status")
+    private Integer status;
+
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate = LocalDateTime.now();
+
+    public MeetingVote(MeetingVoteDTO meetingVote) {
+        this.meeting = new Meeting(meetingVote.meeting_id());
+        this.meetingTopic = new MeetingTopic(meetingVote.meeting_topic_id());
+        this.user = new UserAccount(meetingVote.user_account_id());
+        this.status = meetingVote.status();
+    }
 }
 

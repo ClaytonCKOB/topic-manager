@@ -40,6 +40,7 @@ CREATE TABLE meeting_vote (
 	meeting_id INT NOT NULL REFERENCES meeting(meeting_id) ON DELETE CASCADE,
 	meeting_topic_id INT NOT NULL REFERENCES meeting_topic(meeting_topic_id) ON DELETE CASCADE,
 	user_account_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
+	status INT NOT NULL,
 	updated_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

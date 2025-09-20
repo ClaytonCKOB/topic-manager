@@ -32,4 +32,8 @@ public class MeetingTopic {
         this.title = meetingTopicDTO.title();
         this.description = meetingTopicDTO.description();
     }
+
+    public MeetingTopic(Long meeting_topic_id) {
+        this.id = meeting_topic_id;
+    }
 }

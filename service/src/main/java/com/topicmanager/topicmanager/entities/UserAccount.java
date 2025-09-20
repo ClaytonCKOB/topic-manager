@@ -59,6 +59,10 @@ public class UserAccount implements UserDetails {
         this.active = true;
     }
 
+    public UserAccount(Long user_account_id) {
+        this.id = user_account_id;
+    }
+
     @Override
     public String getPassword(){
         return this.password;
