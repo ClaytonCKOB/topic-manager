@@ -26,7 +26,7 @@ public class MeetingService {
     }
 
     public Meeting getMeetingById(Long id) {
-        return meetingRepository.findByIdWithTopics(id)
+        return meetingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
     }
 }
