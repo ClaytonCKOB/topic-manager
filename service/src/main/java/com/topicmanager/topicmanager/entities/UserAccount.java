@@ -1,6 +1,7 @@
 package com.topicmanager.topicmanager.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.topicmanager.topicmanager.enums.UserAccountRole;
 import jakarta.persistence.*;
@@ -47,7 +48,8 @@ public class UserAccount implements UserDetails {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToMany(mappedBy = "participants")
-    private Set<Meeting> meetings = new HashSet<>();
+    @JsonBackReference
+    private List<Meeting> meetings;
 
     public UserAccount(String username, String encryptedPassword, UserAccountRole role, String email) {
         this.username = username;

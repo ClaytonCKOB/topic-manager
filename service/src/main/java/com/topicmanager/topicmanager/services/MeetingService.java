@@ -6,7 +6,6 @@ import com.topicmanager.topicmanager.repositories.MeetingRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ public class MeetingService {
         return meetingRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public Meeting getMeetingById(Long id) {
         return meetingRepository.findByIdWithTopics(id)
                 .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
