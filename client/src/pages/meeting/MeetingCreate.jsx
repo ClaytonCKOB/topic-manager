@@ -53,12 +53,13 @@ export default function MeetingCreate() {
         <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2 }}>
           <CardContent>
 
-            <Grid container spacing={3} mb={2}>
-              <Grid item xs={12}>
-                <Typography  sx={{ mb: 1 }}>
+            <Grid container spacing={3} mb={5}>
+              <Grid item xs={12} sx={{width: 0.9}}>
+                <Typography  sx={{ mb: 1}}>
                   Título da Reunião
                 </Typography>
                 <TextField
+                  sx={{width: 0.835}}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
