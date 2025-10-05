@@ -31,6 +31,10 @@ export default function MeetingList() {
         navigate("/meeting/create");
     }
 
+    const redirectMeetingDetail = (meeting_id) => {
+        navigate("/meeting/detail/" + meeting_id);
+    }
+
     const columns = [
         { field: 'title', headerName: 'Título', flex: 0.25 },
         { 
@@ -72,42 +76,83 @@ export default function MeetingList() {
 
     return (
     <Box p={4} bgcolor="#f2f5f9" minHeight="100vh">
-        <Typography variant="h5" fontWeight="bold">
-            Gerenciamento de Reuniões
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-            Crie e gerencie as reuniões e suas pautas.
-        </Typography>
+        <Box mb={3}>
+            <Typography variant="h5" fontWeight="bold">
+                Próximas Reuniões para Votação
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                Veja as reuniões agendadas e registre seu voto nas pautas.
+            </Typography>
 
-        <Box display="flex" justifyContent="flex-end" mb={2}>
-            <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={redirectCreateMeeting}
-            sx={{ borderRadius: 2 }}
-            >
-            Nova Reunião
-            </Button>
+            {
+                meetingList.map((meeting, index) => (
+                    <>
+                        <Box sx={{border: '2px dotted gray', backgroundColor: 'white', display: "flex", justifyContent: "space-between", padding: 2, alignItems: 'center', borderRadius: 2}}>
+                            <Box>
+                                <Typography>
+                                    {meeting.title}
+                                </Typography>
+                                <Typography>
+                                    {formatDate(meeting.startDate)} - {formatDate(meeting.endDate)}
+                                </Typography>
+                                <Typography>
+                                    {meeting.topics.length} Item(ns) de pauta
+                                </Typography>
+                            </Box>
+                            <Box>
+                                <Button
+                                    onClick={() => {redirectMeetingDetail(meeting.id)}}
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{ borderRadius: 2, px: 4, py: 1.2 }}
+                                >
+                                Ver pautas / Votar
+                                </Button>
+                            </Box>
+                        </Box>
+                    </>
+                ))
+            }
+
         </Box>
+        <Box>
+            <Typography variant="h5" fontWeight="bold">
+                Gerenciamento de Reuniões
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                Crie e gerencie as reuniões e suas pautas.
+            </Typography>
 
-        <DataGrid
-            rows={meetingList}
-            columns={columns}
-            pageSize={25}
-            pageSizeOptions={[10, 25, 50, 100]}
-            disableRowSelectionOnClick
-            getRowId={(row) => row.id}
-            loading={isRequesting}
-            initialState={{
-                sorting: {
-                    sortModel: [{ field: 'startDate', sort: 'desc' }],
-                },
-                pagination: {
-                    paginationModel: { page: 0, pageSize: 10 },
-                }
-            }}
-        />
+            <Box display="flex" justifyContent="flex-end" mb={2}>
+                <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={redirectCreateMeeting}
+                sx={{ borderRadius: 2 }}
+                >
+                Nova Reunião
+                </Button>
+            </Box>
+
+            <DataGrid
+                rows={meetingList}
+                columns={columns}
+                pageSize={25}
+                pageSizeOptions={[10, 25, 50, 100]}
+                disableRowSelectionOnClick
+                getRowId={(row) => row.id}
+                loading={isRequesting}
+                initialState={{
+                    sorting: {
+                        sortModel: [{ field: 'startDate', sort: 'desc' }],
+                    },
+                    pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                    }
+                }}
+            />
+        </Box>
     </Box>
   );
 }
