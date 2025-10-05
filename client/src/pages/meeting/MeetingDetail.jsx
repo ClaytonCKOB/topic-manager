@@ -1,5 +1,7 @@
 import { Box, Grid, Typography, Button, IconButton, TextField} from "@mui/material"; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import GroupIcon from '@mui/icons-material/Group';
 import PersonIcon from '@mui/icons-material/Person';
@@ -10,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export default function MeetingCreate() {
     const [topics, setTopics] = useState([]);
+    const [collapsedTopics, setCollapsedTopics] = useState([]);
     const topicService = new TopicService();
     const { id } = useParams();
     const navigate = useNavigate();
@@ -21,6 +24,7 @@ export default function MeetingCreate() {
     const getTopics = async (meetingId) => {
         let data = await topicService.getTopicsByMeetingId(meetingId);
         setTopics(data || []);
+        setCollapsedTopics(new Array((data || []).length).fill(true));
     }
 
     useEffect(() => {
@@ -59,7 +63,7 @@ export default function MeetingCreate() {
                         text={"Votos Faltantes"}
                     />
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} sx={{display: "flex", flexDirection: "column"}}>
                     {topics.map((topic, index) => (
                         <Box
                         key={topic.id || index}
@@ -67,70 +71,71 @@ export default function MeetingCreate() {
                             backgroundColor: "#f9fafb",
                             borderRadius: 2,
                             p: 3,
-                            mb: 4,
-                            boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
+                            mb: 1,
+                            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                            position: "relative",
                         }}
                         >
-                        <Typography variant="h6" fontWeight="bold" mb={2}>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <Typography variant="h6" fontWeight="bold">
                             {index + 1}. {topic.description}
-                        </Typography>
+                            </Typography>
 
-                        <Box mb={3}>
-                            <Typography variant="subtitle1" mb={1}>
-                            Seu Voto:
-                            </Typography>
-                            <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                            <Button
-                                variant="outlined"
-                                color="success"
-                                sx={{ borderRadius: 2, px: 4, py: 1.2 }}
+                            <IconButton
+                            onClick={() => {
+                                setCollapsedTopics(prev => {
+                                const updated = [...prev];
+                                updated[index] = !updated[index];
+                                return updated;
+                                });
+                            }}
                             >
-                                Aprovo
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-                            >
-                                Reprovo
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-                            >
-                                Me abstenho
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="warning"
-                                sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-                            >
-                                Colocar em diligência
-                            </Button>
+                            {collapsedTopics[index] ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                            </IconButton>
+                        </Box>
+
+                        {!collapsedTopics[index] && (
+                            <>
+                            <Box mb={3} mt={2}>
+                                <Typography variant="subtitle1" mb={1}>
+                                Seu Voto:
+                                </Typography>
+                                <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                                <Button variant="outlined" color="success" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
+                                    Aprovo
+                                </Button>
+                                <Button variant="outlined" color="error" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
+                                    Reprovo
+                                </Button>
+                                <Button variant="outlined" color="secondary" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
+                                    Me abstenho
+                                </Button>
+                                <Button variant="outlined" color="warning" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
+                                    Colocar em diligência
+                                </Button>
+                                </Box>
                             </Box>
-                        </Box>
-                        <Box mb={3}>
-                            <Typography variant="subtitle1" mb={1}>
-                            Comentário / Justificativa
-                            </Typography>
-                            <TextField
-                            placeholder="Adicione um comentário (opcional)..."
-                            multiline
-                            rows={3}
-                            fullWidth
-                            variant="outlined"
-                            />
-                        </Box>
-                        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                            <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-                            >
-                            Salvar Voto
-                            </Button>
-                        </Box>
+
+                            <Box mb={3}>
+                                <Typography variant="subtitle1" mb={1}>
+                                Comentário / Justificativa
+                                </Typography>
+                                <TextField
+                                placeholder="Adicione um comentário (opcional)..."
+                                multiline
+                                rows={3}
+                                fullWidth
+                                variant="outlined"
+                                />
+                            </Box>
+
+                            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                                <Button variant="contained" color="primary" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
+                                Salvar Voto
+                                </Button>
+                            </Box>
+                            </>
+                        )}
                         </Box>
                     ))}
                 </Grid>

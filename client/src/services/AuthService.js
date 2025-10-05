@@ -12,9 +12,10 @@ export default class AuthService {
                 password
             });
 
-            if (response?.data?.token && response?.data?.role) {
+            if (response?.data?.token && response?.data?.role && response?.data?.name) {
                 this.setToken(response.data.token);
                 this.setRole(response?.data?.role);
+                this.setName(response?.data?.name);
             }
 
             return { status: 200, data: response.data };
@@ -57,8 +58,17 @@ export default class AuthService {
         return localStorage.getItem("user_role");
     }
 
+    setName = (name) => {
+        localStorage.setItem("user_name", name);
+    }
+
+    getName = () => {
+        return localStorage.getItem("user_name");
+    }
+
     logout = () => {
         localStorage.setItem("token", null);
         localStorage.setItem("user_role", null);
+        localStorage.setItem("user_name", null);
     }
 }
