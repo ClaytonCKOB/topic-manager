@@ -104,8 +104,9 @@ export default function MeetingList() {
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            transition: "0.2s"
+                            transition: "0.2s",
                         }}
+                        mb={2}
                     >
                         <Box>
                             <Typography variant="h6" fontWeight="bold" mb={1}>

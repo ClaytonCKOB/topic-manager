@@ -19,19 +19,23 @@ export default class MeetingService {
         }
     }
 
-    async create(title, startDate, endDate) {
+    async create(title, startDate, endDate, meetingParticipants, meetingTopics) {
         var response = {};
         try {
             console.log({
                 title,
                 start_date: startDate,
-                end_date: endDate
+                end_date: endDate,
+                participants: meetingParticipants,
+                topics: meetingTopics
             });
 
             response = await request.post('/api/meeting', {
                 title,
                 start_date: startDate,
-                end_date: endDate
+                end_date: endDate,
+                participants: meetingParticipants,
+                topics: meetingTopics
             });
 
             if (response.status != 200) {
