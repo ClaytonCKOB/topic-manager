@@ -30,6 +30,9 @@ public class UserAccount implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -51,10 +54,11 @@ public class UserAccount implements UserDetails {
     @JsonBackReference
     private List<Meeting> meetings;
 
-    public UserAccount(String username, String encryptedPassword, UserAccountRole role, String email) {
+    public UserAccount(String username, String encryptedPassword, UserAccountRole role, String email, String name) {
         this.username = username;
         this.password = encryptedPassword;
         this.email = email;
+        this.name = name;
         this.role = role;
         this.active = true;
     }

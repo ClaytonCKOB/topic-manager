@@ -4,6 +4,7 @@ import com.topicmanager.topicmanager.enums.UserAccountRole;
 
 public record LoginResponseDTO(
         String token,
-        UserAccountRole role
+        UserAccountRole role,
+        String name
 ) {
 }

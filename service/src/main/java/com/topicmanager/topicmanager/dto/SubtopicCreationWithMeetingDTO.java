@@ -2,14 +2,12 @@ package com.topicmanager.topicmanager.dto;
 
 import java.util.List;
 
-public record TopicCreationWithMeetingDTO(
+public record SubtopicCreationWithMeetingDTO(
 
         String title,
 
         String description,
 
-        List files,
-
-        List<SubtopicCreationWithMeetingDTO> subtopics
+        List files
 ) {
 }

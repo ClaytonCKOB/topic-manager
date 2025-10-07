@@ -7,6 +7,8 @@ public record MeetingTopicDTO(
 
         String title,
 
-        String description
+        String description,
+
+        Long parent_meeting_topic_id
 ) {
 }

@@ -5,6 +5,7 @@ CREATE TABLE meeting_status (
 
 CREATE TABLE user_account (
 	user_account_id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
 	username VARCHAR NOT NULL,
 	email VARCHAR NOT NULL UNIQUE,
 	password VARCHAR NOT NULL,
@@ -25,6 +26,7 @@ CREATE TABLE meeting (
 CREATE TABLE meeting_topic (
     meeting_topic_id SERIAL PRIMARY KEY,
     meeting_id INT NOT NULL REFERENCES meeting(meeting_id) ON DELETE CASCADE,
+    parent_meeting_topic_id INT REFERENCES meeting_topic(meeting_topic_id) ON DELETE CASCADE,
     title VARCHAR NOT NULL,
     description VARCHAR
 );
@@ -32,6 +34,7 @@ CREATE TABLE meeting_topic (
 CREATE TABLE meeting_participant (
     user_account_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
     meeting_id INT NOT NULL REFERENCES meeting(meeting_id) ON DELETE CASCADE,
+    role INT NOT NULL,
     PRIMARY KEY (user_account_id, meeting_id)
 );
 

@@ -29,4 +29,16 @@ public class MeetingParticipantService {
 
         meetingRepository.save(meeting);
     }
+
+    public void createMeetingParticipant(UserAccount userAccount, Long meetingId) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
+
+        UserAccount user = userAccountRepository.findById(userAccount.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        meeting.getParticipants().add(user);
+
+        meetingRepository.save(meeting);
+    }
 }

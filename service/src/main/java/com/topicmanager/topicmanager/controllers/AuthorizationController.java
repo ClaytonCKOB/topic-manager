@@ -36,7 +36,7 @@ public class AuthorizationController {
         Authentication auth = this.authenticationManager.authenticate(usernamePassword);
         UserAccount user = (UserAccount) auth.getPrincipal();
         String token = tokenService.generateToken(user);
-        return ResponseEntity.ok(new LoginResponseDTO(token, user.getRole()));
+        return ResponseEntity.ok(new LoginResponseDTO(token, user.getRole(), user.getName()));
     }
 
     @PostMapping("/register")
@@ -54,7 +54,7 @@ public class AuthorizationController {
                 user.setRole(data.role());
                 userAccountRepository.save(user);
             } else {
-                user = new UserAccount(data.username(), encryptedPassword, data.role(), data.email());
+                user = new UserAccount(data.username(), encryptedPassword, data.role(), data.email(), data.name());
                 userAccountRepository.save(user);
             }
 
