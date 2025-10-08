@@ -78,7 +78,7 @@ export default function MeetingCreate() {
                         >
                         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <Typography variant="h6" fontWeight="bold">
-                            {index + 1}. {topic.description}
+                            {index + 1}. {topic.title}
                             </Typography>
 
                             <IconButton

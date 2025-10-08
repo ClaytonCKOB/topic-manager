@@ -19,14 +19,13 @@ export default class MeetingService {
         }
     }
 
-    async create(title, startDate, endDate, meetingParticipants, meetingTopics) {
+    async create(title, startDate, endDate, meetingTopics) {
         var response = {};
         try {
             console.log({
                 title,
                 start_date: startDate,
                 end_date: endDate,
-                participants: meetingParticipants,
                 topics: meetingTopics
             });
 
@@ -34,7 +33,6 @@ export default class MeetingService {
                 title,
                 start_date: startDate,
                 end_date: endDate,
-                participants: meetingParticipants,
                 topics: meetingTopics
             });
 

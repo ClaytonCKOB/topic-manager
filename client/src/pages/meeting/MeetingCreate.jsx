@@ -33,13 +33,13 @@ export default function MeetingCreate() {
       `${endDate?.toISOString().split("T")[0]}T${endTime?.toTimeString().slice(0,5)}`,
       topics
     );
-    redirectMeetingList();
+    // redirectMeetingList();
   };
   
   const addNewTopic = () => {
     setTopics([...topics, { title: "", files: [], sub_topics: [] }]);
   };
-  
+
   const removeTopic = (index) => {
     setTopics((prev) => prev.filter((_, i) => i !== index));
   };

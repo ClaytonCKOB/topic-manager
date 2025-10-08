@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,14 +43,9 @@ public class Meeting {
     @JsonManagedReference
     private List<MeetingTopic> topics;
 
-    @ManyToMany
-    @JoinTable(
-            name = "meeting_participant",
-            joinColumns = @JoinColumn(name = "meeting_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_account_id")
-    )
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<UserAccount> participants;
+    private List<MeetingParticipant> participants;
 
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MeetingVote> votes;
