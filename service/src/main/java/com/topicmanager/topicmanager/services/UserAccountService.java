@@ -1,6 +1,7 @@
 package com.topicmanager.topicmanager.services;
 
 import com.topicmanager.topicmanager.entities.UserAccount;
+import com.topicmanager.topicmanager.enums.UserAccountRole;
 import com.topicmanager.topicmanager.repositories.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,6 @@ public class UserAccountService {
     private UserAccountRepository userAccountRepository;
 
     List<UserAccount> list() {
-        return userAccountRepository.findAll();
+        return userAccountRepository.findByRoleNot(UserAccountRole.ADMIN);
     }
 }
