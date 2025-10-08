@@ -2,7 +2,8 @@ package com.topicmanager.topicmanager.enums;
 
 public enum UserAccountRole {
     ADMIN("admin"),
-    USER("user");
+    USER("user"),
+    CHEFE("chefe");
 
     private String role;
 
