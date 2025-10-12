@@ -22,19 +22,28 @@ export default class MeetingService {
     async create(title, startDate, endDate, meetingTopics) {
         var response = {};
         try {
-            console.log({
-                title,
-                start_date: startDate,
-                end_date: endDate,
-                topics: meetingTopics
-            });
-
             response = await request.post('/api/meeting', {
                 title,
                 start_date: startDate,
                 end_date: endDate,
                 topics: meetingTopics
             });
+
+            if (response.status != 200) {
+                throw new Error('Network response was not ok');
+            }
+
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        } finally {
+            return response.data;
+        }
+    }
+
+    async delete(meetingId) {
+        var response = {};
+        try {
+            response = await request.delete('/api/meeting/' + meetingId);
 
             if (response.status != 200) {
                 throw new Error('Network response was not ok');

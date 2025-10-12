@@ -50,6 +50,10 @@ public class MeetingService {
         return meetingRepository.findAll();
     }
 
+    public void deleteMeeting(Long id) {
+        meetingRepository.deleteById(id);
+    }
+
     public Meeting getMeetingById(Long id) {
         return meetingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));

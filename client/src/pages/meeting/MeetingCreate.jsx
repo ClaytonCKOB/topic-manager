@@ -33,7 +33,7 @@ export default function MeetingCreate() {
       `${endDate?.toISOString().split("T")[0]}T${endTime?.toTimeString().slice(0,5)}`,
       topics
     );
-    // redirectMeetingList();
+    redirectMeetingList();
   };
   
   const addNewTopic = () => {
@@ -78,6 +78,54 @@ export default function MeetingCreate() {
               ...t,
               sub_topics: t.sub_topics.map((s, j) =>
                 j === subIndex ? { ...s, title: newTitle } : s
+              ),
+            }
+          : t
+      )
+    );
+  };
+
+  const onAddTopicFiles = (index, fileList) => {
+    const files = Array.from(fileList);
+    setTopics((prev) =>
+      prev.map((t, i) => (i === index ? { ...t, files: [...t.files, ...files] } : t))
+    );
+  };
+
+  const onRemoveTopicFile = (index, fileIndex) => {
+    setTopics((prev) =>
+      prev.map((t, i) =>
+        i === index ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) } : t
+      )
+    );
+  };
+
+  const onAddSubtopicFiles = (index, subIndex, fileList) => {
+    const files = Array.from(fileList);
+    setTopics((prev) =>
+      prev.map((t, i) =>
+        i === index
+          ? {
+              ...t,
+              sub_topics: t.sub_topics.map((s, j) =>
+                j === subIndex ? { ...s, files: [...s.files, ...files] } : s
+              ),
+            }
+          : t
+      )
+    );
+  };
+
+  const onRemoveSubtopicFile = (index, subIndex, fileIndex) => {
+    setTopics((prev) =>
+      prev.map((t, i) =>
+        i === index
+          ? {
+              ...t,
+              sub_topics: t.sub_topics.map((s, j) =>
+                j === subIndex
+                  ? { ...s, files: s.files.filter((_, k) => k !== fileIndex) }
+                  : s
               ),
             }
           : t
@@ -197,6 +245,10 @@ export default function MeetingCreate() {
                       onChangeTitle={changeTopicTitle}
                       onRemoveSubTopic={removeSubTopic}
                       onChangeSubTopicTitle={changeSubTopicTitle}
+                      onAddTopicFiles={onAddTopicFiles}
+                      onRemoveTopicFile={onRemoveTopicFile}
+                      onAddSubtopicFiles={onAddSubtopicFiles}
+                      onRemoveSubtopicFile={onRemoveSubtopicFile}
                     />
                   ))}
                 </Grid>

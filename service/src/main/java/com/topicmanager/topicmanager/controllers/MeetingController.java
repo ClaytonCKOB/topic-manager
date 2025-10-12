@@ -38,4 +38,13 @@ public class MeetingController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteMeeting(@PathVariable Long id) {
+        try {
+            meetingService.deleteMeeting(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
