@@ -75,7 +75,7 @@ export default function TopicCard({
       </Grid>
 
       <Grid sx={{ display: 'flex', alignItems: 'end', flexDirection: 'column' }}>
-        {topic.sub_topics.map((sub_topic, sub_index) => (
+        {topic.subtopics?.map((subtopic, sub_index) => (
           <Grid item key={sub_index} mb={3} p={3} sx={{ border: '1px solid gray', borderRadius: 2, width: 0.9 }}>
             <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="h6" mb={2}>
@@ -93,13 +93,13 @@ export default function TopicCard({
               minRows={2}
               placeholder="Adicione a descrição da subpauta..."
               fullWidth
-              value={sub_topic.title}
+              value={subtopic.title}
               onChange={(e) => onChangeSubTopicTitle(index, sub_index, e.target.value)}
             />
 
-            {sub_topic.files?.length > 0 && (
+            {subtopic.files?.length > 0 && (
               <List dense sx={{backgroundColor: "#f9f9f9"}} mt={2} mb={2}>
-                {sub_topic.files.map((file, fIndex) => (
+                {subtopic.files.map((file, fIndex) => (
                   <ListItem
                     key={fIndex}
                     secondaryAction={

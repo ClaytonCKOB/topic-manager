@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import TopicService from "../../services/TopicService";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function MeetingCreate() {
+export default function MeetingVote() {
     const [topics, setTopics] = useState([]);
     const [collapsedTopics, setCollapsedTopics] = useState([]);
     const topicService = new TopicService();

@@ -42,6 +42,10 @@ export default function MeetingList() {
     navigate("/meeting/detail/" + meeting_id);
   };
 
+  const redirectMeetingVote = (meeting_id) => {
+    navigate("/meeting/vote/" + meeting_id);
+  };
+
   const handleDeleteClick = (meetingId) => {
     setSelectedMeetingId(meetingId);
     setOpenDeleteModal(true);
@@ -95,7 +99,11 @@ export default function MeetingList() {
       flex: 0.35,
       renderCell: (params) => {
         return <>
-          <IconButton color="primary" size="small">
+          <IconButton 
+            color="primary" 
+            size="small"
+            onClick={() => redirectMeetingDetail(params.row.id)}
+          >
             <EditIcon />
           </IconButton>
           <IconButton 
@@ -158,7 +166,7 @@ export default function MeetingList() {
               </Typography>
             </Box>
             <Button
-              onClick={() => redirectMeetingDetail(meeting.id)}
+              onClick={() => redirectMeetingVote(meeting.id)}
               variant="contained"
               color="primary"
               sx={{

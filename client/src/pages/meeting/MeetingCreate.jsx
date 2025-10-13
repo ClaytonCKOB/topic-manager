@@ -1,136 +1,188 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Typography, Button, TextField, Grid, Card, CardContent, IconButton, Input, Select, MenuItem } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
+import { Box, Typography, Button, TextField, Grid, Card, CardContent} from "@mui/material";
+import { useNavigate, useParams } from 'react-router-dom';
 import MeetingService from '../../services/MeetingService';
 import { useEffect, useState } from 'react';
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ptBR } from 'date-fns/locale';
-import UserService from '../../services/UserService';
 import TopicCard from '../../base/components/TopicCard';
 
 export default function MeetingCreate() {
-  const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [topics, setTopics] = useState([{title: "", files: [], sub_topics: []}]);
+  const { id } = useParams();
+  const [isDetail, setIsDetail] = useState(false);
+  const [meeting, setMeeting] = useState({
+    title: "",
+    description: "",
+    startDate: null,
+    startTime: null,
+    endDate: null,
+    endTime: null,
+    topics: [],
+  });
 
   const meetingService = new MeetingService();
-  const userService = new UserService();
   const navigate = useNavigate();
 
-  const redirectMeetingList = () => {
-    navigate("/meeting/list");
+  const redirectMeetingList = () => navigate("/meeting/list");
+
+  const getMeeting = async (meetingId) => {
+    const data = await meetingService.get(meetingId);
+    if (data) {
+      const start = new Date(data.startDate);
+      const end = new Date(data.endDate);
+      setMeeting({
+        title: data.title || "",
+        description: data.description || "",
+        startDate: start,
+        startTime: start,
+        endDate: end,
+        endTime: end,
+        topics: data.topics || [],
+      });
+    }
   };
 
-  
+  useEffect(() => {
+    if (id) {
+      setIsDetail(true);
+      getMeeting(id);
+    }
+  }, [id]);
+
+  const combineDateTime = (date, time) => {
+    if (!date || !time) return null;
+    const combined = new Date(date);
+    combined.setHours(time.getHours());
+    combined.setMinutes(time.getMinutes());
+    combined.setSeconds(0);
+    combined.setMilliseconds(0);
+    return combined.toISOString();
+  };
+
   const saveMeeting = async () => {
-    let data = await meetingService.create(
-      title,
-      `${startDate?.toISOString().split("T")[0]}T${startTime?.toTimeString().slice(0,5)}`,
-      `${endDate?.toISOString().split("T")[0]}T${endTime?.toTimeString().slice(0,5)}`,
-      topics
-    );
+    const start = combineDateTime(meeting.startDate, meeting.startTime);
+    const end = combineDateTime(meeting.endDate, meeting.endTime);
+    await meetingService.create(meeting.title, start, end, meeting.topics);
     redirectMeetingList();
   };
-  
+
+  // === Topic Management ===
   const addNewTopic = () => {
-    setTopics([...topics, { title: "", files: [], sub_topics: [] }]);
+    setMeeting((prev) => ({
+      ...prev,
+      topics: [...prev.topics, { title: "", files: [], subtopics: [] }],
+    }));
   };
 
   const removeTopic = (index) => {
-    setTopics((prev) => prev.filter((_, i) => i !== index));
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.filter((_, i) => i !== index),
+    }));
   };
 
   const changeTopicTitle = (index, newTitle) => {
-    setTopics((prev) =>
-      prev.map((t, i) => (i === index ? { ...t, title: newTitle } : t))
-    );
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+        i === index ? { ...t, title: newTitle } : t
+      ),
+    }));
   };
 
   const addSubTopic = (index) => {
-    setTopics((prev) =>
-      prev.map((t, i) =>
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
         i === index
-          ? { ...t, sub_topics: [...t.sub_topics, { title: "", files: [] }] }
+          ? { ...t, subtopics: [...t.subtopics, { title: "", files: [] }] }
           : t
-      )
-    );
+      ),
+    }));
   };
 
   const removeSubTopic = (index, subIndex) => {
-    setTopics((prev) =>
-      prev.map((t, i) =>
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
         i === index
-          ? { ...t, sub_topics: t.sub_topics.filter((_, j) => j !== subIndex) }
+          ? { ...t, subtopics: t.subtopics.filter((_, j) => j !== subIndex) }
           : t
-      )
-    );
+      ),
+    }));
   };
 
   const changeSubTopicTitle = (index, subIndex, newTitle) => {
-    setTopics((prev) =>
-      prev.map((t, i) =>
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
         i === index
           ? {
               ...t,
-              sub_topics: t.sub_topics.map((s, j) =>
+              subtopics: t.subtopics.map((s, j) =>
                 j === subIndex ? { ...s, title: newTitle } : s
               ),
             }
           : t
-      )
-    );
+      ),
+    }));
   };
 
   const onAddTopicFiles = (index, fileList) => {
     const files = Array.from(fileList);
-    setTopics((prev) =>
-      prev.map((t, i) => (i === index ? { ...t, files: [...t.files, ...files] } : t))
-    );
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+        i === index ? { ...t, files: [...t.files, ...files] } : t
+      ),
+    }));
   };
 
   const onRemoveTopicFile = (index, fileIndex) => {
-    setTopics((prev) =>
-      prev.map((t, i) =>
-        i === index ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) } : t
-      )
-    );
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+        i === index
+          ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) }
+          : t
+      ),
+    }));
   };
 
   const onAddSubtopicFiles = (index, subIndex, fileList) => {
     const files = Array.from(fileList);
-    setTopics((prev) =>
-      prev.map((t, i) =>
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
         i === index
           ? {
               ...t,
-              sub_topics: t.sub_topics.map((s, j) =>
+              subtopics: t.subtopics.map((s, j) =>
                 j === subIndex ? { ...s, files: [...s.files, ...files] } : s
               ),
             }
           : t
-      )
-    );
+      ),
+    }));
   };
 
   const onRemoveSubtopicFile = (index, subIndex, fileIndex) => {
-    setTopics((prev) =>
-      prev.map((t, i) =>
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
         i === index
           ? {
               ...t,
-              sub_topics: t.sub_topics.map((s, j) =>
+              subtopics: t.subtopics.map((s, j) =>
                 j === subIndex
                   ? { ...s, files: s.files.filter((_, k) => k !== fileIndex) }
                   : s
               ),
             }
           : t
-      )
-    );
+      ),
+    }));
   };
 
   return (
@@ -147,125 +199,133 @@ export default function MeetingCreate() {
         </Button>
 
         <Typography variant="h5" fontWeight="bold" gutterBottom>
-          Nova Reunião
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-          Preencha as informações para criar uma nova reunião.
+          {isDetail ? "Detalhes da Reunião" : "Nova Reunião"}
         </Typography>
 
-        <Grid>
-          <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8}}>
-            <CardContent>
-
-              <Grid container spacing={3} mb={5}>
-                <Grid item xs={12} sx={{width: 0.9}}>
-                  <Typography  sx={{ mb: 1}}>
-                    Título da Reunião
-                  </Typography>
-                  <TextField
-                    sx={{width: 0.5}}
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </Grid>
+        <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8 }}>
+          <CardContent>
+            <Grid container spacing={3} mb={5}>
+              <Grid item xs={12}>
+                <Typography sx={{ mb: 1 }}>Título da Reunião</Typography>
+                <TextField
+                  fullWidth
+                  value={meeting.title}
+                  onChange={(e) =>
+                    setMeeting((prev) => ({ ...prev, title: e.target.value }))
+                  }
+                />
               </Grid>
-              <Grid container  mb={5} sx={{display: "flex", justifyContent: "space-between"}}>
-                <Grid item xs={12} md={6}>
-                  <Typography  sx={{ mb: 1 }}>
-                    Início da Reunião
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <DatePicker
-                        label="Data"
-                        value={startDate}
-                        onChange={setStartDate}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TimePicker
-                        label="Hora"
-                        value={startTime}
-                        onChange={setStartTime}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
+            </Grid>
 
-                <Grid item xs={12} md={6}>
-                  <Typography  sx={{ mb: 1 }}>
-                    Fim da Reunião
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <DatePicker
-                        label="Data"
-                        value={endDate}
-                        onChange={setEndDate}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TimePicker
-                        label="Hora"
-                        value={endTime}
-                        onChange={setEndTime}
-                        slotProps={{ textField: { fullWidth: true } }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid sx={{border: '2px dotted gray'}} paddingTop={1} paddingInline={5} paddingBottom={3}>
-                <Grid spacing={3} paddingTop={5} mb={5} >
-                    <Grid item xs={12} sx={{display: "flex", justifyContent: "space-between"}}>
-                      <Typography variant="h6"  gutterBottom>
-                        Pautas da Reunião
-                      </Typography>
-                      <Button
-                        onClick={addNewTopic}
-                        variant="contained"
-                        color="primary"
-                        sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-                      >
-                        Adicionar
-                      </Button>
-                    </Grid>
-                </Grid>
-                <Grid>
-                  {topics.map((topic, index) => (
-                    <TopicCard
-                      key={index}
-                      topic={topic}
-                      index={index}
-                      onRemoveTopic={removeTopic}
-                      onAddSubTopic={addSubTopic}
-                      onChangeTitle={changeTopicTitle}
-                      onRemoveSubTopic={removeSubTopic}
-                      onChangeSubTopicTitle={changeSubTopicTitle}
-                      onAddTopicFiles={onAddTopicFiles}
-                      onRemoveTopicFile={onRemoveTopicFile}
-                      onAddSubtopicFiles={onAddSubtopicFiles}
-                      onRemoveSubtopicFile={onRemoveSubtopicFile}
+            {/* Date and Time pickers */}
+            <Grid container spacing={4} mb={5}>
+              <Grid item xs={12} md={6}>
+                <Typography sx={{ mb: 1 }}>Início da Reunião</Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <DatePicker
+                      label="Data"
+                      value={meeting.startDate}
+                      onChange={(date) =>
+                        setMeeting((prev) => ({ ...prev, startDate: date }))
+                      }
+                      slotProps={{ textField: { fullWidth: true } }}
                     />
-                  ))}
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TimePicker
+                      label="Hora"
+                      value={meeting.startTime}
+                      onChange={(time) =>
+                        setMeeting((prev) => ({ ...prev, startTime: time }))
+                      }
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Box display="flex" justifyContent="flex-end" mt={4}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={saveMeeting}
-            sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-          >
-            Salvar
-          </Button>
-        </Box>
+
+              <Grid item xs={12} md={6}>
+                <Typography sx={{ mb: 1 }}>Fim da Reunião</Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <DatePicker
+                      label="Data"
+                      value={meeting.endDate}
+                      onChange={(date) =>
+                        setMeeting((prev) => ({ ...prev, endDate: date }))
+                      }
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TimePicker
+                      label="Hora"
+                      value={meeting.endTime}
+                      onChange={(time) =>
+                        setMeeting((prev) => ({ ...prev, endTime: time }))
+                      }
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {/* Topics */}
+            <Grid
+              sx={{ border: '2px dotted gray' }}
+              p={4}
+              borderRadius={2}
+              mb={4}
+            >
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+                mb={3}
+              >
+                <Typography variant="h6">Pautas da Reunião</Typography>
+                  <Button
+                    onClick={addNewTopic}
+                    variant="contained"
+                    color="primary"
+                    sx={{ borderRadius: 2 }}
+                  >
+                    Adicionar
+                  </Button>
+              </Grid>
+
+              {meeting.topics?.map((topic, index) => (
+                <TopicCard
+                  key={index}
+                  topic={topic}
+                  index={index}
+                  onRemoveTopic={removeTopic}
+                  onAddSubTopic={addSubTopic}
+                  onChangeTitle={changeTopicTitle}
+                  onRemoveSubTopic={removeSubTopic}
+                  onChangeSubTopicTitle={changeSubTopicTitle}
+                  onAddTopicFiles={onAddTopicFiles}
+                  onRemoveTopicFile={onRemoveTopicFile}
+                  onAddSubtopicFiles={onAddSubtopicFiles}
+                  onRemoveSubtopicFile={onRemoveSubtopicFile}
+                />
+              ))}
+            </Grid>
+
+            <Box display="flex" justifyContent="flex-end">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={saveMeeting}
+                sx={{ borderRadius: 2, px: 4, py: 1.2 }}
+              >
+                Salvar
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
     </LocalizationProvider>
   );
