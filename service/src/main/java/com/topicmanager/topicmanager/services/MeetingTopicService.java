@@ -7,7 +7,6 @@ import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.entities.MeetingTopic;
 import com.topicmanager.topicmanager.repositories.MeetingTopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,5 +55,9 @@ public class MeetingTopicService {
 
     public List<MeetingTopic> getMeetingTopicListByMeeting(Long meetingId) {
         return meetingTopicRepository.findByMeetingId(meetingId);
+    }
+
+    public void deleteAllByMeeting(Meeting savedMeeting) {
+        meetingTopicRepository.deleteByMeeting(savedMeeting);
     }
 }

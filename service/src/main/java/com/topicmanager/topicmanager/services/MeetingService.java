@@ -46,6 +46,24 @@ public class MeetingService {
 
     }
 
+    public void updateMeeting(Long meetingId, MeetingCreationDTO meeting) {
+        Meeting existingMeeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new EntityNotFoundException("Meeting not found with id: " + meetingId));
+
+        existingMeeting.setTitle(meeting.title());
+        existingMeeting.setDescription(meeting.description());
+        existingMeeting.setStartDate(meeting.start_date());
+        existingMeeting.setEndDate(meeting.end_date());
+
+        Meeting savedMeeting = meetingRepository.save(existingMeeting);
+
+        meetingTopicService.deleteAllByMeeting(savedMeeting);
+
+        for (TopicCreationWithMeetingDTO topicDTO : meeting.topics()) {
+            meetingTopicService.createMeetingTopic(savedMeeting, topicDTO);
+        }
+    }
+
     public List<Meeting> getMeetingList() {
         return meetingRepository.findAll();
     }
@@ -55,7 +73,12 @@ public class MeetingService {
     }
 
     public Meeting getMeetingById(Long id) {
-        return meetingRepository.findById(id)
+        Meeting meeting = meetingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
+
+        meeting.setTopics(meeting.getTopics().stream().filter(t -> t.getParentTopic() == null).toList());
+
+        return meeting;
+
     }
 }

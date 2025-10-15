@@ -23,6 +23,13 @@ public class MeetingController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity createMeeting(@PathVariable Long id, @RequestBody MeetingCreationDTO meetingDTO) {
+        meetingService.updateMeeting(id, meetingDTO);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<Meeting>> getMeetingList() {
         return ResponseEntity.ok(meetingService.getMeetingList());
