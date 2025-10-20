@@ -274,8 +274,6 @@ export default function MeetingCreate() {
                 </Grid>
               </Grid>
             </Grid>
-
-            {/* Topics */}
             <Grid
               sx={{ border: '2px dotted gray' }}
               p={4}

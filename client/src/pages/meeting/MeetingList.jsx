@@ -13,12 +13,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/AuthService";
+import UserModal from "../user/UserModal";
 
 export default function MeetingList() {
   const [meetingList, setMeetingList] = useState([]);
   const [isRequesting, setIsRequesting] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+  const [openUserModal, setOpenUserModal] = useState(false);
 
   const meetingService = new MeetingService();
   const authService = new AuthService();
@@ -150,7 +152,7 @@ export default function MeetingList() {
               variant="contained"
               color="primary"
               startIcon={<ManageAccountsIcon />}
-              onClick={redirectCreateMeeting}
+              onClick={() => {setOpenUserModal(true);}}
               sx={{
                 borderRadius: 2,
                 alignSelf: "center",
@@ -271,6 +273,12 @@ export default function MeetingList() {
           }}
         />
       </Box>
+
+
+      <UserModal
+        openUserModal={openUserModal}
+        setOpenUserModal={setOpenUserModal}
+      />
 
       <Dialog
         open={openDeleteModal}
