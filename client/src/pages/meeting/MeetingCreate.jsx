@@ -32,6 +32,7 @@ export default function MeetingCreate() {
       const start = new Date(data.startDate);
       const end = new Date(data.endDate);
       setMeeting({
+        id: data.id,
         title: data.title || "",
         description: data.description || "",
         startDate: start,
@@ -63,11 +64,15 @@ export default function MeetingCreate() {
   const saveMeeting = async () => {
     const start = combineDateTime(meeting.startDate, meeting.startTime);
     const end = combineDateTime(meeting.endDate, meeting.endTime);
-    await meetingService.create(meeting.title, start, end, meeting.topics);
+    if (!isDetail) {
+      await meetingService.create(meeting.title, start, end, meeting.topics);
+    } else {
+      await meetingService.update(meeting);
+    }
+
     redirectMeetingList();
   };
 
-  // === Topic Management ===
   const addNewTopic = () => {
     setMeeting((prev) => ({
       ...prev,
@@ -205,7 +210,7 @@ export default function MeetingCreate() {
         <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8 }}>
           <CardContent>
             <Grid container spacing={3} mb={5}>
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{width: 0.4}}>
                 <Typography sx={{ mb: 1 }}>Título da Reunião</Typography>
                 <TextField
                   fullWidth
@@ -216,9 +221,7 @@ export default function MeetingCreate() {
                 />
               </Grid>
             </Grid>
-
-            {/* Date and Time pickers */}
-            <Grid container spacing={4} mb={5}>
+            <Grid container spacing={4} mb={5} sx={{display: "flex", justifyContent: "space-between"}}>
               <Grid item xs={12} md={6}>
                 <Typography sx={{ mb: 1 }}>Início da Reunião</Typography>
                 <Grid container spacing={2}>

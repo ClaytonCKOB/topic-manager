@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AddIcon from "@mui/icons-material/Add";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import formatDate from "../../utils/FormatDate";
@@ -124,6 +125,46 @@ export default function MeetingList() {
         <Typography variant="h5" fontWeight="bold">
           Bem-vindo(a), {authService.getName()}!
         </Typography>
+        <Box mt={3}>
+          <Box
+            sx={{
+              backgroundColor: "#e3e9f0",
+              borderRadius: 2,
+              px: 3,
+              py: 2.5,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "start",
+              transition: "0.2s",
+              width: 0.2
+            }}
+          >
+            <Typography variant="h5" fontWeight="bold">
+              Gerenciar Perfil
+            </Typography>
+            <Typography mt={2} variant="subtitle1" color="text.secondary" gutterBottom>
+              Visualize e edite suas informações pessoais e de acesso.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<ManageAccountsIcon />}
+              onClick={redirectCreateMeeting}
+              sx={{
+                borderRadius: 2,
+                alignSelf: "center",
+                textTransform: "none",
+                py: 1,              
+                px: 2,      
+                marginTop: 2,
+                width: 0.9          
+              }}
+            >
+              Ir Para Meu Perfil
+            </Button>
+          </Box>
+        </Box>
       </Box>
 
       <Box mb={8}>
