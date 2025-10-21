@@ -7,11 +7,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
+import UserModal from "./UserModal";
 
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
+    const [userId, setUserId] = useState(null);
     const [isRequesting, setIsRequesting] = useState(false);
+    const [openUserModal, setOpenUserModal] = useState(false);
     const userService = new UserService();
     const navigate = useNavigate();
 
@@ -87,7 +90,7 @@ export default function UserList() {
               variant="contained"
               color="primary"
               startIcon={<AddIcon />}
-            //   onClick={redirectCreateMeeting}
+              onClick={() => {setUserId(null); setOpenUserModal(true);}}
               sx={{
                 borderRadius: 2,
                 alignSelf: "flex-end",
@@ -119,6 +122,12 @@ export default function UserList() {
                 }}
             />
         </Box>
+
+        <UserModal
+            openUserModal={openUserModal}
+            setOpenUserModal={setOpenUserModal}
+            userId={userId}
+        />
     </Box>
     );
 }

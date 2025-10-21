@@ -5,6 +5,7 @@ import UserService from "../../services/UserService";
 export default function UserModal({ openUserModal, setOpenUserModal, userId }) {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isCreation, setIsCreation] = useState(true);
   const userService = new UserService();
 
   const getUser = async () => {
@@ -21,6 +22,7 @@ export default function UserModal({ openUserModal, setOpenUserModal, userId }) {
 
   useEffect(() => {
     if (openUserModal && userId) getUser();
+    setIsCreation(userId == null || userId == 0);
   }, [openUserModal, userId]);
 
   const handleSaveChanges = async () => {
@@ -36,21 +38,21 @@ export default function UserModal({ openUserModal, setOpenUserModal, userId }) {
 
   return (
     <Dialog open={openUserModal} onClose={handleCancelUserChange} fullWidth maxWidth="sm">
-        <DialogTitle>Gerenciar Perfil</DialogTitle>
+        <DialogTitle>{isCreation ? "Criar Novo Usuário" : "Gerenciar Perfil"}</DialogTitle>
         <DialogContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
             <Box>
                 <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
                 Username
                 </Typography>
-                <Input fullWidth disabled value={user.username || ""} />
+                <Input fullWidth disabled={!isCreation} value={user.username || ""} />
             </Box>
 
             <Box>
                 <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
                 Função
                 </Typography>
-                <Input fullWidth disabled value={user.role || ""} />
+                <Input fullWidth disabled={!isCreation} value={user.role || ""} />
             </Box>
 
             <Box>
