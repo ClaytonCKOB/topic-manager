@@ -143,16 +143,16 @@ export default function MeetingList() {
             }}
           >
             <Typography variant="h5" fontWeight="bold">
-              Gerenciar Perfil
+              Gerenciar {authService.isAdmin() ? "Perfis" : "Perfil"}
             </Typography>
             <Typography mt={2} variant="subtitle1" color="text.secondary" gutterBottom>
-              Visualize e edite suas informações pessoais e de acesso.
+              {authService.isAdmin() ? "Visualize e edite as informações dos usuários do sistema." : "Visualize e edite suas informações pessoais e de acesso."}
             </Typography>
             <Button
               variant="contained"
               color="primary"
               startIcon={<ManageAccountsIcon />}
-              onClick={() => {setOpenUserModal(true);}}
+              onClick={() => {if (!authService.isAdmin()) {setOpenUserModal(true);} else {navigate("/user/list");}}}
               sx={{
                 borderRadius: 2,
                 alignSelf: "center",
@@ -163,7 +163,7 @@ export default function MeetingList() {
                 width: 0.9          
               }}
             >
-              Ir Para Meu Perfil
+              Ir Para {authService.isAdmin() ? "Lista de Usuários" : "Meu Perfil"}
             </Button>
           </Box>
         </Box>

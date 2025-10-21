@@ -66,6 +66,10 @@ export default class AuthService {
         return localStorage.getItem("user_name");
     }
 
+    isAdmin = () => {
+        return localStorage.getItem("user_role") == 'ADMIN';
+    }
+
     logout = () => {
         localStorage.setItem("token", null);
         localStorage.setItem("user_role", null);

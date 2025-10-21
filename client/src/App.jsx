@@ -6,6 +6,7 @@ import DefaultNavigation from './base/route/DefaultNavigation';
 import MeetingList from './pages/meeting/MeetingList';
 import MeetingCreate from './pages/meeting/MeetingCreate';
 import MeetingVote from './pages/meeting/MeetingVote';
+import UserList from './pages/user/UserList';
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
       { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN', 'USER'], component: null },
       { path: "/meeting/detail/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingCreate },
       { path: "/meeting/vote/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingVote },
-      { path: "/configuracao/usuarios", name: "Usuários", allowedRoles: ['ADMIN', 'USER'], component: null }
+      { path: "/user/list", name: "Usuários", allowedRoles: ['ADMIN'], component: UserList }
   ], []);
 
   return (
