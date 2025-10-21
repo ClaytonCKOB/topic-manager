@@ -14,7 +14,11 @@ public class UserAccountService {
     @Autowired
     private UserAccountRepository userAccountRepository;
 
-    List<UserAccount> list() {
+    public List<UserAccount> listNotAdminUsers() {
         return userAccountRepository.findByRoleNot(UserAccountRole.ADMIN);
+    }
+
+    public List<UserAccount> list() {
+        return userAccountRepository.findAll();
     }
 }
