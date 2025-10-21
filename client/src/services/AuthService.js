@@ -38,7 +38,7 @@ export default class AuthService {
     }
 
     isTokenValid = (token) => {
-        if (!token) return false;
+        if (!token || token == 'null') return false;
     
         try {
             const decoded = jwtDecode(token);

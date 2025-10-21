@@ -14,6 +14,7 @@ import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/AuthService";
 import UserModal from "../user/UserModal";
+import Logout from "../user/Logout";
 
 export default function MeetingList() {
   const [meetingList, setMeetingList] = useState([]);
@@ -124,6 +125,7 @@ export default function MeetingList() {
   return (
     <Box p={4} bgcolor="#f2f5f9" minHeight="100vh">
       <Box mb={8}>
+        <Logout/>
         <Typography variant="h5" fontWeight="bold">
           Bem-vindo(a), {authService.getName()}!
         </Typography>
