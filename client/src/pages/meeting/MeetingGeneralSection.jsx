@@ -1,16 +1,8 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Typography, Button, TextField, Grid, Card, CardContent} from "@mui/material";
-import { useNavigate, useParams } from 'react-router-dom';
-import MeetingService from '../../services/MeetingService';
-import { useEffect, useState } from 'react';
-import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { ptBR } from 'date-fns/locale';
-import TopicSection from '../topic/TopicSection';
-import AuthService from '../../services/AuthService';
+import { Typography, TextField, Grid} from "@mui/material";
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 
-export default function MeetingGeneralSection({meeting, setMeeting}) {
-    
+export default function MeetingGeneralSection({meeting, setMeeting, isEditable}) {
+
     return <>
     <Grid container spacing={3} mb={5}>
         <Grid item xs={12} sx={{width: 0.4}}>
@@ -18,6 +10,7 @@ export default function MeetingGeneralSection({meeting, setMeeting}) {
         <TextField
             fullWidth
             value={meeting.title}
+            disabled={!isEditable}
             onChange={(e) =>
             setMeeting((prev) => ({ ...prev, title: e.target.value }))
             }
@@ -32,6 +25,7 @@ export default function MeetingGeneralSection({meeting, setMeeting}) {
             <DatePicker
                 label="Data"
                 value={meeting.startDate}
+                disabled={!isEditable}
                 onChange={(date) =>
                 setMeeting((prev) => ({ ...prev, startDate: date }))
                 }
@@ -42,6 +36,7 @@ export default function MeetingGeneralSection({meeting, setMeeting}) {
             <TimePicker
                 label="Hora"
                 value={meeting.startTime}
+                disabled={!isEditable}
                 onChange={(time) =>
                 setMeeting((prev) => ({ ...prev, startTime: time }))
                 }
@@ -58,6 +53,7 @@ export default function MeetingGeneralSection({meeting, setMeeting}) {
             <DatePicker
                 label="Data"
                 value={meeting.endDate}
+                disabled={!isEditable}
                 onChange={(date) =>
                 setMeeting((prev) => ({ ...prev, endDate: date }))
                 }
@@ -68,6 +64,7 @@ export default function MeetingGeneralSection({meeting, setMeeting}) {
             <TimePicker
                 label="Hora"
                 value={meeting.endTime}
+                disabled={!isEditable}
                 onChange={(time) =>
                 setMeeting((prev) => ({ ...prev, endTime: time }))
                 }

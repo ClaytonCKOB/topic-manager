@@ -99,6 +99,7 @@ export default function MeetingCreate() {
             <MeetingGeneralSection 
               meeting={meeting}
               setMeeting={setMeeting}
+              isEditable={isMeetingEditable}
             />
             
             <TopicSection

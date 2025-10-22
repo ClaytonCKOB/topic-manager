@@ -1,12 +1,7 @@
 import { Typography, Button, Grid} from "@mui/material";
-import { useNavigate} from 'react-router-dom';
-import MeetingService from '../../services/MeetingService';
 import TopicCard from './TopicCard';
 
 export default function TopicSection({meeting, setMeeting}) {
-    const meetingService = new MeetingService();
-    const navigate = useNavigate();
-
     const addNewTopic = () => {
         setMeeting((prev) => ({
         ...prev,
