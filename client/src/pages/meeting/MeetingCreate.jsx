@@ -18,7 +18,7 @@ export default function MeetingCreate() {
     startTime: null,
     endDate: null,
     endTime: null,
-    topics: [],
+    topics: [{}],
   });
 
   const meetingService = new MeetingService();
