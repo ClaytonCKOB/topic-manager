@@ -3,19 +3,119 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-export default function TopicCard({
-  topic,
-  index,
-  onRemoveTopic,
-  onAddSubTopic,
-  onChangeTitle,
-  onRemoveSubTopic,
-  onChangeSubTopicTitle,
-  onAddTopicFiles,
-  onRemoveTopicFile,
-  onAddSubtopicFiles,
-  onRemoveSubtopicFile
-}) {
+export default function TopicCard({meeting, setMeeting, topic, index}) {
+
+  const onRemoveTopic = (index) => {
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.filter((_, i) => i !== index),
+      }));
+  };
+
+  const onChangeTopicTitle = (index, newTitle) => {
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index ? { ...t, title: newTitle } : t
+      ),
+      }));
+  };
+
+  const onAddSubTopic = (index) => {
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index
+          ? { ...t, subtopics: [...t.subtopics, { title: "", files: [] }] }
+          : t
+      ),
+      }));
+  };
+
+  const onRemoveSubTopic = (index, subIndex) => {
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index
+          ? { ...t, subtopics: t.subtopics.filter((_, j) => j !== subIndex) }
+          : t
+      ),
+      }));
+  };
+
+  const onChangeSubTopicTitle = (index, subIndex, newTitle) => {
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index
+          ? {
+              ...t,
+              subtopics: t.subtopics.map((s, j) =>
+                  j === subIndex ? { ...s, title: newTitle } : s
+              ),
+              }
+          : t
+      ),
+      }));
+  };
+
+  const onAddTopicFiles = (index, fileList) => {
+      const files = Array.from(fileList);
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index ? { ...t, files: [...t.files, ...files] } : t
+      ),
+      }));
+  };
+
+  const onRemoveTopicFile = (index, fileIndex) => {
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index
+          ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) }
+          : t
+      ),
+      }));
+  };
+
+  const onAddSubtopicFiles = (index, subIndex, fileList) => {
+      const files = Array.from(fileList);
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index
+          ? {
+              ...t,
+              subtopics: t.subtopics.map((s, j) =>
+                  j === subIndex ? { ...s, files: [...s.files, ...files] } : s
+              ),
+              }
+          : t
+      ),
+      }));
+  };
+
+  const onRemoveSubtopicFile = (index, subIndex, fileIndex) => {
+      setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+          i === index
+          ? {
+              ...t,
+              subtopics: t.subtopics.map((s, j) =>
+                  j === subIndex
+                  ? { ...s, files: s.files.filter((_, k) => k !== fileIndex) }
+                  : s
+              ),
+              }
+          : t
+      ),
+      }));
+  };
+
+
   return (
     <Grid key={index}>
       <Grid item mb={3} p={3} sx={{ border: '1px solid gray', borderRadius: 2 }}>
@@ -40,7 +140,7 @@ export default function TopicCard({
             placeholder="Adicione a descrição da pauta..."
             fullWidth
             value={topic.title}
-            onChange={(e) => onChangeTitle(index, e.target.value)}
+            onChange={(e) => onChangeTopicTitle(index, e.target.value)}
           />
         </Grid>
         {topic.files?.length > 0 && (

@@ -5,9 +5,11 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import UserModal from "../user/UserModal";
 import AuthService from "../../services/AuthService";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function UserManagement() {
     const [openUserModal, setOpenUserModal] = useState(false);
+    const navigate = useNavigate();
 
     const authService = new AuthService();
 

@@ -6,11 +6,14 @@ import { useEffect, useState } from 'react';
 import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ptBR } from 'date-fns/locale';
-import TopicCard from '../../base/components/TopicCard';
+import TopicSection from '../topic/TopicSection';
+import AuthService from '../../services/AuthService';
+import MeetingGeneralSection from './MeetingGeneralSection';
 
 export default function MeetingCreate() {
   const { id } = useParams();
   const [isDetail, setIsDetail] = useState(false);
+  const [isMeetingEditable, setIsMeetingEditable] = useState(false);
   const [meeting, setMeeting] = useState({
     title: "",
     description: "",
@@ -22,8 +25,8 @@ export default function MeetingCreate() {
   });
 
   const meetingService = new MeetingService();
+  const authService = new AuthService();
   const navigate = useNavigate();
-
   const redirectMeetingList = () => navigate("/meeting/list");
 
   const getMeeting = async (meetingId) => {
@@ -48,6 +51,7 @@ export default function MeetingCreate() {
     if (id) {
       setIsDetail(true);
       getMeeting(id);
+      setIsMeetingEditable(authService.isAdmin());
     }
   }, [id]);
 
@@ -73,123 +77,6 @@ export default function MeetingCreate() {
     redirectMeetingList();
   };
 
-  const addNewTopic = () => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: [...prev.topics, { title: "", files: [], subtopics: [] }],
-    }));
-  };
-
-  const removeTopic = (index) => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.filter((_, i) => i !== index),
-    }));
-  };
-
-  const changeTopicTitle = (index, newTitle) => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index ? { ...t, title: newTitle } : t
-      ),
-    }));
-  };
-
-  const addSubTopic = (index) => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index
-          ? { ...t, subtopics: [...t.subtopics, { title: "", files: [] }] }
-          : t
-      ),
-    }));
-  };
-
-  const removeSubTopic = (index, subIndex) => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index
-          ? { ...t, subtopics: t.subtopics.filter((_, j) => j !== subIndex) }
-          : t
-      ),
-    }));
-  };
-
-  const changeSubTopicTitle = (index, subIndex, newTitle) => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index
-          ? {
-              ...t,
-              subtopics: t.subtopics.map((s, j) =>
-                j === subIndex ? { ...s, title: newTitle } : s
-              ),
-            }
-          : t
-      ),
-    }));
-  };
-
-  const onAddTopicFiles = (index, fileList) => {
-    const files = Array.from(fileList);
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index ? { ...t, files: [...t.files, ...files] } : t
-      ),
-    }));
-  };
-
-  const onRemoveTopicFile = (index, fileIndex) => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index
-          ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) }
-          : t
-      ),
-    }));
-  };
-
-  const onAddSubtopicFiles = (index, subIndex, fileList) => {
-    const files = Array.from(fileList);
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index
-          ? {
-              ...t,
-              subtopics: t.subtopics.map((s, j) =>
-                j === subIndex ? { ...s, files: [...s.files, ...files] } : s
-              ),
-            }
-          : t
-      ),
-    }));
-  };
-
-  const onRemoveSubtopicFile = (index, subIndex, fileIndex) => {
-    setMeeting((prev) => ({
-      ...prev,
-      topics: prev.topics.map((t, i) =>
-        i === index
-          ? {
-              ...t,
-              subtopics: t.subtopics.map((s, j) =>
-                j === subIndex
-                  ? { ...s, files: s.files.filter((_, k) => k !== fileIndex) }
-                  : s
-              ),
-            }
-          : t
-      ),
-    }));
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
       <Box p={4} bgcolor="#f2f5f9" minHeight="100vh">
@@ -209,111 +96,15 @@ export default function MeetingCreate() {
 
         <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8 }}>
           <CardContent>
-            <Grid container spacing={3} mb={5}>
-              <Grid item xs={12} sx={{width: 0.4}}>
-                <Typography sx={{ mb: 1 }}>Título da Reunião</Typography>
-                <TextField
-                  fullWidth
-                  value={meeting.title}
-                  onChange={(e) =>
-                    setMeeting((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                />
-              </Grid>
-            </Grid>
-            <Grid container spacing={4} mb={5} sx={{display: "flex", justifyContent: "space-between"}}>
-              <Grid item xs={12} md={6}>
-                <Typography sx={{ mb: 1 }}>Início da Reunião</Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <DatePicker
-                      label="Data"
-                      value={meeting.startDate}
-                      onChange={(date) =>
-                        setMeeting((prev) => ({ ...prev, startDate: date }))
-                      }
-                      slotProps={{ textField: { fullWidth: true } }}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TimePicker
-                      label="Hora"
-                      value={meeting.startTime}
-                      onChange={(time) =>
-                        setMeeting((prev) => ({ ...prev, startTime: time }))
-                      }
-                      slotProps={{ textField: { fullWidth: true } }}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Typography sx={{ mb: 1 }}>Fim da Reunião</Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <DatePicker
-                      label="Data"
-                      value={meeting.endDate}
-                      onChange={(date) =>
-                        setMeeting((prev) => ({ ...prev, endDate: date }))
-                      }
-                      slotProps={{ textField: { fullWidth: true } }}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TimePicker
-                      label="Hora"
-                      value={meeting.endTime}
-                      onChange={(time) =>
-                        setMeeting((prev) => ({ ...prev, endTime: time }))
-                      }
-                      slotProps={{ textField: { fullWidth: true } }}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid
-              sx={{ border: '2px dotted gray' }}
-              p={4}
-              borderRadius={2}
-              mb={4}
-            >
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-                mb={3}
-              >
-                <Typography variant="h6">Pautas da Reunião</Typography>
-                  <Button
-                    onClick={addNewTopic}
-                    variant="contained"
-                    color="primary"
-                    sx={{ borderRadius: 2 }}
-                  >
-                    Adicionar
-                  </Button>
-              </Grid>
-
-              {meeting.topics?.map((topic, index) => (
-                <TopicCard
-                  key={index}
-                  topic={topic}
-                  index={index}
-                  onRemoveTopic={removeTopic}
-                  onAddSubTopic={addSubTopic}
-                  onChangeTitle={changeTopicTitle}
-                  onRemoveSubTopic={removeSubTopic}
-                  onChangeSubTopicTitle={changeSubTopicTitle}
-                  onAddTopicFiles={onAddTopicFiles}
-                  onRemoveTopicFile={onRemoveTopicFile}
-                  onAddSubtopicFiles={onAddSubtopicFiles}
-                  onRemoveSubtopicFile={onRemoveSubtopicFile}
-                />
-              ))}
-            </Grid>
+            <MeetingGeneralSection 
+              meeting={meeting}
+              setMeeting={setMeeting}
+            />
+            
+            <TopicSection
+              meeting={meeting}
+              setMeeting={setMeeting}
+            />
 
             <Box display="flex" justifyContent="flex-end">
               <Button

@@ -9,14 +9,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function MeetingVoteList() {
     const [meetingList, setMeetingList] = useState([]);
-    const [isRequesting, setIsRequesting] = useState(false);
     const navigate = useNavigate();
     const meetingService = new MeetingService();
 
     useEffect(() => {    
-        setIsRequesting(true);
         getMeetingList();
-        setIsRequesting(false);
     }, []);
 
     const redirectMeetingVote = (meeting_id) => {
