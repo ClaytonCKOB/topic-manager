@@ -43,6 +43,7 @@ export default function MeetingCreate() {
         endDate: end,
         endTime: end,
         topics: data.topics || [],
+        votes: data.votes
       });
 
       const now = new Date();

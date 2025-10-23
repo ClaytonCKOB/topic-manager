@@ -3,6 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import FileList from "../../base/components/files/FileList";
+import VoteList from "../../base/components/vote/VoteList";
 
 export default function TopicComponent({setMeeting, topic, index, subIndex, isEditable, isSubTopic}) {
 
@@ -158,6 +159,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             removeFile={(fIndex) => {onRemoveTopicFile(index, subIndex, fIndex)}}
         />
 
+        <VoteList votes={topic.votes}/>
         {
             isEditable ?
             <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
