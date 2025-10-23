@@ -2,6 +2,7 @@ import { Typography, Button, TextField, Grid, IconButton, Input, List, ListItem,
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import FileList from "../../base/components/files/FileList";
 
 export default function TopicCard({meeting, setMeeting, topic, index, isEditable}) {
 
@@ -26,7 +27,7 @@ export default function TopicCard({meeting, setMeeting, topic, index, isEditable
       ...prev,
       topics: prev.topics.map((t, i) =>
           i === index
-          ? { ...t, subtopics: [...t.subtopics, { title: "", files: [] }] }
+          ? { ...t, subtopics: [...(t.subtopics || []), { title: "", files: [] }] }
           : t
       ),
       }));
@@ -60,13 +61,13 @@ export default function TopicCard({meeting, setMeeting, topic, index, isEditable
   };
 
   const onAddTopicFiles = (index, fileList) => {
-      const files = Array.from(fileList);
-      setMeeting((prev) => ({
+    const files = Array.from(fileList);
+    setMeeting((prev) => ({
       ...prev,
       topics: prev.topics.map((t, i) =>
-          i === index ? { ...t, files: [...t.files, ...files] } : t
+        i === index ? { ...t, files: [...(t.files || []), ...files] } : t
       ),
-      }));
+    }));
   };
 
   const onRemoveTopicFile = (index, fileIndex) => {
@@ -81,20 +82,22 @@ export default function TopicCard({meeting, setMeeting, topic, index, isEditable
   };
 
   const onAddSubtopicFiles = (index, subIndex, fileList) => {
-      const files = Array.from(fileList);
-      setMeeting((prev) => ({
+    const files = Array.from(fileList);
+    setMeeting((prev) => ({
       ...prev,
       topics: prev.topics.map((t, i) =>
-          i === index
+        i === index
           ? {
               ...t,
               subtopics: t.subtopics.map((s, j) =>
-                  j === subIndex ? { ...s, files: [...s.files, ...files] } : s
+                j === subIndex
+                  ? { ...s, files: [...(s.files || []), ...files] }
+                  : s
               ),
-              }
+            }
           : t
       ),
-      }));
+    }));
   };
 
   const onRemoveSubtopicFile = (index, subIndex, fileIndex) => {
@@ -148,25 +151,12 @@ export default function TopicCard({meeting, setMeeting, topic, index, isEditable
             onChange={(e) => onChangeTopicTitle(index, e.target.value)}
           />
         </Grid>
-        {topic.files?.length > 0 && (
-          <List dense>
-            {topic.files.map((file, fIndex) => (
-              <ListItem
-                sx={{backgroundColor: "#f9f9f9"}} mt={2} mb={2}
-                key={fIndex}
-                secondaryAction={
-                  isEditable ?
-                  <IconButton edge="end" color="error" onClick={() => onRemoveTopicFile(index, fIndex)}>
-                    <DeleteIcon />
-                  </IconButton>
-                  : <></>
-                }
-              >
-                <ListItemText primary={file.name || `Arquivo ${fIndex + 1}`} />
-              </ListItem>
-            ))}
-          </List>
-        )}
+        <FileList 
+          files={topic.files}
+          isEditable={isEditable}
+          removeFile={(fIndex) => {onRemoveTopicFile(index, fIndex)}}
+        />
+
         {
           isEditable ?
           <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
@@ -212,25 +202,11 @@ export default function TopicCard({meeting, setMeeting, topic, index, isEditable
               value={subtopic.title}
               onChange={(e) => onChangeSubTopicTitle(index, sub_index, e.target.value)}
             />
-
-            {subtopic.files?.length > 0 && (
-              <List dense sx={{backgroundColor: "#f9f9f9"}} mt={2} mb={2}>
-                {subtopic.files.map((file, fIndex) => (
-                  <ListItem
-                    key={fIndex}
-                    secondaryAction={
-                      isEditable ?
-                      <IconButton edge="end" color="error" onClick={() => onRemoveSubtopicFile(index, sub_index, fIndex)}>
-                        <DeleteIcon />
-                      </IconButton>
-                      : <></>
-                    }
-                  >
-                    <ListItemText primary={file.name || `Arquivo ${fIndex + 1}`} />
-                  </ListItem>
-                ))}
-              </List>
-            )}
+            <FileList
+              files={subtopic.files}
+              isEditable={isEditable}
+              removeFile={(fIndex) => {onRemoveSubtopicFile(index, sub_index, fIndex)}}
+            />
 
             {
               isEditable ?
