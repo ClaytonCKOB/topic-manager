@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-export default function TopicCard({meeting, setMeeting, topic, index}) {
+export default function TopicCard({meeting, setMeeting, topic, index, isEditable}) {
 
   const onRemoveTopic = (index) => {
       setMeeting((prev) => ({
@@ -123,14 +123,18 @@ export default function TopicCard({meeting, setMeeting, topic, index}) {
           <Typography variant="h6" mb={2}>
             Pauta {index + 1}
           </Typography>
-          <Grid>
-            <IconButton onClick={() => onAddSubTopic(index)}>
-              <AddCircleOutlineIcon />
-            </IconButton>
-            <IconButton color="error" size="small" onClick={() => onRemoveTopic(index)}>
-              <DeleteIcon />
-            </IconButton>
-          </Grid>
+          {
+            isEditable ? 
+            <Grid>
+              <IconButton onClick={() => onAddSubTopic(index)}>
+                <AddCircleOutlineIcon />
+              </IconButton>
+              <IconButton color="error" size="small" onClick={() => onRemoveTopic(index)}>
+                <DeleteIcon />
+              </IconButton>
+            </Grid>
+            :<></>
+          }
         </Grid>
 
         <Grid>
@@ -140,6 +144,7 @@ export default function TopicCard({meeting, setMeeting, topic, index}) {
             placeholder="Adicione a descrição da pauta..."
             fullWidth
             value={topic.title}
+            disabled={!isEditable}
             onChange={(e) => onChangeTopicTitle(index, e.target.value)}
           />
         </Grid>
@@ -150,9 +155,11 @@ export default function TopicCard({meeting, setMeeting, topic, index}) {
                 sx={{backgroundColor: "#f9f9f9"}} mt={2} mb={2}
                 key={fIndex}
                 secondaryAction={
+                  isEditable ?
                   <IconButton edge="end" color="error" onClick={() => onRemoveTopicFile(index, fIndex)}>
                     <DeleteIcon />
                   </IconButton>
+                  : <></>
                 }
               >
                 <ListItemText primary={file.name || `Arquivo ${fIndex + 1}`} />
@@ -160,18 +167,22 @@ export default function TopicCard({meeting, setMeeting, topic, index}) {
             ))}
           </List>
         )}
-        <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
-          <Button component="label" variant="contained" startIcon={<AttachFileIcon />}>
-            Adicionar Anexo(s)
-            <Input
-              type="file"
-              inputProps={{ accept: 'application/pdf' }}
-              onChange={(e) => onAddTopicFiles(index, e.target.files)}
-              sx={{ display: 'none' }}
-              multiple
-            />
-          </Button>
-        </Grid>
+        {
+          isEditable ?
+          <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
+            <Button component="label" variant="contained" startIcon={<AttachFileIcon />}>
+              Adicionar Anexo(s)
+              <Input
+                type="file"
+                inputProps={{ accept: 'application/pdf' }}
+                onChange={(e) => onAddTopicFiles(index, e.target.files)}
+                sx={{ display: 'none' }}
+                multiple
+              />
+            </Button>
+          </Grid>
+          : <></>
+        }
       </Grid>
 
       <Grid sx={{ display: 'flex', alignItems: 'end', flexDirection: 'column' }}>
@@ -181,14 +192,19 @@ export default function TopicCard({meeting, setMeeting, topic, index}) {
               <Typography variant="h6" mb={2}>
                 Pauta {index + 1}.{sub_index + 1}
               </Typography>
-              <Grid>
-                <IconButton color="error" size="small" onClick={() => onRemoveSubTopic(index, sub_index)}>
-                  <DeleteIcon />
-                </IconButton>
-              </Grid>
+              {
+                isEditable ?
+                <Grid>
+                  <IconButton color="error" size="small" onClick={() => onRemoveSubTopic(index, sub_index)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+                : <></>
+              }
             </Grid>
 
             <TextField
+              disabled={!isEditable}
               multiline
               minRows={2}
               placeholder="Adicione a descrição da subpauta..."
@@ -203,9 +219,11 @@ export default function TopicCard({meeting, setMeeting, topic, index}) {
                   <ListItem
                     key={fIndex}
                     secondaryAction={
+                      isEditable ?
                       <IconButton edge="end" color="error" onClick={() => onRemoveSubtopicFile(index, sub_index, fIndex)}>
                         <DeleteIcon />
                       </IconButton>
+                      : <></>
                     }
                   >
                     <ListItemText primary={file.name || `Arquivo ${fIndex + 1}`} />
@@ -214,18 +232,22 @@ export default function TopicCard({meeting, setMeeting, topic, index}) {
               </List>
             )}
 
-            <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
-              <Button component="label" variant="contained" startIcon={<AttachFileIcon />}>
-                Adicionar Anexo(s)
-                <Input
-                  type="file"
-                  inputProps={{ accept: 'application/pdf' }}
-                  onChange={(e) => onAddSubtopicFiles(index, sub_index, e.target.files)}
-                  sx={{ display: 'none' }}
-                  multiple
-                />
-              </Button>
-            </Grid>
+            {
+              isEditable ?
+              <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
+                <Button component="label" variant="contained" startIcon={<AttachFileIcon />}>
+                  Adicionar Anexo(s)
+                  <Input
+                    type="file"
+                    inputProps={{ accept: 'application/pdf' }}
+                    onChange={(e) => onAddSubtopicFiles(index, sub_index, e.target.files)}
+                    sx={{ display: 'none' }}
+                    multiple
+                  />
+                </Button>
+              </Grid>
+              : <></>
+            }
           </Grid>
         ))}
       </Grid>

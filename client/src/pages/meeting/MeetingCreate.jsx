@@ -13,7 +13,7 @@ import MeetingGeneralSection from './MeetingGeneralSection';
 export default function MeetingCreate() {
   const { id } = useParams();
   const [isDetail, setIsDetail] = useState(false);
-  const [isMeetingEditable, setIsMeetingEditable] = useState(false);
+  const [isMeetingEditable, setIsMeetingEditable] = useState(true);
   const [meeting, setMeeting] = useState({
     title: "",
     description: "",
@@ -44,6 +44,11 @@ export default function MeetingCreate() {
         endTime: end,
         topics: data.topics || [],
       });
+
+      const now = new Date();
+      const meetingEnded = end < now;
+
+      setIsMeetingEditable(authService.isAdmin() && !meetingEnded);
     }
   };
 
@@ -51,7 +56,6 @@ export default function MeetingCreate() {
     if (id) {
       setIsDetail(true);
       getMeeting(id);
-      setIsMeetingEditable(authService.isAdmin());
     }
   }, [id]);
 
@@ -105,18 +109,24 @@ export default function MeetingCreate() {
             <TopicSection
               meeting={meeting}
               setMeeting={setMeeting}
+              isEditable={isMeetingEditable}
             />
 
-            <Box display="flex" justifyContent="flex-end">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={saveMeeting}
-                sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-              >
-                Salvar
-              </Button>
-            </Box>
+            {
+              isMeetingEditable ?
+              <Box display="flex" justifyContent="flex-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={saveMeeting}
+                  sx={{ borderRadius: 2, px: 4, py: 1.2 }}
+                >
+                  Salvar
+                </Button>
+              </Box>
+              : <></>
+            }
+            
           </CardContent>
         </Card>
       </Box>

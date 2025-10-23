@@ -1,7 +1,7 @@
 import { Typography, Button, Grid} from "@mui/material";
 import TopicCard from './TopicCard';
 
-export default function TopicSection({meeting, setMeeting}) {
+export default function TopicSection({meeting, setMeeting, isEditable}) {
     const addNewTopic = () => {
         setMeeting((prev) => ({
         ...prev,
@@ -23,14 +23,19 @@ export default function TopicSection({meeting, setMeeting}) {
         mb={3}
         >
         <Typography variant="h6">Pautas da Reunião</Typography>
-            <Button
-            onClick={addNewTopic}
-            variant="contained"
-            color="primary"
-            sx={{ borderRadius: 2 }}
-            >
-            Adicionar
-            </Button>
+            {
+                isEditable ?
+                <Button
+                onClick={addNewTopic}
+                variant="contained"
+                color="primary"
+                sx={{ borderRadius: 2 }}
+                >
+                Adicionar
+                </Button> 
+                : <></>
+            }
+            
         </Grid>
 
         {meeting?.topics?.map((topic, index) => (
@@ -39,6 +44,7 @@ export default function TopicSection({meeting, setMeeting}) {
                 setMeeting={setMeeting}
                 topic={topic}
                 index={index}
+                isEditable={isEditable}
             />
         ))}
     </Grid>
