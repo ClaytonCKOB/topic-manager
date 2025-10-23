@@ -1,7 +1,7 @@
 package com.topicmanager.topicmanager.controllers;
 
-import com.topicmanager.topicmanager.dto.MeetingVoteDTO;
-import com.topicmanager.topicmanager.services.MeetingVoteService;
+import com.topicmanager.topicmanager.dto.TopicVoteDTO;
+import com.topicmanager.topicmanager.services.TopicVoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/meeting-vote")
-public class MeetingVoteController {
+public class TopicVoteController {
     @Autowired
-    MeetingVoteService meetingVoteService;
+    TopicVoteService topicVoteService;
 
     @PostMapping
-    public ResponseEntity setMeetingVote(@RequestBody MeetingVoteDTO meetingVoteDTO) {
-        meetingVoteService.setMeetingVote(meetingVoteDTO);
+    public ResponseEntity setTopicVote(@RequestBody TopicVoteDTO topicVoteDTO) {
+        topicVoteService.setTopicVote(topicVoteDTO);
 
         return ResponseEntity.ok().build();
     }

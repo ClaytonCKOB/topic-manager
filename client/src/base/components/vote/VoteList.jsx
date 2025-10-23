@@ -1,5 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
 import formatDate from "../../../utils/FormatDate";
+import { mt } from "date-fns/locale";
+import { Box } from "@mui/material";
 
 export default function VoteList({votes}) {
     const columns = [
@@ -19,25 +21,25 @@ export default function VoteList({votes}) {
                 return <div>{formatted}</div>;
             } 
         },
-        { field: 'comment', headerName: 'Cometário', flex: 0.25,
+        { field: 'comment', headerName: 'Comentário', flex: 0.25,
             renderCell: (params) => {
                 return <div></div>;
             } 
         }
     ];
 
-    return <>
-    <DataGrid
-        rows={votes}
-        columns={columns}
-        disableRowSelectionOnClick
-        hideFooter
-        getRowId={(row) => row.id}
-        initialState={{
-        sorting: {
-            sortModel: [{ field: 'user', sort: 'asc' }],
-        }
-        }}
-    />
-    </>;
+    return <Box sx={{mt: 3}}>
+        <DataGrid
+            rows={votes}
+            columns={columns}
+            disableRowSelectionOnClick
+            hideFooter
+            getRowId={(row) => row.id}
+            initialState={{
+            sorting: {
+                sortModel: [{ field: 'user', sort: 'asc' }],
+            }
+            }}
+        />
+    </Box>;
 }

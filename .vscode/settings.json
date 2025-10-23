@@ -1,0 +1,9 @@
+{
+    "editor.hover.enabled": true,
+    "editor.hover.hidingDelay": 300,
+    "editor.hover.sticky": true,
+    "editor.indentSize": "tabSize",
+    "editor.guides.indentation": true,
+    "editor.guides.indentHighlight": true,
+    "editor.guides.indentSize": 2
+}

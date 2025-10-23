@@ -31,6 +31,15 @@ CREATE TABLE meeting_topic (
     description VARCHAR
 );
 
+CREATE TABLE topic_vote (
+    topic_vote_id SERIAL PRIMARY KEY,
+    meeting_topic_id INT NOT NULL REFERENCES meeting_topic(meeting_topic_id) ON DELETE CASCADE,
+    user_account_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
+    status INT NOT NULL,
+    comment VARCHAR,
+    updated_date TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE meeting_topic_file (
     meeting_topic_file_id SERIAL PRIMARY KEY,
     meeting_topic_id INT NOT NULL REFERENCES meeting_topic(meeting_topic_id) ON DELETE CASCADE,
@@ -45,15 +54,6 @@ CREATE TABLE meeting_participant (
     meeting_id INT NOT NULL REFERENCES meeting(meeting_id) ON DELETE CASCADE,
     role INT NOT NULL,
     PRIMARY KEY (user_account_id, meeting_id)
-);
-
-CREATE TABLE meeting_vote (
-	meeting_vote_id SERIAL PRIMARY KEY,
-	meeting_id INT NOT NULL REFERENCES meeting(meeting_id) ON DELETE CASCADE,
-	meeting_topic_id INT NOT NULL REFERENCES meeting_topic(meeting_topic_id) ON DELETE CASCADE,
-	user_account_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
-	status INT NOT NULL,
-	updated_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 
