@@ -1,5 +1,6 @@
 package com.topicmanager.topicmanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.topicmanager.topicmanager.dto.MeetingVoteDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,7 @@ public class MeetingVote {
 
     @ManyToOne
     @JoinColumn(name = "meeting_id", nullable = false)
+    @JsonBackReference
     private Meeting meeting;
 
     @ManyToOne
