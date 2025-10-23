@@ -47,10 +47,6 @@ public class Meeting {
     @JsonManagedReference
     private List<MeetingParticipant> participants;
 
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<MeetingVote> votes;
-
     public Meeting(MeetingCreationDTO meeting) {
         this.title = meeting.title();
         this.description = meeting.description();

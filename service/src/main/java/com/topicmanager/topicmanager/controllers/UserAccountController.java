@@ -23,6 +23,6 @@ public class UserAccountController {
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUserAccount() {
-        return ResponseEntity.ok(userAccountService.list().stream().map(user -> new UserDTO(user.getName(), user.getUsername(), user.getEmail(), user.getRole(), user.getActive())).toList());
+        return ResponseEntity.ok(userAccountService.list().stream().map(user -> new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(), user.getActive())).toList());
     }
 }

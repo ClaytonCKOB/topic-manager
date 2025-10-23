@@ -1,5 +1,7 @@
 package com.topicmanager.topicmanager.dto;
 
+import com.topicmanager.topicmanager.entities.MeetingTopicFile;
+
 import java.util.List;
 
 public record TopicCreationWithMeetingDTO(
@@ -8,7 +10,7 @@ public record TopicCreationWithMeetingDTO(
 
         String description,
 
-        List files,
+        List<FileDTO> files,
 
         List<SubtopicCreationWithMeetingDTO> subtopics
 ) {

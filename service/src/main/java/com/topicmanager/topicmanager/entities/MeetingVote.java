@@ -20,12 +20,8 @@ public class MeetingVote {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "meeting_id", nullable = false)
-    @JsonBackReference
-    private Meeting meeting;
-
-    @ManyToOne
     @JoinColumn(name = "meeting_topic_id", nullable = false)
+    @JsonBackReference
     private MeetingTopic meetingTopic;
 
     @ManyToOne
@@ -39,7 +35,6 @@ public class MeetingVote {
     private LocalDateTime updatedDate = LocalDateTime.now();
 
     public MeetingVote(MeetingVoteDTO meetingVote) {
-        this.meeting = new Meeting(meetingVote.meeting_id());
         this.meetingTopic = new MeetingTopic(meetingVote.meeting_topic_id());
         this.user = new UserAccount(meetingVote.user_account_id());
         this.status = meetingVote.status();

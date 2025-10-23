@@ -8,6 +8,6 @@ public record SubtopicCreationWithMeetingDTO(
 
         String description,
 
-        List files
+        List<FileDTO> files
 ) {
 }

@@ -41,6 +41,14 @@ public class MeetingTopic {
     @JsonManagedReference
     private List<MeetingTopic> subtopics = new ArrayList<>();
 
+    @OneToMany(mappedBy = "meetingTopic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<MeetingVote> votes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "meetingTopic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<MeetingTopicFile> files = new ArrayList<>();
+
     public MeetingTopic(MeetingTopicDTO meetingTopicDTO) {
         this.meeting = new Meeting(meetingTopicDTO.meeting_id());
         this.title = meetingTopicDTO.title();
