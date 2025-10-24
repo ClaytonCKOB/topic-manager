@@ -55,4 +55,20 @@ export default class UserService {
             return response.data;
         }
     }
+
+    async delete(userId) {
+        var response = {};
+        try {
+            response = await request.delete('/api/user-account/' + userId);
+
+            if (response.status != 200) {
+                throw new Error('Network response was not ok');
+            }
+
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        } finally {
+            return response.data;
+        }
+    }
 }

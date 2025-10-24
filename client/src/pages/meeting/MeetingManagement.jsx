@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
+import DeleteDialog from "../../base/components/dialog/DeleteDialog";
 
 export default function MeetingManagement({meetingList, isRequesting}) {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -39,7 +40,7 @@ export default function MeetingManagement({meetingList, isRequesting}) {
     if (!selectedMeetingId) return;
     try {
         await meetingService.delete(selectedMeetingId);
-        await getMeetingList();
+        // await getMeetingList();
 
     } catch (err) {
         console.error("Erro ao deletar reunião:", err);
@@ -145,25 +146,11 @@ export default function MeetingManagement({meetingList, isRequesting}) {
           }}
         />
 
-        <Dialog
-            open={openDeleteModal}
-            onClose={handleCancelDelete}
-        >
-            <DialogTitle>Confirmar Remoção</DialogTitle>
-            <DialogContent>
-            <Typography>
-                Tem certeza que deseja remover esta reunião?
-            </Typography>
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={handleCancelDelete} color="inherit">
-                Cancelar
-            </Button>
-            <Button onClick={handleConfirmDelete} color="error" variant="contained">
-                Confirmar
-            </Button>
-            </DialogActions>
-        </Dialog>
+        <DeleteDialog 
+          openDeleteModal={openDeleteModal}
+          handleCancelDelete={handleCancelDelete}
+          handleConfirmDelete={handleConfirmDelete}
+        />
     </Box>
     </>;
 }

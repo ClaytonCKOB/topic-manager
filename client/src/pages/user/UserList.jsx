@@ -8,6 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import UserModal from "./UserModal";
+import DeleteDialog from "../../base/components/dialog/DeleteDialog";
 
 
 export default function UserList() {
@@ -15,6 +16,7 @@ export default function UserList() {
     const [userId, setUserId] = useState(null);
     const [isRequesting, setIsRequesting] = useState(false);
     const [openUserModal, setOpenUserModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const userService = new UserService();
     const navigate = useNavigate();
 
@@ -30,6 +32,31 @@ export default function UserList() {
         getUsers();
         setIsRequesting(false);
     }, []); 
+
+    const handleDeleteClick = (userId) => {
+        setUserId(userId);
+        setOpenDeleteModal(true);
+    };
+    
+    const handleCancelDelete = () => {
+        setOpenDeleteModal(false);
+        setUserId(null);
+    };
+
+    const handleConfirmDelete = async () => {
+    if (!userId) return;
+    try {
+        await userService.delete(userId);
+        // await getMeetingList();
+
+    } catch (err) {
+        console.error("Erro ao deletar reunião:", err);
+
+    } finally {
+        setOpenDeleteModal(false);
+        setUserId(null);
+    }
+    };
 
     const columns = [
         { field: 'name', headerName: 'Nome', flex: 0.25 },
@@ -127,6 +154,11 @@ export default function UserList() {
             openUserModal={openUserModal}
             setOpenUserModal={setOpenUserModal}
             userId={userId}
+        />
+        <DeleteDialog 
+            openDeleteModal={openDeleteModal}
+            handleCancelDelete={handleCancelDelete}
+            handleConfirmDelete={handleConfirmDelete}
         />
     </Box>
     );
