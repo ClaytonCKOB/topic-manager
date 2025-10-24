@@ -2,6 +2,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import formatDate from "../../../utils/FormatDate";
 import { mt } from "date-fns/locale";
 import { Box } from "@mui/material";
+import VoteComponent from "./VoteComponent";
 
 export default function VoteList({votes, isVisible}) {
     const columns = [
@@ -10,9 +11,9 @@ export default function VoteList({votes, isVisible}) {
                 return <div>{params.value?.name}</div>;
             } 
         },
-        { field: 'status', headerName: 'Voto', flex: 0.25,
+        { field: 'status', headerName: 'Voto', align: 'center', flex: 0.25,
             renderCell: (params) => {
-                return <div>{params.value}</div>;
+                return <div><VoteComponent voteId={params.value}/></div>;
             } 
         },
         { field: 'updatedDate', headerName: 'Horário', flex: 0.25,
