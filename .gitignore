@@ -1,5 +1,6 @@
 .DS_Store
 .idea/
+.vscode/
 client/node_modules/
 target/
 service/target/
