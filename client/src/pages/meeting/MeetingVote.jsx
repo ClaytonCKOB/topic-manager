@@ -17,8 +17,8 @@ export default function MeetingVote() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-  const redirectMeetingList = () => {
-    navigate("/meeting/list");
+  const redirectHome = () => {
+    navigate("/home");
   };
 
     const getTopics = async (meetingId) => {
@@ -37,7 +37,7 @@ export default function MeetingVote() {
             variant="contained"
             color="primary"
             startIcon={<ArrowBackIcon />}
-            onClick={redirectMeetingList}
+            onClick={redirectHome}
             sx={{ mb: 3 }}
             >
             Voltar

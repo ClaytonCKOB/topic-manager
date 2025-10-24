@@ -26,15 +26,13 @@ const Login = () => {
     const navigate = useNavigate();
     const authService = new AuthService();
 
-    // verify is user is already logged in
     useEffect(() => {
         const token = authService.getToken();
         if (authService.isTokenValid(token)) {
-            navigate("/meeting/list");
+            navigate("/home");
         }
     }, []);
 
-    // change document title
     useEffect(() => {
         document.title = "Fazer login no Topic Manager";
     }, []);
@@ -47,7 +45,7 @@ const Login = () => {
             const response = await authService.login(username, password);
 
             if (response.status == 200) {
-                navigate("/meeting/list");
+                navigate("/home");
             } else if (response.status == 401) {
                 setWrongCredentials(true);
             } else {

@@ -27,7 +27,7 @@ export default function MeetingCreate() {
   const meetingService = new MeetingService();
   const authService = new AuthService();
   const navigate = useNavigate();
-  const redirectMeetingList = () => navigate("/meeting/list");
+  const redirectHome = () => navigate("/home");
 
   const getMeeting = async (meetingId) => {
     const data = await meetingService.get(meetingId);
@@ -79,7 +79,7 @@ export default function MeetingCreate() {
       await meetingService.update(meeting);
     }
 
-    redirectMeetingList();
+    redirectHome();
   };
 
   return (
@@ -89,7 +89,7 @@ export default function MeetingCreate() {
           variant="contained"
           color="primary"
           startIcon={<ArrowBackIcon />}
-          onClick={redirectMeetingList}
+          onClick={redirectHome}
           sx={{ mb: 3 }}
         >
           Voltar

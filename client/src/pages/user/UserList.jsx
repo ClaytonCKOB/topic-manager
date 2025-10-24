@@ -18,7 +18,7 @@ export default function UserList() {
     const userService = new UserService();
     const navigate = useNavigate();
 
-    const redirectMeetingList = () => navigate("/meeting/list");
+    const redirectHome = () => navigate("/home");
 
     const getUsers = async () => {
         let data = await userService.list();
@@ -73,7 +73,7 @@ export default function UserList() {
                 variant="contained"
                 color="primary"
                 startIcon={<ArrowBackIcon />}
-                onClick={redirectMeetingList}
+                onClick={redirectHome}
                 sx={{ mb: 3 }}
             >
             Voltar

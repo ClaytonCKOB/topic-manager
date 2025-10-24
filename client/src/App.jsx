@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/user/Login';
 import Page from './base/route/Page';
 import DefaultNavigation from './base/route/DefaultNavigation';
-import MeetingList from './pages/meeting/MeetingList';
+import Home from './pages/Home';
 import MeetingCreate from './pages/meeting/MeetingCreate';
 import MeetingVote from './pages/meeting/MeetingVote';
 import UserList from './pages/user/UserList';
@@ -12,7 +12,7 @@ import UserList from './pages/user/UserList';
 function App() {
 
   const routesList = useMemo(() => [
-      { path: "/meeting/list", name: "Reuniões", allowedRoles: ['ADMIN', 'USER'], component: MeetingList },
+      { path: "/home", name: "Reuniões", allowedRoles: ['ADMIN', 'USER'], component: Home },
       { path: "/meeting/create", name: "Criar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingCreate },
       { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN', 'USER'], component: null },
       { path: "/meeting/detail/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingCreate },

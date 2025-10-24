@@ -1,15 +1,15 @@
 import { 
   Box, Typography
 } from "@mui/material";
-import AuthService from "../../services/AuthService";
-import Logout from "../user/Logout";
-import MeetingManagement from "./MeetingManagement";
-import MeetingVoteList from "./MeetingVoteList";
-import UserManagement from "../user/UserManagement";
+import AuthService from "../services/AuthService";
+import Logout from "./user/Logout";
+import MeetingManagement from "./meeting/MeetingManagement";
+import MeetingVoteList from "./meeting/MeetingVoteList";
+import UserManagement from "./user/UserManagement";
 import { useEffect, useState } from "react";
-import MeetingService from "../../services/MeetingService";
+import MeetingService from "../services/MeetingService";
 
-export default function MeetingList() {
+export default function Home() {
   const [meetingList, setMeetingList] = useState([]);
   const [isRequesting, setIsRequesting] = useState(false);
   const meetingService = new MeetingService();

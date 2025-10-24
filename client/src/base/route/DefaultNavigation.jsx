@@ -12,8 +12,8 @@ const DefaultNavigation = () => {
     const userRole = authService.getRole();
 
     switch (userRole) {
-        case 'ADMIN': return <Navigate to="/meeting/list" />;
-        case 'USER': return <Navigate to="/meeting/list" />;
+        case 'ADMIN': return <Navigate to="/home" />;
+        case 'USER': return <Navigate to="/home" />;
         default: return <Navigate to="/login" />;
     }
 };
