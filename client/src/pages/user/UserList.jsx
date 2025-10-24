@@ -63,11 +63,6 @@ export default function UserList() {
         { field: 'username', headerName: 'Username', flex: 0.25 },
         { field: 'email', headerName: 'E-mail', flex: 0.25 },
         { field: 'role', headerName: 'Função', flex: 0.25 },
-        { field: 'active', headerName: 'Ativo', flex: 0.25,
-            renderCell: (params) => {
-                return <>{params.value ? "Sim" : "Não"}</>;
-            }
-        },
         { 
             field: 'actions', 
             headerName: 'Ações', 
@@ -77,7 +72,7 @@ export default function UserList() {
                 <IconButton 
                     color="primary" 
                     size="small"
-                    onClick={() => redirectMeetingDetail(params.row.id)}
+                    onClick={() => {setUserId(params.row.id); setOpenUserModal(true);}}
                 >
                     <EditIcon />
                 </IconButton>

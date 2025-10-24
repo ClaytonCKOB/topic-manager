@@ -38,12 +38,7 @@ export default class UserService {
     async update(user) {
         var response = {};
         try {
-            response = await request.put('/api/meeting/' + meeting.id, {
-                title: meeting.title,
-                start_date: FormatMeetingDate(meeting.startDate, meeting.startTime),
-                end_date: FormatMeetingDate(meeting.endDate, meeting.endTime),
-                topics: meeting.topics
-            });
+            response = await request.put('/api/user-account', {...user});
 
             if (response.status != 200) {
                 throw new Error('Network response was not ok');

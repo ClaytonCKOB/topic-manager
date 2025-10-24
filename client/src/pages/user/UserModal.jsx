@@ -21,13 +21,21 @@ export default function UserModal({ openUserModal, setOpenUserModal, userId }) {
   };
 
   useEffect(() => {
-    if (openUserModal && userId) getUser();
+    if (openUserModal && userId) {
+        getUser();
+    } else {
+        setUser({});
+    }
     setIsCreation(userId == null || userId == 0);
   }, [openUserModal, userId]);
 
   const handleSaveChanges = async () => {
     try {
-        await userService.update(user);
+        if (isCreation) {
+            await userService.create(user);
+        } else {
+            await userService.update(user);
+        }
         setOpenUserModal(false);
     } catch (err) {
         console.error(err);

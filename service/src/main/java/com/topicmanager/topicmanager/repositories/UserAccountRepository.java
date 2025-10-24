@@ -12,4 +12,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     UserDetails findByUsername(String username);
 
     List<UserAccount> findByRoleNot(UserAccountRole role);
+
+    List<UserAccount> findByActiveTrue();
 }
