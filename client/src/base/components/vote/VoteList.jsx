@@ -3,7 +3,7 @@ import formatDate from "../../../utils/FormatDate";
 import { mt } from "date-fns/locale";
 import { Box } from "@mui/material";
 
-export default function VoteList({votes}) {
+export default function VoteList({votes, isVisible}) {
     const columns = [
         { field: 'user', headerName: 'Usuário', flex: 0.25,
             renderCell: (params) => {
@@ -28,18 +28,24 @@ export default function VoteList({votes}) {
         }
     ];
 
-    return <Box sx={{mt: 3}}>
-        <DataGrid
-            rows={votes}
-            columns={columns}
-            disableRowSelectionOnClick
-            hideFooter
-            getRowId={(row) => row.id}
-            initialState={{
-            sorting: {
-                sortModel: [{ field: 'user', sort: 'asc' }],
-            }
-            }}
-        />
-    </Box>;
+    return <>
+    {
+        isVisible ?
+            <Box sx={{mt: 3}}>
+                <DataGrid
+                    rows={votes}
+                    columns={columns}
+                    disableRowSelectionOnClick
+                    hideFooter
+                    getRowId={(row) => row.id}
+                    initialState={{
+                    sorting: {
+                        sortModel: [{ field: 'user', sort: 'asc' }],
+                    }
+                    }}
+                />
+            </Box>
+        : null
+    }
+    </>
 }

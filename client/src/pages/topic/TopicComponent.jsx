@@ -159,7 +159,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             removeFile={(fIndex) => {onRemoveTopicFile(index, subIndex, fIndex)}}
         />
 
-        <VoteList votes={topic.votes}/>
+        <VoteList votes={topic.votes} isVisible={!isEditable}/>
         {
             isEditable ?
             <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>

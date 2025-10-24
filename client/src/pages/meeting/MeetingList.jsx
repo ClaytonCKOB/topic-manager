@@ -6,9 +6,25 @@ import Logout from "../user/Logout";
 import MeetingManagement from "./MeetingManagement";
 import MeetingVoteList from "./MeetingVoteList";
 import UserManagement from "../user/UserManagement";
+import { useEffect, useState } from "react";
+import MeetingService from "../../services/MeetingService";
 
 export default function MeetingList() {
+  const [meetingList, setMeetingList] = useState([]);
+  const [isRequesting, setIsRequesting] = useState(false);
+  const meetingService = new MeetingService();
   const authService = new AuthService();
+
+  useEffect(() => {    
+    setIsRequesting(true);
+    getMeetingList();
+    setIsRequesting(false);
+  }, []);
+
+  const getMeetingList = async (attr = {}) => {
+      const data = await meetingService.list(attr);
+      setMeetingList(data || []); 
+  };
 
   return (
     <Box p={4} bgcolor="#f2f5f9" minHeight="100vh">
@@ -20,9 +36,9 @@ export default function MeetingList() {
         <UserManagement/>
       </Box>
 
-      <MeetingVoteList/>
+      <MeetingVoteList meetingList={meetingList}/>
 
-      <MeetingManagement/>
+      <MeetingManagement meetingList={meetingList} isRequesting={isRequesting}/>
 
     </Box>
   );

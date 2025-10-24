@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react"
-import MeetingService from "../../services/MeetingService";
 import { 
   Box, Typography, Button
 } from "@mui/material";
@@ -7,24 +5,12 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 
-export default function MeetingVoteList() {
-    const [meetingList, setMeetingList] = useState([]);
+export default function MeetingVoteList({meetingList}) {
     const navigate = useNavigate();
-    const meetingService = new MeetingService();
-
-    useEffect(() => {    
-        getMeetingList();
-    }, []);
 
     const redirectMeetingVote = (meeting_id) => {
         navigate("/meeting/vote/" + meeting_id);
     };
-
-    const getMeetingList = async (attr = {}) => {
-        const data = await meetingService.list(attr);
-        setMeetingList(data || []); 
-    };
-
 
     return <>
     <Box mb={8}>

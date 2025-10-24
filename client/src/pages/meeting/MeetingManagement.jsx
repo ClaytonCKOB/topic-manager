@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import MeetingService from "../../services/MeetingService";
 import { DataGrid } from "@mui/x-data-grid";
 import { 
@@ -10,22 +10,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
-import AuthService from "../../services/AuthService";
 
-export default function MeetingManagement() {
-    const [meetingList, setMeetingList] = useState([]);
+export default function MeetingManagement({meetingList, isRequesting}) {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
-    const [isRequesting, setIsRequesting] = useState(false);
     const navigate = useNavigate();
     const meetingService = new MeetingService();
-    const authService = new AuthService();
-
-    useEffect(() => {    
-        setIsRequesting(true);
-        getMeetingList();
-        setIsRequesting(false);
-    }, []);
 
     const redirectCreateMeeting = () => {
         navigate("/meeting/create");
@@ -33,11 +23,6 @@ export default function MeetingManagement() {
 
     const redirectMeetingDetail = (meeting_id) => {
         navigate("/meeting/detail/" + meeting_id);
-    };
-
-    const getMeetingList = async (attr = {}) => {
-        const data = await meetingService.list(attr);
-        setMeetingList(data || []); 
     };
 
     const handleDeleteClick = (meetingId) => {
