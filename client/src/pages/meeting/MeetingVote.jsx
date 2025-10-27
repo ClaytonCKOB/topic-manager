@@ -1,7 +1,5 @@
-import { Box, Grid, Typography, Button, IconButton, TextField} from "@mui/material"; 
+import { Box, Grid, Typography, Button} from "@mui/material"; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import GroupIcon from '@mui/icons-material/Group';
 import PersonIcon from '@mui/icons-material/Person';
@@ -9,26 +7,37 @@ import TotalVotes from "../../base/components/TotalVotes";
 import { useEffect, useState } from "react";
 import TopicService from "../../services/TopicService";
 import { useNavigate, useParams } from "react-router-dom";
+import TopicVote from "../topic/TopicVote";
 
 export default function MeetingVote() {
     const [topics, setTopics] = useState([]);
-    const [collapsedTopics, setCollapsedTopics] = useState([]);
+    const [topicVotes, setTopicVotes] = useState([])
     const topicService = new TopicService();
     const { id } = useParams();
     const navigate = useNavigate();
 
-  const redirectHome = () => {
-    navigate("/home");
-  };
+    useEffect(() => {
+        topicService.saveVote(1, 1, 1);
+    }, []);
+
+    const redirectHome = () => {
+        navigate("/home");
+    };
 
     const getTopics = async (meetingId) => {
         let data = await topicService.getTopicsByMeetingId(meetingId);
+        console.log(data);
         setTopics(data || []);
-        setCollapsedTopics(new Array((data || []).length).fill(true));
+    }
+
+    const getTopicVote = async (meetingId) => {
+        let data = await topicService.getVotesByMeetingId(meetingId);
+        setTopics(data || []);
     }
 
     useEffect(() => {
         getTopics(id);
+        getTopicVote(id);
     }, []);
 
     return <>
@@ -49,94 +58,23 @@ export default function MeetingVote() {
                 <Grid sx={{display: "flex"}}>
                     <TotalVotes
                         icon={GroupIcon}
-                        votes={2}
+                        votes={topics.length}
                         text={"Votantes Totais"}
                     />
                     <TotalVotes
                         icon={PersonIcon}
-                        votes={2}
+                        votes={topicVotes.length}
                         text={"Votos Registrados"}
                     />
                     <TotalVotes
                         icon={PersonIcon}
-                        votes={2}
+                        votes={topics.length - topicVotes.length}
                         text={"Votos Faltantes"}
                     />
                 </Grid>
                 <Grid container spacing={3} sx={{display: "flex", flexDirection: "column"}}>
                     {topics.map((topic, index) => (
-                        <Box
-                        key={topic.id || index}
-                        sx={{
-                            backgroundColor: "#f9fafb",
-                            borderRadius: 2,
-                            p: 3,
-                            mb: 1,
-                            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                            position: "relative",
-                        }}
-                        >
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <Typography variant="h6" fontWeight="bold">
-                            {index + 1}. {topic.title}
-                            </Typography>
-
-                            <IconButton
-                            onClick={() => {
-                                setCollapsedTopics(prev => {
-                                const updated = [...prev];
-                                updated[index] = !updated[index];
-                                return updated;
-                                });
-                            }}
-                            >
-                            {collapsedTopics[index] ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-                            </IconButton>
-                        </Box>
-
-                        {!collapsedTopics[index] && (
-                            <>
-                            <Box mb={3} mt={2}>
-                                <Typography variant="subtitle1" mb={1}>
-                                Seu Voto:
-                                </Typography>
-                                <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                                <Button variant="outlined" color="success" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
-                                    Aprovo
-                                </Button>
-                                <Button variant="outlined" color="error" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
-                                    Reprovo
-                                </Button>
-                                <Button variant="outlined" color="secondary" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
-                                    Me abstenho
-                                </Button>
-                                <Button variant="outlined" color="warning" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
-                                    Colocar em diligência
-                                </Button>
-                                </Box>
-                            </Box>
-
-                            <Box mb={3}>
-                                <Typography variant="subtitle1" mb={1}>
-                                Comentário / Justificativa
-                                </Typography>
-                                <TextField
-                                placeholder="Adicione um comentário (opcional)..."
-                                multiline
-                                rows={3}
-                                fullWidth
-                                variant="outlined"
-                                />
-                            </Box>
-
-                            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                                <Button variant="contained" color="primary" sx={{ borderRadius: 2, px: 4, py: 1.2 }}>
-                                Salvar Voto
-                                </Button>
-                            </Box>
-                            </>
-                        )}
-                        </Box>
+                        <TopicVote topic={topic} index={index}/>
                     ))}
                 </Grid>
             </Box>

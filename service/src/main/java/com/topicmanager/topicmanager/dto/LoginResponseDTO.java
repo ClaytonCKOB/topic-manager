@@ -5,6 +5,7 @@ import com.topicmanager.topicmanager.enums.UserAccountRole;
 public record LoginResponseDTO(
         String token,
         UserAccountRole role,
-        String name
+        String name,
+        Long userId
 ) {
 }

@@ -16,6 +16,7 @@ export default class AuthService {
                 this.setToken(response.data.token);
                 this.setRole(response?.data?.role);
                 this.setName(response?.data?.name);
+                this.setUserId(response?.data?.userId)
             }
 
             return { status: 200, data: response.data };
@@ -42,6 +43,7 @@ export default class AuthService {
     
         try {
             const decoded = jwtDecode(token);
+            console.log(decoded);
             const currentTime = Math.floor(Date.now() / 1000);
             return decoded.exp > currentTime;
         } catch (error) {
@@ -66,6 +68,14 @@ export default class AuthService {
         return localStorage.getItem("user_name");
     }
 
+    setUserId = (userId) => {
+        localStorage.setItem("user_id", userId);
+    }
+
+    getUserId = () => {
+        return localStorage.getItem("user_id");
+    }
+
     isAdmin = () => {
         return localStorage.getItem("user_role") == 'ADMIN';
     }
@@ -74,5 +84,6 @@ export default class AuthService {
         localStorage.setItem("token", null);
         localStorage.setItem("user_role", null);
         localStorage.setItem("user_name", null);
+        localStorage.setItem("user_id", null);
     }
 }

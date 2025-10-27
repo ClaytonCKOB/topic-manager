@@ -6,6 +6,8 @@ import com.topicmanager.topicmanager.repositories.TopicVoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TopicVoteService {
 
@@ -21,7 +23,14 @@ public class TopicVoteService {
         } else {
             existingTopicVote.setStatus(topicVote.status());
         }
+    }
 
+    public List<TopicVote> getTopicVotesByTopicId(Long topicId) {
+        return topicVoteRepository.findByMeetingTopicId(topicId);
+    }
+
+    public List<TopicVote> getTopicVotesByMeetingId(Long meetingId) {
+        return topicVoteRepository.findByMeetingId(meetingId);
     }
 
 }
