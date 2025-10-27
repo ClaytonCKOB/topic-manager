@@ -11,7 +11,7 @@ import TopicVote from "../topic/TopicVote";
 
 export default function MeetingVote() {
     const [topics, setTopics] = useState([]);
-    const [topicVotes, setTopicVotes] = useState([])
+    const [totalVotes, setTotalVotes] = useState({})
     const topicService = new TopicService();
     const { id } = useParams();
     const navigate = useNavigate();
@@ -26,18 +26,14 @@ export default function MeetingVote() {
 
     const getTopics = async (meetingId) => {
         let data = await topicService.getTopicsByMeetingId(meetingId);
-        console.log(data);
-        setTopics(data || []);
-    }
+        let votes = await topicService.getTotalVotes(id);
 
-    const getTopicVote = async (meetingId) => {
-        let data = await topicService.getVotesByMeetingId(meetingId);
         setTopics(data || []);
+        setTotalVotes(votes || {});
     }
 
     useEffect(() => {
         getTopics(id);
-        getTopicVote(id);
     }, []);
 
     return <>
@@ -58,23 +54,23 @@ export default function MeetingVote() {
                 <Grid sx={{display: "flex"}}>
                     <TotalVotes
                         icon={GroupIcon}
-                        votes={topics.length}
+                        votes={totalVotes.total}
                         text={"Votantes Totais"}
                     />
                     <TotalVotes
                         icon={PersonIcon}
-                        votes={topicVotes.length}
+                        votes={totalVotes.voted}
                         text={"Votos Registrados"}
                     />
                     <TotalVotes
                         icon={PersonIcon}
-                        votes={topics.length - topicVotes.length}
+                        votes={totalVotes.missing}
                         text={"Votos Faltantes"}
                     />
                 </Grid>
                 <Grid container spacing={3} sx={{display: "flex", flexDirection: "column"}}>
                     {topics.map((topic, index) => (
-                        <TopicVote topic={topic} index={index}/>
+                        <TopicVote topic={topic} index={index} refreshTopics={() => getTopics(id)}/>
                     ))}
                 </Grid>
             </Box>

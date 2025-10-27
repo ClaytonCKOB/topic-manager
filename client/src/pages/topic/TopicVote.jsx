@@ -1,11 +1,11 @@
 import { Box, Typography, Button, TextField, IconButton } from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopicService from "../../services/TopicService";
 import AuthService from "../../services/AuthService";
 
-export default function TopicVote({ topic, index, topicVote, setTopicVote }) {
+export default function TopicVote({ topic, index, refreshTopics }) {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedVote, setSelectedVote] = useState(null);
     const [comment, setComment] = useState("");
@@ -21,7 +21,15 @@ export default function TopicVote({ topic, index, topicVote, setTopicVote }) {
 
     const saveVote = async (topicId, comment, status) => {
         topicService.saveVote(authService.getUserId(), topicId, comment, status);
+        refreshTopics();
     }
+
+    useEffect(() => {
+        let currentVote = topic.votes.filter(vote => vote.user.id == authService.getUserId()).length > 0 ? topic.votes.filter(vote => vote.user.id == authService.getUserId())[0].status : null; 
+        let currentComment = topic.votes.filter(vote => vote.user.id == authService.getUserId()).length > 0 ? topic.votes.filter(vote => vote.user.id == authService.getUserId())[0].comment : ""; 
+        setSelectedVote(currentVote);
+        setComment(currentComment);
+    }, []);
 
     return (
         <Box

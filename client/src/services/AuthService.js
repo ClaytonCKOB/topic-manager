@@ -43,7 +43,6 @@ export default class AuthService {
     
         try {
             const decoded = jwtDecode(token);
-            console.log(decoded);
             const currentTime = Math.floor(Date.now() / 1000);
             return decoded.exp > currentTime;
         } catch (error) {

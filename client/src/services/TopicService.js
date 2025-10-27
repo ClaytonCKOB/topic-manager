@@ -1,6 +1,24 @@
 import request from '../utils/RequestUtil';
+import AuthService from './AuthService';
 
 export default class TopicService {
+    async getTopic(topicId) {
+        var response = {};
+        try {
+            let url = '/api/meeting-topic/' + topicId;
+
+            response = await request.get(url);
+            if (response.status != 200) {
+                throw new Error('Network response was not ok');
+            }
+
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        } finally {
+            return response.data;
+        }
+    }
+
     async getTopicsByMeetingId(meetingId) {
         var response = {};
         try {
@@ -57,5 +75,28 @@ export default class TopicService {
         } finally {
             return response.data;
         }
+    }
+
+    async getTotalVotes(meetingId) {
+        var authService = new AuthService();
+        let response = {
+            "total": 0,
+            "missing": 0,
+            "voted": 0
+        };
+
+        let topics = await this.getTopicsByMeetingId(meetingId);
+
+        if (topics && topics.length) {
+            response.total = topics.length;
+            let votedByUser = topics.map( t => t.votes.filter(v => v.user.id == authService.getUserId()).length)
+                .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            
+            response.voted = votedByUser;
+            response.missing = topics.length - votedByUser;
+        }
+
+
+        return response;
     }
 }
