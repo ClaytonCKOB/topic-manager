@@ -16,10 +16,6 @@ export default function MeetingVote() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        topicService.saveVote(1, 1, 1);
-    }, []);
-
     const redirectHome = () => {
         navigate("/home");
     };

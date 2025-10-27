@@ -62,7 +62,7 @@ export default class TopicService {
             response = await request.post(url, {
                 user_account_id: userId,
                 meeting_topic_id: topicId,
-                comment: comment,
+                comment: status != 3 ? "" : comment,
                 status: status
             });
 

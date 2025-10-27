@@ -22,15 +22,13 @@ public class TopicVoteService {
             topicVoteRepository.save(newTopicVote);
         } else {
             existingTopicVote.setStatus(topicVote.status());
+            existingTopicVote.setComment(topicVote.comment());
+            topicVoteRepository.save(existingTopicVote);
         }
     }
 
     public List<TopicVote> getTopicVotesByTopicId(Long topicId) {
         return topicVoteRepository.findByMeetingTopicId(topicId);
-    }
-
-    public List<TopicVote> getTopicVotesByMeetingId(Long meetingId) {
-        return topicVoteRepository.findByMeetingId(meetingId);
     }
 
 }

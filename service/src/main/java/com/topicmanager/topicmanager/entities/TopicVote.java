@@ -31,12 +31,16 @@ public class TopicVote {
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "comment")
+    private String comment;
+
     @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate = LocalDateTime.now();
 
     public TopicVote(TopicVoteDTO topicVote) {
         this.meetingTopic = new MeetingTopic(topicVote.meeting_topic_id());
         this.user = new UserAccount(topicVote.user_account_id());
+        this.comment = topicVote.comment();
         this.status = topicVote.status();
     }
 }

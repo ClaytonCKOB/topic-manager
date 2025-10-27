@@ -74,19 +74,25 @@ export default function TopicVote({ topic, index, refreshTopics }) {
                 </Box>
             </Box>
 
-            <Box mb={3}>
-                <Typography variant="subtitle1" mb={1}>
-                Comentário / Justificativa
-                </Typography>
-                <TextField
-                placeholder="Adicione um comentário (opcional)..."
-                multiline
-                rows={3}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => {setComment(e.target.value)}}
-                />
-            </Box>
+            {
+                selectedVote == 3 ?
+                <Box mb={3}>
+                    <Typography variant="subtitle1" mb={1}>
+                    Comentário / Justificativa
+                    </Typography>
+                    <TextField
+                    placeholder="Adicione um comentário (opcional)..."
+                    multiline
+                    rows={3}
+                    fullWidth
+                    variant="outlined"
+                    value={comment}
+                    onChange={(e) => {setComment(e.target.value)}}
+                    />
+                </Box>
+                : null
+            }
+            
 
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button variant="contained" color="primary" sx={{ borderRadius: 2, px: 4, py: 1.2 }} onClick={() => {saveVote(topic.id, comment, selectedVote)}}>
