@@ -9,6 +9,7 @@ import { ptBR } from 'date-fns/locale';
 import TopicSection from '../topic/TopicSection';
 import AuthService from '../../services/AuthService';
 import MeetingGeneralSection from './MeetingGeneralSection';
+import TopicService from '../../services/TopicService';
 
 export default function MeetingCreate() {
   const { id } = useParams();
@@ -26,6 +27,7 @@ export default function MeetingCreate() {
 
   const meetingService = new MeetingService();
   const authService = new AuthService();
+  const topicService = new TopicService();
   const navigate = useNavigate();
   const redirectHome = () => navigate("/home");
 
@@ -67,14 +69,37 @@ export default function MeetingCreate() {
     combined.setMinutes(time.getMinutes());
     combined.setSeconds(0);
     combined.setMilliseconds(0);
-    return combined.toISOString();
+    return combined.toISOString().slice(0, -1);;
   };
 
   const saveMeeting = async () => {
     const start = combineDateTime(meeting.startDate, meeting.startTime);
     const end = combineDateTime(meeting.endDate, meeting.endTime);
     if (!isDetail) {
-      await meetingService.create(meeting.title, start, end, meeting.topics);
+      let savedMeeting = await meetingService.create(meeting.title, start, end, meeting.topics);
+
+      if (savedMeeting?.topics?.length > 0) {
+        for (let topicIndex = 0; topicIndex < savedMeeting.topics.length; topicIndex++) {
+          const savedTopic = savedMeeting.topics[topicIndex];
+          const localTopic = meeting.topics[topicIndex];
+
+          if (localTopic.files && localTopic.files.length > 0) {
+            await topicService.saveFiles(savedTopic.id, localTopic.files);
+          }
+
+          if (savedTopic.subtopics && savedTopic.subtopics.length > 0) {
+            for (let subIndex = 0; subIndex < savedTopic.subtopics.length; subIndex++) {
+              const savedSubtopic = savedTopic.subtopics[subIndex];
+              const localSubtopic = localTopic.subtopics?.[subIndex];
+
+              if (localSubtopic?.files && localSubtopic.files.length > 0) {
+                await topicService.saveFiles(savedSubtopic.id, localSubtopic.files);
+              }
+            }
+          }
+        }
+      }
+
     } else {
       await meetingService.update(meeting);
     }

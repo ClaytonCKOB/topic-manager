@@ -47,23 +47,25 @@ export default function MeetingVote() {
                 <Typography variant="h5" fontWeight="bold" gutterBottom mb={3}>
                     Progresso da Reunião
                 </Typography>
-                <Grid sx={{display: "flex"}}>
-                    <TotalVotes
-                        icon={GroupIcon}
-                        votes={totalVotes.total}
-                        text={"Votantes Totais"}
-                    />
-                    <TotalVotes
-                        icon={PersonIcon}
-                        votes={totalVotes.voted}
-                        text={"Votos Registrados"}
-                    />
-                    <TotalVotes
-                        icon={PersonIcon}
-                        votes={totalVotes.missing}
-                        text={"Votos Faltantes"}
-                    />
-                </Grid>
+                <Box sx={{width: 1, alignItems: "center"}}>
+                    <Grid sx={{display: "flex"}}>
+                        <TotalVotes
+                            icon={GroupIcon}
+                            votes={totalVotes.total}
+                            text={"Votantes Totais"}
+                        />
+                        <TotalVotes
+                            icon={PersonIcon}
+                            votes={totalVotes.voted}
+                            text={"Votos Registrados"}
+                        />
+                        <TotalVotes
+                            icon={PersonIcon}
+                            votes={totalVotes.missing}
+                            text={"Votos Faltantes"}
+                        />
+                    </Grid>
+                </Box>
                 <Grid container spacing={3} sx={{display: "flex", flexDirection: "column"}}>
                     {topics.map((topic, index) => (
                         <TopicVote topic={topic} index={index} refreshTopics={() => getTopics(id)}/>

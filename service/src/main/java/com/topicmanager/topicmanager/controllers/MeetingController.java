@@ -6,7 +6,6 @@ import com.topicmanager.topicmanager.services.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -17,14 +16,14 @@ public class MeetingController {
     MeetingService meetingService;
 
     @PostMapping
-    public ResponseEntity createMeeting(@RequestBody MeetingCreationDTO meetingDTO) {
-        meetingService.createMeeting(meetingDTO);
+    public ResponseEntity<Meeting> createMeeting(@RequestBody MeetingCreationDTO meetingDTO) {
+        Meeting meeting = meetingService.createMeeting(meetingDTO);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(meeting);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity createMeeting(@PathVariable Long id, @RequestBody MeetingCreationDTO meetingDTO) {
+    public ResponseEntity updateMeeting(@PathVariable Long id, @RequestBody MeetingCreationDTO meetingDTO) {
         meetingService.updateMeeting(id, meetingDTO);
 
         return ResponseEntity.ok().build();

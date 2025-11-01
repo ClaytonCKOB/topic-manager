@@ -1,18 +1,16 @@
 package com.topicmanager.topicmanager.services;
 
-import com.topicmanager.topicmanager.dto.FileDTO;
 import com.topicmanager.topicmanager.dto.MeetingTopicDTO;
 import com.topicmanager.topicmanager.dto.SubtopicCreationWithMeetingDTO;
 import com.topicmanager.topicmanager.dto.TopicCreationWithMeetingDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.entities.MeetingTopic;
-import com.topicmanager.topicmanager.entities.MeetingTopicFile;
 import com.topicmanager.topicmanager.repositories.MeetingTopicFileRepository;
 import com.topicmanager.topicmanager.repositories.MeetingTopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,19 +33,6 @@ public class MeetingTopicService {
         newTopic.setTitle(topic.title());
         newTopic.setDescription(topic.description());
 
-
-        if (topic.files() != null) {
-            for (FileDTO fileDTO : topic.files()) {
-                MeetingTopicFile file = new MeetingTopicFile();
-                file.setFileName(fileDTO.fileName());
-                file.setFileType(fileDTO.fileType());
-                file.setFileData(Base64.getDecoder().decode(fileDTO.fileContent()));
-                file.setMeetingTopic(newTopic);
-                newTopic.getFiles().add(file);
-            }
-        }
-
-
         if (topic.subtopics() != null) {
             for (SubtopicCreationWithMeetingDTO subDTO : topic.subtopics()) {
                 MeetingTopic subtopic = new MeetingTopic();
@@ -56,22 +41,14 @@ public class MeetingTopicService {
                 subtopic.setDescription(subDTO.description());
                 subtopic.setParentTopic(newTopic);
 
-
-                if (subDTO.files() != null) {
-                    for (FileDTO fileDTO : subDTO.files()) {
-                        MeetingTopicFile file = new MeetingTopicFile();
-                        file.setFileName(fileDTO.fileName());
-                        file.setFileType(fileDTO.fileType());
-                        file.setFileData(Base64.getDecoder().decode(fileDTO.fileContent()));
-                        file.setMeetingTopic(subtopic);
-                        subtopic.getFiles().add(file);
-                    }
-                }
-
                 newTopic.getSubtopics().add(subtopic);
             }
         }
 
+        if (meeting.getTopics() == null)
+            meeting.setTopics(new ArrayList<>());
+
+        meeting.getTopics().add(newTopic);
 
         meetingTopicRepository.save(newTopic);
     }

@@ -99,4 +99,20 @@ export default class TopicService {
 
         return response;
     }
+
+    async saveFiles(topicId, files) {
+        const formData = new FormData();
+        files.forEach(file => formData.append("file", file));
+
+        try {
+            const response = await request.post(`/api/meeting-topic-file/${topicId}`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            return response.data;
+            
+        } catch (error) {
+            console.error("Error uploading files:", error);
+            throw error;
+        }
+    }
 }

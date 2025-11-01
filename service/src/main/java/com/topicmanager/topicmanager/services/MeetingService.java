@@ -26,7 +26,7 @@ public class MeetingService {
     @Autowired
     UserAccountService userAccountService;
 
-    public void createMeeting(MeetingCreationDTO meeting) {
+    public Meeting createMeeting(MeetingCreationDTO meeting) {
         Meeting newMeeting = new Meeting(meeting);
 
         Meeting savedMeeting = meetingRepository.save(newMeeting);
@@ -41,6 +41,7 @@ public class MeetingService {
             meetingTopicService.createMeetingTopic(savedMeeting, topic);
         }
 
+        return newMeeting;
     }
 
     public void updateMeeting(Long meetingId, MeetingCreationDTO meeting) {
