@@ -163,16 +163,16 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
         {
             isEditable ?
             <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
-            <Button component="label" variant="contained" startIcon={<AttachFileIcon />}>
-                Adicionar Anexo(s)
-                <Input
-                type="file"
-                inputProps={{ accept: 'application/pdf' }}
-                onChange={(e) => onAddTopicFiles(index, subIndex, e.target.files)}
-                sx={{ display: 'none' }}
-                multiple
-                />
-            </Button>
+                <Button component="label" variant="contained" startIcon={<AttachFileIcon />}>
+                    Adicionar Anexo(s)
+                    <Input
+                    type="file"
+                    inputProps={{ accept: 'application/pdf' }}
+                    onChange={(e) => onAddTopicFiles(index, subIndex, e.target.files)}
+                    sx={{ display: 'none' }}
+                    multiple
+                    />
+                </Button>
             </Grid>
             : <></>
         }

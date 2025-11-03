@@ -31,7 +31,7 @@ export default function VoteList({votes, isVisible}) {
 
     return <>
     {
-        isVisible ?
+        isVisible && votes.length > 0 ?
             <Box sx={{mt: 3}}>
                 <DataGrid
                     rows={votes}
