@@ -4,6 +4,7 @@ import com.topicmanager.topicmanager.dto.MeetingTopicDTO;
 import com.topicmanager.topicmanager.entities.MeetingTopic;
 import com.topicmanager.topicmanager.services.MeetingTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +18,9 @@ public class MeetingTopicController {
     MeetingTopicService meetingTopicService;
 
     @PostMapping
-    public ResponseEntity createMeetingTopic(@RequestBody MeetingTopicDTO meetingTopicDTO) {
-        meetingTopicService.createMeetingTopic(meetingTopicDTO);
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<MeetingTopic> createMeetingTopic(@RequestBody MeetingTopicDTO meetingTopicDTO) {
+        MeetingTopic created = meetingTopicService.createMeetingTopic(meetingTopicDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping
@@ -30,12 +30,13 @@ public class MeetingTopicController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MeetingTopic> getMeetingTopic(@PathVariable Long id) {
-        return ResponseEntity.ok(meetingTopicService.getMeetingTopicById(id));
+        MeetingTopic topic = meetingTopicService.getMeetingTopicById(id);
+        return ResponseEntity.ok(topic);
     }
 
     @GetMapping("/meeting/{meetingId}")
     public ResponseEntity<List<MeetingTopic>> getMeetingTopicListByMeeting(@PathVariable Long meetingId) {
         return ResponseEntity.ok(meetingTopicService.getMeetingTopicListByMeeting(meetingId));
     }
-
 }
+

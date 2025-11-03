@@ -21,10 +21,12 @@ public class MeetingTopicService {
     @Autowired
     MeetingTopicFileRepository meetingTopicFileRepository;
 
-    public void createMeetingTopic(MeetingTopicDTO meetingTopicDTO) {
+    public MeetingTopic createMeetingTopic(MeetingTopicDTO meetingTopicDTO) {
         MeetingTopic newMeetingTopic = new MeetingTopic(meetingTopicDTO);
 
         meetingTopicRepository.save(newMeetingTopic);
+
+        return newMeetingTopic;
     }
 
     public void createMeetingTopic(Meeting meeting, TopicCreationWithMeetingDTO topic) {

@@ -4,6 +4,7 @@ import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.services.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -19,7 +20,7 @@ public class MeetingController {
     public ResponseEntity<Meeting> createMeeting(@RequestBody MeetingCreationDTO meetingDTO) {
         Meeting meeting = meetingService.createMeeting(meetingDTO);
 
-        return ResponseEntity.ok(meeting);
+        return ResponseEntity.status(HttpStatus.CREATED).body(meeting);
     }
 
     @PutMapping("/{id}")
@@ -31,26 +32,19 @@ public class MeetingController {
 
     @GetMapping
     public ResponseEntity<List<Meeting>> getMeetingList() {
-        return ResponseEntity.ok(meetingService.getMeetingList());
+        List<Meeting> meetingList = meetingService.getMeetingList();
+        return ResponseEntity.ok(meetingList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Meeting> getMeeting(@PathVariable Long id) {
-        try {
-            Meeting meeting = meetingService.getMeetingById(id);
-            return ResponseEntity.ok(meeting);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Meeting meeting = meetingService.getMeetingById(id);
+        return ResponseEntity.ok(meeting);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteMeeting(@PathVariable Long id) {
-        try {
-            meetingService.deleteMeeting(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        meetingService.deleteMeeting(id);
+        return ResponseEntity.ok().build();
     }
 }
