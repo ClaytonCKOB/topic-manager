@@ -20,7 +20,6 @@ export default function MeetingCreate() {
     description: "",
     startDate: null,
     startTime: null,
-    endDate: null,
     endTime: null,
     topics: [{}],
   });
@@ -35,14 +34,12 @@ export default function MeetingCreate() {
     const data = await meetingService.get(meetingId);
     if (data) {
       const start = new Date(data.startDate);
-      const end = new Date(data.endDate);
       setMeeting({
         id: data.id,
         title: data.title || "",
         description: data.description || "",
         startDate: start,
         startTime: start,
-        endDate: end,
         endTime: end,
         topics: data.topics || [],
         votes: data.votes
@@ -74,7 +71,7 @@ export default function MeetingCreate() {
 
   const saveMeeting = async () => {
     const start = combineDateTime(meeting.startDate, meeting.startTime);
-    const end = combineDateTime(meeting.endDate, meeting.endTime);
+    const end = combineDateTime(meeting.startDate, meeting.endTime);
     if (!isDetail) {
       let savedMeeting = await meetingService.create(meeting.title, start, end, meeting.topics);
 
