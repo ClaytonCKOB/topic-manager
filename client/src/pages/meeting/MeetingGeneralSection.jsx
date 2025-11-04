@@ -5,7 +5,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
 
     return <>
     <Grid container spacing={3} mb={5}>
-        <Grid item xs={12} sx={{width: 0.4}}>
+        <Grid item xs={12} sx={{width: 0.5}}>
         <Typography sx={{ mb: 1 }}>Título da Reunião</Typography>
         <TextField
             fullWidth
@@ -17,7 +17,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
         />
         </Grid>
     </Grid>
-    <Grid container spacing={4} mb={5} sx={{display: "flex", justifyContent: "space-between"}}>
+    <Grid container spacing={4} mb={5} sx={{display: "flex"}}>
         <Grid item xs={12} md={6}>
             <Typography sx={{ mb: 1 }}>Data da Reunião</Typography>
             <Grid container spacing={2}>
@@ -35,9 +35,8 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                 
             </Grid>
         </Grid>
-
         <Grid item xs={12} md={6}>
-            <Typography sx={{ mb: 1 }}>Fim da Reunião</Typography>
+            <Typography sx={{ mb: 1 }}>Início da Reunião</Typography>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <TimePicker
@@ -50,6 +49,11 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                         slotProps={{ textField: { fullWidth: true } }}
                     />
                 </Grid>
+            </Grid>
+        </Grid>
+        <Grid item xs={12} md={6}>
+            <Typography sx={{ mb: 1 }}>Fim da Reunião</Typography>
+            <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <TimePicker
                         label="Hora"

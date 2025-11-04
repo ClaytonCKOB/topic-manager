@@ -58,6 +58,7 @@ export default function UserManagement() {
     <UserModal
         openUserModal={openUserModal}
         setOpenUserModal={setOpenUserModal}
+        userId={authService.getUserId()}
     />
     </>;
 }

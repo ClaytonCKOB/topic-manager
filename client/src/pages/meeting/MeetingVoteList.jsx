@@ -21,7 +21,9 @@ export default function MeetingVoteList({meetingList}) {
           Veja as reuniões agendadas e registre seu voto nas pautas.
         </Typography>
 
-        {meetingList.map((meeting, index) => (
+        {meetingList
+          .filter((m) => m.endDate && new Date(m.endDate) > new Date())
+          .map((meeting, index) => (
           <Box
             key={index}
             sx={{

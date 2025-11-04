@@ -4,9 +4,10 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import FileList from "../../base/components/files/FileList";
 import VoteList from "../../base/components/vote/VoteList";
+import AuthService from "../../services/AuthService";
 
 export default function TopicComponent({setMeeting, topic, index, subIndex, isEditable, isSubTopic}) {
-
+    const authService = new AuthService();
     const onAddSubTopic = (index) => {
         setMeeting((prev) => ({
         ...prev,
@@ -159,7 +160,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             removeFile={(fIndex) => {onRemoveTopicFile(index, subIndex, fIndex)}}
         />
 
-        <VoteList votes={topic.votes} isVisible={!isEditable}/>
+        <VoteList votes={topic.votes} isVisible={!isEditable && authService.isAdmin()}/>
         {
             isEditable ?
             <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>

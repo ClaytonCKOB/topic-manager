@@ -11,12 +11,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 import DeleteDialog from "../../base/components/dialog/DeleteDialog";
+import AuthService from "../../services/AuthService";
 
 export default function MeetingManagement({meetingList, isRequesting}) {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
     const navigate = useNavigate();
     const meetingService = new MeetingService();
+    const authService = new AuthService();
 
     const redirectCreateMeeting = () => {
         navigate("/meeting/create");
@@ -86,13 +88,15 @@ export default function MeetingManagement({meetingList, isRequesting}) {
             >
                 <EditIcon />
             </IconButton>
+            { authService.isAdmin() && (
             <IconButton 
                 color="error" 
                 size="small"
                 onClick={() => handleDeleteClick(params.row.id)}
             >
                 <DeleteIcon />
-            </IconButton>
+            </IconButton>)
+            }
             </>;
         }
         }
@@ -109,23 +113,25 @@ export default function MeetingManagement({meetingList, isRequesting}) {
               Crie e gerencie as reuniões e suas pautas.
             </Typography>
           </Box>
-          <Box display="flex" justifyContent="flex-end">
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={redirectCreateMeeting}
-              sx={{
-                borderRadius: 2,
-                alignSelf: "flex-end",
-                textTransform: "none",
-                py: 1,              
-                px: 2,                
-              }}
-            >
-              Nova Reunião
-            </Button>
-          </Box>
+          { authService.isAdmin() &&
+            <Box display="flex" justifyContent="flex-end">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={redirectCreateMeeting}
+                sx={{
+                  borderRadius: 2,
+                  alignSelf: "flex-end",
+                  textTransform: "none",
+                  py: 1,              
+                  px: 2,                
+                }}
+              >
+                Nova Reunião
+              </Button>
+            </Box>
+          }
         </Box>
 
         <DataGrid

@@ -47,7 +47,7 @@ export default function MeetingVote() {
                 <Typography variant="h5" fontWeight="bold" gutterBottom mb={3}>
                     Progresso da Reunião
                 </Typography>
-                <Box sx={{width: 1, alignItems: "center"}}>
+                <Box sx={{width: 1, alignItems: "center"}} mb={3}>
                     <Grid sx={{display: "flex"}}>
                         <TotalVotes
                             icon={GroupIcon}
@@ -68,7 +68,7 @@ export default function MeetingVote() {
                 </Box>
                 <Grid container spacing={3} sx={{display: "flex", flexDirection: "column"}}>
                     {topics.map((topic, index) => (
-                        <TopicVote topic={topic} index={index} refreshTopics={() => getTopics(id)}/>
+                        <TopicVote key={index} topic={topic} index={index} refreshTopics={() => getTopics(id)}/>
                     ))}
                 </Grid>
             </Box>

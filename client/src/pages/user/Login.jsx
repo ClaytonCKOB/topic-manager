@@ -4,6 +4,7 @@ import AuthService from "../../services/AuthService";
 import { Backdrop, Box, Button, CircularProgress, IconButton, Skeleton, TextField, Typography, useMediaQuery } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare, faClose, faEye, faEyeSlash, faLinkSlash } from "@fortawesome/free-solid-svg-icons";
+import ErrorMessage from "../../base/components/message/ErrorMessage";
 
 const Login = () => {
     const isSmallScreen = useMediaQuery('(max-width:600px) or (max-height:600px)');
@@ -14,14 +15,12 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [wrongCredentials, setWrongCredentials] = useState(false);
-
-    const [serverOffline, setServerOffline] = useState(false);
-
-    const [alertOpen, setAlertOpen] = useState(false);
-    const [alert, setAlert] = useState({
+    const [snackbar, setSnackbar] = useState({
+        open: false,
         message: "",
-        description: "",
+        severity: "error",
     });
+    const [serverOffline, setServerOffline] = useState(false);
 
     const navigate = useNavigate();
     const authService = new AuthService();
@@ -48,19 +47,20 @@ const Login = () => {
                 navigate("/home");
             } else if (response.status == 401) {
                 setWrongCredentials(true);
+                setSnackbar({
+                    open: true,
+                    message: "Credenciais incorretas.",
+                    severity: "error",
+                });
             } else {
-                setAlert({
-                    message: response.code === "ERR_NETWORK" ? "O servidor não está respondendo" : "Erro ao realizar login",
-                    description: response.data,
-                })
-                setAlertOpen(true);
+                setSnackbar({
+                    open: true,
+                    message: "Credenciais incorretas.",
+                    severity: "error",
+                });
             }
         } catch (error) {
             console.error("Login failed:", error);
-            setAlert({
-                message: "Erro ao realizar login",
-                description: error.message,
-            })
         }
         setLoading(false);
     };
@@ -218,6 +218,10 @@ const Login = () => {
                 }}
             >
             </Box>
+            <ErrorMessage
+                snackbar={snackbar}
+                setSnackbar={setSnackbar}
+            />
         </Box>
     )
 };

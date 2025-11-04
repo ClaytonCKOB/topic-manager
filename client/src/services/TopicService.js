@@ -56,25 +56,20 @@ export default class TopicService {
     async saveVote(userId, topicId, comment, status) {
         var response = {};
 
-        try {
-            let url = '/api/topic-vote' ;
+        let url = '/api/topic-vote' ;
 
-            response = await request.post(url, {
-                user_account_id: userId,
-                meeting_topic_id: topicId,
-                comment: status != 3 ? "" : comment,
-                status: status
-            });
+        response = await request.post(url, {
+            user_account_id: userId,
+            meeting_topic_id: topicId,
+            comment: status != 3 ? "" : comment,
+            status: status
+        });
 
-            if (response.status != 200) {
-                throw new Error('Network response was not ok');
-            }
-
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        } finally {
-            return response.data;
+        if (response.status != 200) {
+            throw new Error('Network response was not ok');
         }
+
+        return response.data;
     }
 
     async getTotalVotes(meetingId) {
