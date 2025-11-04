@@ -26,7 +26,6 @@ export default function MeetingCreate() {
     endTime: null,
     topics: [{}],
   });
-
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -182,10 +181,7 @@ export default function MeetingCreate() {
             )}
           </CardContent>
         </Card>
-        <ErrorMessage 
-          open={snackbar.open}
-          severity={snackbar.severity}
-          message={snackbar.message}
+        <ErrorMessage
           snackbar={snackbar}
           setSnackbar={setSnackbar}
         />

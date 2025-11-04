@@ -9,6 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import UserModal from "./UserModal";
 import DeleteDialog from "../../base/components/dialog/DeleteDialog";
+import ErrorMessage from "../../base/components/message/ErrorMessage";
 
 
 export default function UserList() {
@@ -17,6 +18,11 @@ export default function UserList() {
     const [isRequesting, setIsRequesting] = useState(false);
     const [openUserModal, setOpenUserModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: "",
+        severity: "error",
+    });
     const userService = new UserService();
     const navigate = useNavigate();
 
@@ -44,18 +50,22 @@ export default function UserList() {
     };
 
     const handleConfirmDelete = async () => {
-    if (!userId) return;
-    try {
-        await userService.delete(userId);
-        // await getMeetingList();
+        if (!userId) return;
+        try {
+            await userService.delete(userId);
+            // await getMeetingList();
 
-    } catch (err) {
-        console.error("Erro ao deletar reunião:", err);
-
-    } finally {
-        setOpenDeleteModal(false);
-        setUserId(null);
-    }
+        } catch (err) {
+            console.error("Erro ao deletar usuário:", err);
+            setSnackbar({
+                open: true,
+                message: "Erro ao deletar usuário.",
+                severity: "error",
+            });
+        } finally {
+            setOpenDeleteModal(false);
+            setUserId(null);
+        }
     };
 
     const columns = [
@@ -154,6 +164,10 @@ export default function UserList() {
             openDeleteModal={openDeleteModal}
             handleCancelDelete={handleCancelDelete}
             handleConfirmDelete={handleConfirmDelete}
+        />
+        <ErrorMessage
+            snackbar={snackbar}
+            setSnackbar={setSnackbar}
         />
     </Box>
     );

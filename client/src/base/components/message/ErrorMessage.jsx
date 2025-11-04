@@ -1,6 +1,6 @@
 import { Alert, Snackbar } from "@mui/material";
 
-export default function ErrorMessage({open, severity, message, snackbar, setSnackbar}) {
+export default function ErrorMessage({snackbar, setSnackbar}) {
     const handleCloseSnackbar = (_, reason) => {
         if (reason === 'clickaway') return;
         setSnackbar({ ...snackbar, open: false });
@@ -8,18 +8,18 @@ export default function ErrorMessage({open, severity, message, snackbar, setSnac
     
     return <>
         <Snackbar
-          open={open}
+          open={snackbar.open}
           autoHideDuration={4000}
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
           <Alert 
             onClose={handleCloseSnackbar} 
-            severity={severity} 
+            severity={snackbar.severity} 
             variant="filled" 
             sx={{ width: '100%' }}
           >
-            {message}
+            {snackbar.message}
           </Alert>
         </Snackbar>
     </>;
