@@ -32,6 +32,9 @@ public class AuthorizationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationDTO data) {
+        if (data.username().isEmpty() || data.password().isEmpty())
+            return ResponseEntity.badRequest().body("Usuário e senha são obrigatórios.");
+
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         Authentication auth = this.authenticationManager.authenticate(usernamePassword);
         UserAccount user = (UserAccount) auth.getPrincipal();
