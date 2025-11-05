@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/user/Login';
 import Page from './base/route/Page';
 import DefaultNavigation from './base/route/DefaultNavigation';
@@ -40,6 +40,7 @@ function App() {
             })}
 
             <Route path="/login" element={<Login />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </>
