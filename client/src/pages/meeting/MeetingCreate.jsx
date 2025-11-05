@@ -13,6 +13,7 @@ import AuthService from '../../services/AuthService';
 import MeetingGeneralSection from './MeetingGeneralSection';
 import TopicService from '../../services/TopicService';
 import ErrorMessage from '../../base/components/message/ErrorMessage';
+import ParticipantSection from '../participant/ParticipantSection';
 
 export default function MeetingCreate() {
   const { id } = useParams();
@@ -52,7 +53,8 @@ export default function MeetingCreate() {
           startTime: start,
           endTime: end,
           topics: data.topics || [],
-          votes: data.votes
+          votes: data.votes,
+          participants: data.participants
         });
 
         const now = new Date();
@@ -167,6 +169,9 @@ export default function MeetingCreate() {
               isEditable={isMeetingEditable}
             />
 
+            <ParticipantSection
+              participants={meeting.participants}
+            />
             {isMeetingEditable && (
               <Box display="flex" justifyContent="flex-end">
                 <Button

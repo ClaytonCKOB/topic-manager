@@ -1,6 +1,8 @@
 package com.topicmanager.topicmanager.services;
 
 import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
+import com.topicmanager.topicmanager.dto.MeetingDTO;
+import com.topicmanager.topicmanager.dto.MeetingParticipantDTO;
 import com.topicmanager.topicmanager.dto.TopicCreationWithMeetingDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.entities.UserAccount;
@@ -9,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -70,13 +73,23 @@ public class MeetingService {
         meetingRepository.deleteById(id);
     }
 
-    public Meeting getMeetingById(Long id) {
+    public MeetingDTO getMeetingById(Long id) {
         Meeting meeting = meetingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
 
         meeting.setTopics(meeting.getTopics().stream().filter(t -> t.getParentTopic() == null).toList());
 
-        return meeting;
+        return getMeetingDTO(meeting);
 
+    }
+
+    private MeetingDTO getMeetingDTO(Meeting meeting) {
+        List<MeetingParticipantDTO> meetingParticipants = new ArrayList<>();
+
+        meeting.getParticipants().forEach(participant -> {
+            meetingParticipants.add(new MeetingParticipantDTO(participant.getId().getUserAccountId(), participant.getId().getMeetingId(), participant.getUser().getUsername(), participant.getRole()));
+        });
+
+        return new MeetingDTO(meeting.getId(), meeting.getStatus(), meeting.getTitle(), meeting.getDescription(), meeting.getStartDate(), meeting.getEndDate(), meeting.getTopics(), meetingParticipants);
     }
 }

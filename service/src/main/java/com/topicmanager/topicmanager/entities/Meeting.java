@@ -43,7 +43,7 @@ public class Meeting {
     @JsonManagedReference
     private List<MeetingTopic> topics;
 
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<MeetingParticipant> participants;
 
