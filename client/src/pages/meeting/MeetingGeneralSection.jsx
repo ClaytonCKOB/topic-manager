@@ -11,6 +11,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
             fullWidth
             value={meeting.title}
             disabled={!isEditable}
+            sx={{WebkitTextFillColor: "black"}}
             onChange={(e) =>
             setMeeting((prev) => ({ ...prev, title: e.target.value }))
             }
@@ -26,6 +27,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                     label="Data"
                     value={meeting.startDate}
                     disabled={!isEditable}
+                    sx={{WebkitTextFillColor: "black"}}
                     onChange={(date) =>
                     setMeeting((prev) => ({ ...prev, startDate: date }))
                     }
@@ -43,6 +45,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                         label="Hora"
                         value={meeting.startTime}
                         disabled={!isEditable}
+                        sx={{WebkitTextFillColor: "black"}}
                         onChange={(time) =>
                         setMeeting((prev) => ({ ...prev, startTime: time }))
                         }
@@ -59,6 +62,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                         label="Hora"
                         value={meeting.endTime}
                         disabled={!isEditable}
+                        sx={{WebkitTextFillColor: "black"}}
                         onChange={(time) =>
                         setMeeting((prev) => ({ ...prev, endTime: time }))
                         }

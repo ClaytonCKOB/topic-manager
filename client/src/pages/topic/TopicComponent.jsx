@@ -147,6 +147,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
 
         <TextField
             disabled={!isEditable}
+            sx={{WebkitTextFillColor: "black"}}
             multiline
             minRows={2}
             placeholder="Adicione a descrição da subpauta..."

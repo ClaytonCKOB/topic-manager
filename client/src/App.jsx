@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/user/Login';
 import Page from './base/route/Page';
-import DefaultNavigation from './base/route/DefaultNavigation';
 import Home from './pages/Home';
 import MeetingCreate from './pages/meeting/MeetingCreate';
 import MeetingVote from './pages/meeting/MeetingVote';

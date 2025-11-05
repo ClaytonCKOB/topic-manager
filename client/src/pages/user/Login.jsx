@@ -55,7 +55,7 @@ const Login = () => {
             } else {
                 setSnackbar({
                     open: true,
-                    message: "Credenciais incorretas.",
+                    message: "Erro ao realizar login.",
                     severity: "error",
                 });
             }

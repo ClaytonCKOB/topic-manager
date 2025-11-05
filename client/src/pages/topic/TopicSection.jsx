@@ -40,6 +40,7 @@ export default function TopicSection({meeting, setMeeting, isEditable}) {
 
         {meeting?.topics?.map((topic, index) => (
             <TopicCard
+                key={index}
                 meeting={meeting}
                 setMeeting={setMeeting}
                 topic={topic}
