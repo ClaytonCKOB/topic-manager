@@ -2,6 +2,13 @@ import { Typography, TextField, Grid} from "@mui/material";
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 
 export default function MeetingGeneralSection({meeting, setMeeting, isEditable}) {
+    const textColorStyle = {
+        "& .MuiInputBase-input.Mui-disabled": {
+            WebkitTextFillColor: "black",
+            color: "black",
+            opacity: 1,
+        },
+    };
 
     return <>
     <Grid container spacing={3} mb={5}>
@@ -11,7 +18,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
             fullWidth
             value={meeting.title}
             disabled={!isEditable}
-            sx={{WebkitTextFillColor: "black"}}
+            sx={textColorStyle}
             onChange={(e) =>
             setMeeting((prev) => ({ ...prev, title: e.target.value }))
             }

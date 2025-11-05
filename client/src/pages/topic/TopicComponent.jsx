@@ -7,6 +7,13 @@ import VoteList from "../../base/components/vote/VoteList";
 import AuthService from "../../services/AuthService";
 
 export default function TopicComponent({setMeeting, topic, index, subIndex, isEditable, isSubTopic}) {
+    const textColorStyle = {
+        "& .MuiInputBase-input.Mui-disabled": {
+            WebkitTextFillColor: "black",
+            color: "black",
+            opacity: 1,
+        },
+    };
     const authService = new AuthService();
     const onAddSubTopic = (index) => {
         setMeeting((prev) => ({
@@ -147,7 +154,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
 
         <TextField
             disabled={!isEditable}
-            sx={{WebkitTextFillColor: "black"}}
+            sx={textColorStyle}
             multiline
             minRows={2}
             placeholder="Adicione a descrição da subpauta..."
