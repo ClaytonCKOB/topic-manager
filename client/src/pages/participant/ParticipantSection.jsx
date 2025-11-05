@@ -12,7 +12,7 @@ export default function ParticipantSection({participants}) {
         { field: 'role', headerName: 'Função', align: 'center', flex: 0.25}
     ];
 
-    return participants?.length && (
+    return participants?.length > 0 && (
     <Grid
         sx={{ border: '2px dotted gray' }}
         p={4}
@@ -23,7 +23,7 @@ export default function ParticipantSection({participants}) {
         container
         alignItems="center"
         justifyContent="space-between"
-        mb={3}
+        mb={!collapsed ? 3 : 0}
         >
             <Typography variant="h6">Participantes da Reunião</Typography>  
 
