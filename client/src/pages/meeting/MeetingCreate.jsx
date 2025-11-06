@@ -14,6 +14,7 @@ import MeetingGeneralSection from './MeetingGeneralSection';
 import TopicService from '../../services/TopicService';
 import ErrorMessage from '../../base/components/message/ErrorMessage';
 import ParticipantSection from '../participant/ParticipantSection';
+import TopicTotalizers from '../topic/TopicTotalizers';
 
 export default function MeetingCreate() {
   const { id } = useParams();
@@ -163,6 +164,8 @@ export default function MeetingCreate() {
               isEditable={isMeetingEditable}
             />
             
+            <TopicTotalizers topics={meeting.topics} />
+
             <TopicSection
               meeting={meeting}
               setMeeting={setMeeting}

@@ -5,7 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
 
 export default function ParticipantSection({participants}) {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     
     const columns = [
         { field: 'username', headerName: 'Usuário', flex: 0.5},
