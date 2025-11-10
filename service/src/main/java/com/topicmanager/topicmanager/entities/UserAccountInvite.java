@@ -5,6 +5,7 @@ import com.topicmanager.topicmanager.enums.UserAccountRole;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "user_account_invite")
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 @Setter
 public class UserAccountInvite {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_account_invite_id")
     private String id;
 
@@ -34,6 +34,7 @@ public class UserAccountInvite {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     public UserAccountInvite(UserInviteDTO userAccountInviteDTO) {
+        this.id = UUID.randomUUID().toString();
         this.sender_id = userAccountInviteDTO.sender_id();
         this.email = userAccountInviteDTO.email();
         this.role = userAccountInviteDTO.role();
