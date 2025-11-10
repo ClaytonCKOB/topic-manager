@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import UserModal from "./UserModal";
 import DeleteDialog from "../../base/components/dialog/DeleteDialog";
 import ErrorMessage from "../../base/components/message/ErrorMessage";
+import UserInvite from "./UserInvite";
 
 
 export default function UserList() {
@@ -17,6 +18,7 @@ export default function UserList() {
     const [userId, setUserId] = useState(null);
     const [isRequesting, setIsRequesting] = useState(false);
     const [openUserModal, setOpenUserModal] = useState(false);
+    const [openUserInvitationModal, setOpenUserInvitationModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -122,7 +124,7 @@ export default function UserList() {
               variant="contained"
               color="primary"
               startIcon={<AddIcon />}
-              onClick={() => {setUserId(null); setOpenUserModal(true);}}
+              onClick={() => {setUserId(null); setOpenUserInvitationModal(true);}}
               sx={{
                 borderRadius: 2,
                 alignSelf: "flex-end",
@@ -155,6 +157,10 @@ export default function UserList() {
             />
         </Box>
 
+        <UserInvite
+            openUserModal={openUserInvitationModal}
+            setOpenUserModal={setOpenUserInvitationModal}
+        />
         <UserModal
             openUserModal={openUserModal}
             setOpenUserModal={setOpenUserModal}
