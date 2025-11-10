@@ -7,6 +7,7 @@ import com.topicmanager.topicmanager.entities.UserAccountInvite;
 import com.topicmanager.topicmanager.enums.UserAccountRole;
 import com.topicmanager.topicmanager.repositories.UserAccountInviteRepository;
 import com.topicmanager.topicmanager.repositories.UserAccountRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,11 @@ public class UserAccountInviteService {
         notificationService.sendInvitation(userAccountInvite);
     }
 
-    public void delete(Long userAccountId) {
-        UserAccountInvite userAccountInvite = userAccountInviteRepository.findById(userAccountId).get();
-        userAccountInvite.setActive(false);
-        userAccountInviteRepository.save(userAccountInvite);
+    public UserInviteDTO getInvitation(String id) {
+        UserAccountInvite userAccountInvite = userAccountInviteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Invite not found"));
+
+
+        return new UserInviteDTO(userAccountInvite.getSender_id(), userAccountInvite.getEmail(), userAccountInvite.getRole());
     }
 }

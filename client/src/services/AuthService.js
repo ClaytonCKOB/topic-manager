@@ -30,6 +30,24 @@ export default class AuthService {
           }
     }
 
+    register = async (invitation_id, name, username, email, password) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/api/auth/register-invite`, {
+                invitation_id,
+                name,
+                username,
+                email,
+                password
+            });
+
+            return response;
+
+        } catch (error) {
+            console.error("Register failed:", error?.response?.data ?? error.message);
+            throw error;
+        }
+    }
+
     getToken = () => {
         return localStorage.getItem("token") || sessionStorage.getItem("token");
     }

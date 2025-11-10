@@ -1,12 +1,13 @@
 package com.topicmanager.topicmanager.controllers;
 
-import com.topicmanager.topicmanager.dto.AuthenticationDTO;
-import com.topicmanager.topicmanager.dto.LoginResponseDTO;
-import com.topicmanager.topicmanager.dto.RegisterDTO;
+import com.topicmanager.topicmanager.dto.*;
 import com.topicmanager.topicmanager.entities.UserAccount;
+import com.topicmanager.topicmanager.entities.UserAccountInvite;
 import com.topicmanager.topicmanager.enums.UserAccountRole;
+import com.topicmanager.topicmanager.repositories.UserAccountInviteRepository;
 import com.topicmanager.topicmanager.repositories.UserAccountRepository;
 import com.topicmanager.topicmanager.services.TokenService;
+import com.topicmanager.topicmanager.services.UserAccountInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +27,9 @@ public class AuthorizationController {
 
     @Autowired
     private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private UserAccountInviteService userAccountInviteService;
 
     @Autowired
     TokenService tokenService;
@@ -58,6 +62,34 @@ public class AuthorizationController {
                 userAccountRepository.save(user);
             } else {
                 user = new UserAccount(data.username(), encryptedPassword, data.role(), data.email(), data.name());
+                userAccountRepository.save(user);
+            }
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @PostMapping("/register-invite")
+    public ResponseEntity<?> registerInvite(@RequestBody RegisterInviteDTO data) {
+        try {
+            if (data.username().isEmpty() || data.password().isEmpty() || data.email().isEmpty()) {
+                return ResponseEntity.badRequest().body("Usuário e senha são obrigatórios.");
+            }
+
+            UserInviteDTO invite = userAccountInviteService.getInvitation(data.invitation_id());
+
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+            UserAccount user = (UserAccount) userAccountRepository.findByUsername(data.username());
+            if (user != null) {
+                user.setActive(true);
+                user.setPassword(encryptedPassword);
+                user.setRole(invite.role());
+                userAccountRepository.save(user);
+            } else {
+                user = new UserAccount(data.username(), encryptedPassword, invite.role(), data.email(), data.name());
                 userAccountRepository.save(user);
             }
 

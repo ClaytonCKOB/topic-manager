@@ -18,7 +18,7 @@ function App() {
       { path: "/meeting/detail/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingCreate },
       { path: "/meeting/vote/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingVote },
       { path: "/user/list", name: "Usuários", allowedRoles: ['ADMIN'], component: UserList },
-      { path: "/register", name: "Sign-up", allowedRoles: [], component: Register }
+      { path: "/register/:id", name: "Sign-up", allowedRoles: [], component: Register }
   ], []);
 
   return (

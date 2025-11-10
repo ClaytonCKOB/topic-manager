@@ -1,21 +1,24 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import AuthService from "../../services/AuthService";
 import { Backdrop, Box, Button, CircularProgress, IconButton, TextField, Typography, useMediaQuery } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faEye, faEyeSlash, faLinkSlash } from "@fortawesome/free-solid-svg-icons";
 import ErrorMessage from "../../base/components/message/ErrorMessage";
+import UserInviteService from "../../services/UserInviteService";
 
 export default function Register() {
     const isSmallScreen = useMediaQuery('(max-width:600px) or (max-height:600px)');
     const loginWidthPercentage = isSmallScreen ? 100 : 40;
-
+    
+    const { id } = useParams();
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [passwordMismatch, setPasswordMismatch] = useState(false);
     const [snackbar, setSnackbar] = useState({
@@ -27,6 +30,24 @@ export default function Register() {
 
     const navigate = useNavigate();
     const authService = new AuthService();
+    const userInviteService = new UserInviteService();
+
+    const getUserInvitation = async (id) => {
+        try {
+            let data = await userInviteService.getInvitation(id);
+            setEmail(data.email);
+        } catch (error) {
+            setSnackbar({
+                open: true,
+                message: "Erro ao buscar convite.",
+                severity: "error",
+            });
+        }
+    }
+
+    useEffect(() => {
+        getUserInvitation(id);
+    }, []);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -39,15 +60,15 @@ export default function Register() {
 
         setLoading(true);
         try {
-            const response = await authService.register(name, username, email, password);
-
+            const response = await authService.register(id, name, username, email, password);
             if (response.status === 201 || response.status === 200) {
                 setSnackbar({
                     open: true,
                     message: "Conta criada com sucesso! Faça login.",
                     severity: "success",
                 });
-                navigate("/");
+                authService.logout();
+                navigate("/login");
             } else {
                 setSnackbar({
                     open: true,
@@ -137,11 +158,20 @@ export default function Register() {
 
                     <TextField
                         label="Confirmar senha"
-                        type={showPassword ? 'text' : 'password'}
+                        type={showConfirmPassword ? 'text' : 'password'}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         error={passwordMismatch}
                         helperText={passwordMismatch ? "As senhas não coincidem" : ""}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                        <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
+                                    </IconButton>
+                                )
+                            }
+                        }}
                     />
 
                     <Button variant="contained" sx={{ height: 56 }} onClick={handleRegister}>

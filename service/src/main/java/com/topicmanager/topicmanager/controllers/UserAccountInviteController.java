@@ -31,4 +31,10 @@ public class UserAccountInviteController {
         return ResponseEntity.ok(userInviteList);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserInviteDTO> getInvites(@PathVariable String id){
+        UserInviteDTO userInvite = userAccountInviteService.getInvitation(id);
+        return ResponseEntity.ok(userInvite);
+    }
+
 }
