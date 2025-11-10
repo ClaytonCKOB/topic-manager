@@ -14,6 +14,15 @@ CREATE TABLE user_account (
 	created_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE user_account_invite (
+    user_account_invite_id VARCHAR PRIMARY KEY,
+    sender_id  INT NOT NULL REFERENCES user_account(user_account_id),
+    email VARCHAR NOT NULL UNIQUE,
+    role INT NOT NULL,
+    active BOOLEAN DEFAULT TRUE,
+    created_date TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE meeting (
     meeting_id SERIAL PRIMARY KEY,
     meeting_status_id INT NOT NULL REFERENCES meeting_status(meeting_status_id),

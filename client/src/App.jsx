@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import MeetingCreate from './pages/meeting/MeetingCreate';
 import MeetingVote from './pages/meeting/MeetingVote';
 import UserList from './pages/user/UserList';
+import Register from './pages/user/Register';
 
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
       { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN', 'USER'], component: null },
       { path: "/meeting/detail/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingCreate },
       { path: "/meeting/vote/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'USER'], component: MeetingVote },
-      { path: "/user/list", name: "Usuários", allowedRoles: ['ADMIN'], component: UserList }
+      { path: "/user/list", name: "Usuários", allowedRoles: ['ADMIN'], component: UserList },
+      { path: "/register", name: "Sign-up", allowedRoles: [], component: Register }
   ], []);
 
   return (
@@ -30,7 +32,7 @@ function App() {
                         key={route.path}
                         path={route.path}
                         element={
-                            <Page name={route.name} allowedRoles={route.allowedRoles}>
+                            <Page name={route.name} allowedRoles={route.allowedRoles} path={route.path}>
                                 <Component />
                             </Page>
                         }

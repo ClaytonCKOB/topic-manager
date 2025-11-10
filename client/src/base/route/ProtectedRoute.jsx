@@ -1,15 +1,10 @@
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ children, allowedRoles }) => {
+const ProtectedRoute = ({ children, allowedRoles, path }) => {
   const token = localStorage.getItem('token');
   const userRole = localStorage.getItem('user_role');
-  if (!token) {
+  if (path != '/register' && (!token || (allowedRoles && !allowedRoles.includes(userRole))))
     return <Navigate to="/login" />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
-    return <Navigate to="/login" />;
-  }
 
   return children;
 };
