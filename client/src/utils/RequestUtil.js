@@ -13,7 +13,7 @@ const request = axios.create({
 
 request.interceptors.request.use((config) => {
     const token = authService.getToken();
-    
+
     if (authService.isTokenValid(token)) {
         config.headers.Authorization = `Bearer ${token}`;
     } else {
@@ -24,6 +24,17 @@ request.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error);
 });
+
+request.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            authService.setToken(null);
+            window.location.href = "/login";
+        }
+        return Promise.reject(error);
+    }
+);
 
 
 export default request;

@@ -44,7 +44,6 @@ export default function TopicTotalizers({topics}) {
     topicList.forEach((topic) => {
         let status = [0, 0, 0, 0];
 
-        console.log(topic);
         if (topic.votes?.length > 0) {
             topic.votes?.forEach((vote) => {
                 status[vote.status]++;
