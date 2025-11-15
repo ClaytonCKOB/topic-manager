@@ -1,7 +1,5 @@
 package com.topicmanager.topicmanager.dto;
 
-import com.topicmanager.topicmanager.entities.MeetingTopicFile;
-
 import java.util.List;
 
 public record TopicCreationWithMeetingDTO(

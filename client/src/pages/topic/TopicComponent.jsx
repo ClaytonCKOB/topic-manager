@@ -144,9 +144,13 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
                     </IconButton>
                     : null
                 }
-                <IconButton color="error" size="small" onClick={() => onRemoveTopic(index, subIndex)}>
-                    <DeleteIcon />
-                </IconButton>
+                {
+                    isSubTopic || (!isSubTopic && index != 0) ?
+                    <IconButton color="error" size="small" onClick={() => onRemoveTopic(index, subIndex)}>
+                        <DeleteIcon />
+                    </IconButton>
+                    : null
+                }
             </Grid>
             : <></>
             }

@@ -1,8 +1,3 @@
-CREATE TABLE meeting_status (
-    meeting_status_id SERIAL PRIMARY KEY,
-    description VARCHAR NOT NULL
-);
-
 CREATE TABLE user_account (
 	user_account_id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
@@ -25,9 +20,7 @@ CREATE TABLE user_account_invite (
 
 CREATE TABLE meeting (
     meeting_id SERIAL PRIMARY KEY,
-    meeting_status_id INT NOT NULL REFERENCES meeting_status(meeting_status_id),
     title VARCHAR NOT NULL,
-    description VARCHAR,
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL
 );
@@ -65,5 +58,5 @@ CREATE TABLE meeting_participant (
     PRIMARY KEY (user_account_id, meeting_id)
 );
 
-
-INSERT INTO meeting_status (meeting_status_id, description) VALUES (1, 'Criado'), (2, 'Em andamento'), (3, 'Finalizado');
+INSERT INTO user_account
+VALUES (1,'admin', 'admin', 'no-reply@topicmanager.com', '$2a$10$zPw/VBKlXzNYCnb7/kJnNO3sUx9ixeVOuRMXiFs1lckdXnzR8T3De', 0, true, NOW());

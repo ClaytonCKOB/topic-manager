@@ -18,9 +18,6 @@ public class MeetingTopicService {
     @Autowired
     MeetingTopicRepository meetingTopicRepository;
 
-    @Autowired
-    MeetingTopicFileRepository meetingTopicFileRepository;
-
     public MeetingTopic createMeetingTopic(MeetingTopicDTO meetingTopicDTO) {
         MeetingTopic newMeetingTopic = new MeetingTopic(meetingTopicDTO);
 

@@ -80,7 +80,7 @@ export default function TopicTotalizers({topics}) {
     ];
 
 
-    return totalizer?.length && (
+    return totalizer?.length > 0 && (
     <Grid
         sx={{ border: '2px dotted gray' }}
         p={4}

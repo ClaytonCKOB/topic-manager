@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserService from "../../services/UserService";
 import ErrorMessage from "../../base/components/message/ErrorMessage";
@@ -58,53 +58,56 @@ export default function UserModal({ openUserModal, setOpenUserModal, userId }) {
 
     return (
     <Dialog open={openUserModal} onClose={handleCancelUserChange} fullWidth maxWidth="sm">
-        <DialogTitle>{isCreation ? "Criar Novo Usuário" : "Gerenciar Perfil"}</DialogTitle>
+        <DialogTitle sx={{backgroundColor: "#cfd8dc", marginBottom: 3, fontWeight: 550}}>{isCreation ? "Criar Novo Usuário" : "Gerenciar Perfil"}</DialogTitle>
         <DialogContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
-            <Box>
-                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                Username
-                </Typography>
-                <Input fullWidth disabled={!isCreation} value={user.username || ""} />
-            </Box>
+                <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Username
+                    </Typography>
+                    <TextField 
+                        fullWidth 
+                        disabled={!isCreation} 
+                        value={user.username || ""} 
+                    />
+                </Box>
 
-            <Box>
-                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                Função
-                </Typography>
-                <Input fullWidth disabled={!isCreation} value={user.role || ""} />
-            </Box>
+                <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Função
+                    </Typography>
+                    <TextField fullWidth disabled={!isCreation} value={user.role || ""} />
+                </Box>
 
-            <Box>
-                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                Nome
-                </Typography>
-                <Input
-                fullWidth
-                value={user.name || ""}
-                onChange={(e) => setUser((prev) => ({ ...prev, name: e.target.value }))}
-                />
-            </Box>
+                <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                        Nome
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        value={user.name || ""}
+                        onChange={(e) => setUser((prev) => ({ ...prev, name: e.target.value }))}
+                    />
+                </Box>
 
-            <Box>
-                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                E-mail
-                </Typography>
-                <Input
-                fullWidth
-                value={user.email || ""}
-                onChange={(e) => setUser((prev) => ({ ...prev, email: e.target.value }))}
-                />
-            </Box>
+                <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                    E-mail
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        value={user.email || ""}
+                        onChange={(e) => setUser((prev) => ({ ...prev, email: e.target.value }))}
+                    />
+                </Box>
             </Box>
         </DialogContent>
-
-        <DialogActions>
+        <DialogActions mt={3}>
             <Button onClick={handleCancelUserChange} color="inherit">
-            Cancelar
+                Cancelar
             </Button>
             <Button onClick={handleSaveChanges} color="primary" variant="contained" disabled={loading}>
-            Salvar
+                Salvar
             </Button>
         </DialogActions>
         <ErrorMessage

@@ -1,15 +1,10 @@
 package com.topicmanager.topicmanager.services;
 
-import com.topicmanager.topicmanager.dto.UserDTO;
 import com.topicmanager.topicmanager.dto.UserInviteDTO;
-import com.topicmanager.topicmanager.entities.UserAccount;
 import com.topicmanager.topicmanager.entities.UserAccountInvite;
-import com.topicmanager.topicmanager.enums.UserAccountRole;
 import com.topicmanager.topicmanager.repositories.UserAccountInviteRepository;
-import com.topicmanager.topicmanager.repositories.UserAccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

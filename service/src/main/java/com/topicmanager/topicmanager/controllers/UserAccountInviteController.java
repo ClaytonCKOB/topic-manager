@@ -1,11 +1,8 @@
 package com.topicmanager.topicmanager.controllers;
 
-import com.topicmanager.topicmanager.dto.UserDTO;
 import com.topicmanager.topicmanager.dto.UserInviteDTO;
-import com.topicmanager.topicmanager.entities.UserAccount;
 import com.topicmanager.topicmanager.entities.UserAccountInvite;
 import com.topicmanager.topicmanager.services.UserAccountInviteService;
-import com.topicmanager.topicmanager.services.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

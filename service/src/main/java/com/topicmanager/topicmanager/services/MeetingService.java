@@ -52,7 +52,6 @@ public class MeetingService {
                 .orElseThrow(() -> new EntityNotFoundException("Meeting not found with id: " + meetingId));
 
         existingMeeting.setTitle(meeting.title());
-        existingMeeting.setDescription(meeting.description());
         existingMeeting.setStartDate(meeting.start_date());
         existingMeeting.setEndDate(meeting.end_date());
 
@@ -90,6 +89,6 @@ public class MeetingService {
             meetingParticipants.add(new MeetingParticipantDTO(participant.getId().getUserAccountId(), participant.getId().getMeetingId(), participant.getUser().getUsername(), participant.getRole()));
         });
 
-        return new MeetingDTO(meeting.getId(), meeting.getStatus(), meeting.getTitle(), meeting.getDescription(), meeting.getStartDate(), meeting.getEndDate(), meeting.getTopics(), meetingParticipants);
+        return new MeetingDTO(meeting.getId(), meeting.getTitle(), meeting.getStartDate(), meeting.getEndDate(), meeting.getTopics(), meetingParticipants);
     }
 }

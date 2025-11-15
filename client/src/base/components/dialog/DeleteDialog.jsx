@@ -6,7 +6,7 @@ export default function DeleteDialog({openDeleteModal, handleCancelDelete, handl
             open={openDeleteModal}
             onClose={handleCancelDelete}
         >
-            <DialogTitle>Confirmar Remoção</DialogTitle>
+            <DialogTitle sx={{backgroundColor: "#cfd8dc", marginBottom: 3, fontWeight: 550}}>Confirmar Remoção</DialogTitle>
             <DialogContent>
             <Typography>
                 Tem certeza que deseja remover?

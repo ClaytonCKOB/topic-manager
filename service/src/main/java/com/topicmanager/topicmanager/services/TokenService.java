@@ -1,6 +1,5 @@
 package com.topicmanager.topicmanager.services;
 
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -48,6 +47,4 @@ public class TokenService {
     private Instant genExpirationDate() {
         return LocalDateTime.now().plusHours(8).toInstant(ZoneOffset.of("-03:00"));
     }
-
-
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserInviteService from "../../services/UserInviteService";
 import ErrorMessage from "../../base/components/message/ErrorMessage";
@@ -44,7 +44,7 @@ export default function UserInvite({ openUserModal, setOpenUserModal }) {
 
     return (
     <Dialog open={openUserModal} onClose={handleCancelUserChange} fullWidth maxWidth="sm">
-        <DialogTitle>Enviar Convite</DialogTitle>
+        <DialogTitle sx={{backgroundColor: "#cfd8dc", marginBottom: 3, fontWeight: 550}}>Enviar Convite</DialogTitle>
         <DialogContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
                 <Box mb={3}>
@@ -59,14 +59,14 @@ export default function UserInvite({ openUserModal, setOpenUserModal }) {
                         <MenuItem value={2}>Chefe</MenuItem>
                     </Select>
                 </Box>
-                <Box>
+                <Box mb={3}>
                     <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                    E-mail
+                        E-mail
                     </Typography>
-                    <Input
-                    fullWidth
-                    value={email || ""}
-                    onChange={(e) => setEmail(e.target.value)}
+                    <TextField
+                        fullWidth
+                        value={email || ""}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </Box>
             </Box>
