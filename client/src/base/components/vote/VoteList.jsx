@@ -22,11 +22,7 @@ export default function VoteList({votes, isVisible}) {
                 return <div>{formatted}</div>;
             } 
         },
-        { field: 'comment', headerName: 'Comentário', flex: 0.25,
-            renderCell: (params) => {
-                return <div></div>;
-            } 
-        }
+        { field: 'comment', headerName: 'Comentário', flex: 0.25}
     ];
 
     return <>
