@@ -5,8 +5,10 @@ import com.topicmanager.topicmanager.dto.MeetingDTO;
 import com.topicmanager.topicmanager.dto.MeetingParticipantDTO;
 import com.topicmanager.topicmanager.dto.TopicCreationWithMeetingDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
+import com.topicmanager.topicmanager.entities.TopicVote;
 import com.topicmanager.topicmanager.entities.UserAccount;
 import com.topicmanager.topicmanager.repositories.MeetingRepository;
+import com.topicmanager.topicmanager.repositories.TopicVoteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class MeetingService {
 
     @Autowired
     MeetingRepository meetingRepository;
+
+    @Autowired
+    TopicVoteRepository topicVoteRepository;
 
     @Autowired
     MeetingTopicService meetingTopicService;
@@ -87,7 +92,12 @@ public class MeetingService {
     private MeetingDTO getMeetingDTO(Meeting meeting) {
         List<MeetingParticipantDTO> meetingParticipants = new ArrayList<>();
 
-        meeting.getParticipants().forEach(participant -> {
+        List<TopicVote> topicVotes = topicVoteRepository.findAll();
+
+        meeting.getParticipants().
+                stream().
+                filter(p -> !topicVotes.stream().filter(v -> v.getUser().getId().equals(p.getUser().getId())).toList().isEmpty()).
+                forEach(participant -> {
             meetingParticipants.add(new MeetingParticipantDTO(participant.getId().getUserAccountId(), participant.getId().getMeetingId(), participant.getUser().getUsername(), participant.getRole()));
         });
 
