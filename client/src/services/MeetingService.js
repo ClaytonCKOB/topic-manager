@@ -63,7 +63,7 @@ export default class MeetingService {
             response = await request.put('/api/meeting/' + meeting.id, {
                 title: meeting.title,
                 start_date: FormatMeetingDate(meeting.startDate, meeting.startTime),
-                end_date: FormatMeetingDate(meeting.endDate, meeting.endTime),
+                end_date: FormatMeetingDate(meeting.startDate, meeting.endTime),
                 topics: meeting.topics
             });
 
