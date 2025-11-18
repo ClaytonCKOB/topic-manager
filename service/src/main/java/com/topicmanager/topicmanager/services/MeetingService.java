@@ -57,6 +57,8 @@ public class MeetingService {
 
         Meeting savedMeeting = meetingRepository.save(existingMeeting);
 
+        // TODO: should not delete all the topics, since it could have votes
+        // or block edit when there is already a vote
         meetingTopicService.deleteAllByMeeting(savedMeeting);
 
         for (TopicCreationWithMeetingDTO topicDTO : meeting.topics()) {

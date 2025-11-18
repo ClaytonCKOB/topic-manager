@@ -31,6 +31,7 @@ public class MeetingController {
         return ResponseEntity.ok().build();
     }
 
+    // TODO: don't return meeting, but a dto instead
     @GetMapping
     public ResponseEntity<List<Meeting>> getMeetingList() {
         List<Meeting> meetingList = meetingService.getMeetingList();
