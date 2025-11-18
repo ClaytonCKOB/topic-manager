@@ -14,6 +14,7 @@ const DefaultNavigation = () => {
     switch (userRole) {
         case 'ADMIN': return <Navigate to="/home" />;
         case 'USER': return <Navigate to="/home" />;
+        case 'CHEFE': return <Navigate to="/home" />;
         default: return <Navigate to="/login" />;
     }
 };
