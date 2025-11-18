@@ -28,7 +28,9 @@ public class UserAccountService {
     }
 
     public void delete(Long userAccountId) {
-        userAccountRepository.deleteById(userAccountId);
+        UserAccount userAccount = getUser(userAccountId);
+        userAccount.setActive(false);
+        userAccountRepository.save(userAccount);
     }
 
     public void update(UserDTO userDTO) {
