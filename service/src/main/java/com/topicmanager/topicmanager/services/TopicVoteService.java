@@ -14,6 +14,9 @@ public class TopicVoteService {
     @Autowired
     TopicVoteRepository topicVoteRepository;
 
+    @Autowired
+    ActionItemService actionItemService;
+
     public void setTopicVote(TopicVoteDTO topicVote) {
         TopicVote existingTopicVote = topicVoteRepository.findByMeetingTopicIdAndUserId(topicVote.meeting_topic_id(), topicVote.user_account_id());
 
@@ -24,6 +27,15 @@ public class TopicVoteService {
             existingTopicVote.setStatus(topicVote.status());
             existingTopicVote.setComment(topicVote.comment());
             topicVoteRepository.save(existingTopicVote);
+        }
+
+        // TODO: use constants
+        if (topicVote.status().equals(3)) {
+            actionItemService.createActionItem(
+                    topicVote.meeting_topic_id(),
+                    topicVote.user_account_id(),
+                    topicVote.comment()
+            );
         }
     }
 

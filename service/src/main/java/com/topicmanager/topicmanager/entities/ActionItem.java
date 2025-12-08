@@ -38,7 +38,7 @@ public class ActionItem {
     @Column(nullable = false)
     private Boolean completed;
 
-    @Column(name = "completed_date", nullable = false)
+    @Column(name = "completed_date")
     private LocalDateTime completedDate;
 
     @Column(name = "created_date", nullable = false)
