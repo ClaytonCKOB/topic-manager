@@ -26,7 +26,7 @@ export default function UserManagement() {
             justifyContent: "space-between",
             alignItems: "start",
             transition: "0.2s",
-            width: 0.2
+            width: 0.5
         }}
         >
         <Typography variant="h5" fontWeight="bold">

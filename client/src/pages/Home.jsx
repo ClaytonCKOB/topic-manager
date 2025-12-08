@@ -8,6 +8,7 @@ import MeetingVoteList from "./meeting/MeetingVoteList";
 import UserManagement from "./user/UserManagement";
 import { useEffect, useState } from "react";
 import MeetingService from "../services/MeetingService";
+import ActionItemList from "../base/components/action_item/ActionItemList";
 
 export default function Home() {
   const [meetingList, setMeetingList] = useState([]);
@@ -28,12 +29,15 @@ export default function Home() {
 
   return (
     <Box p={4} bgcolor="#f2f5f9" minHeight="100vh">
-      <Box mb={8}>
-        <Logout/>
-        <Typography variant="h5" fontWeight="bold">
-          Bem-vindo(a), {authService.getName()}!
-        </Typography>
-        <UserManagement/>
+      <Box mt={5} mb={8} display="flex">
+        <Box width={0.3}>
+          <Logout/>
+          <Typography variant="h5" fontWeight="bold">
+            Bem-vindo(a), {authService.getName()}!
+          </Typography>
+          <UserManagement/>
+        </Box>
+        <ActionItemList/>
       </Box>
 
       <MeetingVoteList meetingList={meetingList}/>

@@ -1,6 +1,6 @@
 import request from '../utils/RequestUtil';
 
-export default class actionItemService {
+export default class ActionItemService {
 
     async list(actorId) {
         var response = {};
