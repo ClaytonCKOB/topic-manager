@@ -33,6 +33,17 @@ CREATE TABLE meeting_topic (
     description VARCHAR
 );
 
+CREATE TABLE action_item (
+   action_item_id SERIAL PRIMARY KEY,
+   meeting_topic_id INT REFERENCES meeting_topic(meeting_topic_id) ON DELETE CASCADE,
+   sender_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
+   actor_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
+   comment VARCHAR,
+   completed BOOLEAN DEFAULT FALSE,
+   completed_date TIMESTAMP NOT NULL DEFAULT NULL,
+   created_date TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE topic_vote (
     topic_vote_id SERIAL PRIMARY KEY,
     meeting_topic_id INT NOT NULL REFERENCES meeting_topic(meeting_topic_id) ON DELETE CASCADE,
