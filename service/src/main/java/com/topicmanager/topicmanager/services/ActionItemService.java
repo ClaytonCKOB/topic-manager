@@ -1,6 +1,8 @@
 package com.topicmanager.topicmanager.services;
 
+import com.topicmanager.topicmanager.dto.ActionItemDTO;
 import com.topicmanager.topicmanager.entities.ActionItem;
+import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.entities.MeetingTopic;
 import com.topicmanager.topicmanager.entities.UserAccount;
 import com.topicmanager.topicmanager.repositories.ActionItemRepository;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,8 +28,23 @@ public class ActionItemService {
     @Autowired
     private MeetingParticipantService meetingParticipantService;
 
-    public List<ActionItem> listActionItemsByActor(Long id) {
-        return actionItemRepository.findByActorIdAndCompletedFalse(id);
+    public List<ActionItemDTO> listActionItemsByActor(Long id) {
+        List<ActionItem> actionItemList = actionItemRepository.findByActorIdAndCompletedFalse(id);
+
+        return actionItemList.stream().map(actionItem -> {
+            MeetingTopic meetingTopic = actionItem.getTopic();
+            Meeting meeting = meetingTopic.getMeeting();
+            return new ActionItemDTO(
+                actionItem.getId(),
+                meetingTopic.getId(),
+                meetingTopic.getTitle(),
+                meeting.getId(),
+                meeting.getTitle(),
+                actionItem.getSender().getName(),
+                actionItem.getComment(),
+                actionItem.getCreatedDate()
+            );
+        }).toList();
     }
 
     public void completeActionItem(Long actionItemId) {

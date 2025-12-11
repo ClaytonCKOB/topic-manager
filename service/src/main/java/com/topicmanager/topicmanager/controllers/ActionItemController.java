@@ -1,5 +1,6 @@
 package com.topicmanager.topicmanager.controllers;
 
+import com.topicmanager.topicmanager.dto.ActionItemDTO;
 import com.topicmanager.topicmanager.entities.ActionItem;
 import com.topicmanager.topicmanager.services.ActionItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,13 @@ public class ActionItemController {
     @Autowired
     ActionItemService actionItemService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<ActionItem>> listActionItems(@PathVariable Long actorId){
-        List<ActionItem> actionItems = actionItemService.listActionItemsByActor(actorId);
+    @GetMapping("/{actorId}")
+    public ResponseEntity<List<ActionItemDTO>> listActionItems(@PathVariable Long actorId){
+        List<ActionItemDTO> actionItems = actionItemService.listActionItemsByActor(actorId);
         return ResponseEntity.ok(actionItems);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{actionItemId}")
     public ResponseEntity completeActionItem(@PathVariable Long actionItemId){
         actionItemService.completeActionItem(actionItemId);
         return ResponseEntity.ok().build();

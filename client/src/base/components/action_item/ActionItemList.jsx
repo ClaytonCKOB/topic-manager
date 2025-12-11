@@ -45,12 +45,12 @@ export default function ActionItemList() {
                     }}>
                         <Box display="flex" justifyContent="space-between" alignItems="center">
                             <Typography variant="h6" fontWeight="bold">
-                                {item.sender.name}
+                                {item.senderName}
                             </Typography>
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={() => {setOpenUserModal(true); setSelectedActionItem(item);}}
+                                onClick={() => {setSelectedActionItem(item); setOpenUserModal(true); }}
                                 sx={{
                                     boxSizing: "border-box",
                                     width: "40px",
@@ -84,7 +84,7 @@ export default function ActionItemList() {
                 openUserModal={openUserModal}
                 setOpenUserModal={setOpenUserModal}
                 actionItem={selectedActionItem}
-                removeActionItem={(id) => setActionItemList((prev) => prev.filter((item) => item.id !== id))}
+                removeActionItem={(id) => setActionItemList((prev) => prev.filter((item) => item.actionItemId !== id))}
             />
         </Box>
         : null

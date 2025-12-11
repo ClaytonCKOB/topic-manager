@@ -40,7 +40,7 @@ CREATE TABLE action_item (
    actor_id INT NOT NULL REFERENCES user_account(user_account_id) ON DELETE CASCADE,
    comment VARCHAR,
    completed BOOLEAN DEFAULT FALSE,
-   completed_date TIMESTAMP NOT NULL DEFAULT NULL,
+   completed_date TIMESTAMP DEFAULT NULL,
    created_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
