@@ -3,9 +3,12 @@ import ActionItemService from "../../../services/ActionItemService";
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import AuthService from "../../../services/AuthService";
 import { useEffect, useState } from "react";
+import ActionItemDialog from "../action_item/ActionItemDialog";
 
 export default function ActionItemList() {
     const [actionItemList, setActionItemList] = useState([]);
+    const [selectedActionItem, setSelectedActionItem] = useState(null);
+    const [openUserModal, setOpenUserModal] = useState(false);
     const authService = new AuthService();
     const actionItemService = new ActionItemService();
 
@@ -47,12 +50,10 @@ export default function ActionItemList() {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                startIcon={<FullscreenIcon/>}
-                                onClick={() => {}}
+                                onClick={() => {setOpenUserModal(true); setSelectedActionItem(item);}}
                                 sx={{
                                     boxSizing: "border-box",
                                     width: "40px",
-                                    padding: "8px",
                                     minWidth: "0px",
                                     justifyContent: "center",
                                     display: "flex",
@@ -60,6 +61,7 @@ export default function ActionItemList() {
                                     margin: "0px",
                                 }}
                             >
+                                <FullscreenIcon/>
                             </Button>
                         </Box>
                         <Box
@@ -78,6 +80,12 @@ export default function ActionItemList() {
                     </Box>
                 ))}
             </Box>
+            <ActionItemDialog
+                openUserModal={openUserModal}
+                setOpenUserModal={setOpenUserModal}
+                actionItem={selectedActionItem}
+                removeActionItem={(id) => setActionItemList((prev) => prev.filter((item) => item.id !== id))}
+            />
         </Box>
         : null
     }
