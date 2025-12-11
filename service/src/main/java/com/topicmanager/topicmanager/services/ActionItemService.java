@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +26,9 @@ public class ActionItemService {
 
     @Autowired
     private MeetingParticipantService meetingParticipantService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<ActionItemDTO> listActionItemsByActor(Long id) {
         List<ActionItem> actionItemList = actionItemRepository.findByActorIdAndCompletedFalse(id);
@@ -58,11 +60,15 @@ public class ActionItemService {
         MeetingTopic meetingTopic = meetingTopicService.getMeetingTopicById(meetingTopicId);
         UserAccount sender = userAccountService.getUser(senderId);
         UserAccount actor = meetingParticipantService.getMeetingBossById(meetingTopic.getMeeting().getId());
+        Meeting meeting = meetingTopic.getMeeting();
         ActionItem actionItem = new ActionItem();
         actionItem.setTopic(meetingTopic);
         actionItem.setActor(actor);
         actionItem.setSender(sender);
         actionItem.setComment(comment);
+        actionItem.setCompleted(false);
         actionItemRepository.save(actionItem);
+
+        notificationService.sendActionItem(actionItem);
     }
 }

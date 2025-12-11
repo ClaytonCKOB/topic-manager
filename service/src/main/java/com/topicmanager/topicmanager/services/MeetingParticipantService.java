@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class MeetingParticipantService {
@@ -54,12 +55,15 @@ public class MeetingParticipantService {
 
     public UserAccount getMeetingBossById(Long meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
-        MeetingParticipant boss = meeting.getParticipants()
+        List<MeetingParticipant> participants = meeting.getParticipants()
                 .stream()
                 .filter(participant -> participant.getRole().equals(UserAccountRole.CHEFE))
-                .toList()
-                .get(0);
+                .toList();
 
-        return boss.getUser();
+        if (!participants.isEmpty()) {
+            return participants.get(0).getUser();
+        } else {
+            return null;
+        }
     }
 }

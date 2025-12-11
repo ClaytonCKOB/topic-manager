@@ -161,7 +161,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             sx={textColorStyle}
             multiline
             minRows={2}
-            placeholder="Adicione a descrição da subpauta..."
+            placeholder={isSubTopic ? "Adicione a descrição da subpauta..." : "Adicione a descrição da pauta..."}
             fullWidth
             value={topic.title}
             onChange={(e) => onChangeTopicTitle(index, subIndex, e.target.value)}

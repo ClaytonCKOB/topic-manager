@@ -12,11 +12,11 @@ import Register from './pages/user/Register';
 function App() {
 
   const routesList = useMemo(() => [
-      { path: "/home", name: "Reuniões", allowedRoles: ['ADMIN', 'CHEFE', 'USER'], component: Home },
-      { path: "/meeting/create", name: "Criar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'USER'], component: MeetingCreate },
-      { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'USER'], component: null },
-      { path: "/meeting/detail/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'USER'], component: MeetingCreate },
-      { path: "/meeting/vote/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'USER'], component: MeetingVote },
+      { path: "/home", name: "Reuniões", allowedRoles: ['ADMIN', 'CHEFE', 'PARTICIPANTE'], component: Home },
+      { path: "/meeting/create", name: "Criar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'PARTICIPANTE'], component: MeetingCreate },
+      { path: "/meeting/:id", name: "Alterar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'PARTICIPANTE'], component: null },
+      { path: "/meeting/detail/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'PARTICIPANTE'], component: MeetingCreate },
+      { path: "/meeting/vote/:id", name: "Consultar Reunião", allowedRoles: ['ADMIN', 'CHEFE', 'PARTICIPANTE'], component: MeetingVote },
       { path: "/user/list", name: "Usuários", allowedRoles: ['ADMIN'], component: UserList },
       { path: "/register/:id", name: "Sign-up", allowedRoles: [], component: Register }
   ], []);
