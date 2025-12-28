@@ -95,7 +95,7 @@ public class NotificationService {
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7;">
             <div style="max-width: 600px; background-color: #ffffff; border-radius: 8px; padding: 25px;">
     
-                <h2 style="color: #333;">Você possui uma Tarefa Pendiente</h2>
+                <h2 style="color: #333;">Você possui uma Tarefa Pendente</h2>
     
                 <p style="font-size: 15px; color: #555;">
                     Olá %s,<br><br>
