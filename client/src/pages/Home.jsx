@@ -42,7 +42,7 @@ export default function Home() {
 
       <MeetingVoteList meetingList={meetingList}/>
 
-      <MeetingManagement meetingList={meetingList} isRequesting={isRequesting}/>
+      <MeetingManagement meetingList={meetingList} setMeetingList={setMeetingList} isRequesting={isRequesting}/>
 
     </Box>
   );

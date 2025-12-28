@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import DeleteDialog from "../../base/components/dialog/DeleteDialog";
 import AuthService from "../../services/AuthService";
 
-export default function MeetingManagement({meetingList, isRequesting}) {
+export default function MeetingManagement({meetingList, setMeetingList, isRequesting}) {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
     const navigate = useNavigate();
@@ -39,18 +39,19 @@ export default function MeetingManagement({meetingList, isRequesting}) {
     };
 
     const handleConfirmDelete = async () => {
-    if (!selectedMeetingId) return;
-    try {
-        await meetingService.delete(selectedMeetingId);
-        // await getMeetingList();
+      if (!selectedMeetingId) return;
+      
+      try {
+          await meetingService.delete(selectedMeetingId);
 
-    } catch (err) {
-        console.error("Erro ao deletar reunião:", err);
+      } catch (err) {
+          console.error("Erro ao deletar reunião:", err);
 
-    } finally {
-        setOpenDeleteModal(false);
-        setSelectedMeetingId(null);
-    }
+      } finally {
+          setOpenDeleteModal(false);
+          setSelectedMeetingId(null);
+          setMeetingList(meetingList.filter(m => m.id !== selectedMeetingId));
+      }
     };
 
     const columns = [
