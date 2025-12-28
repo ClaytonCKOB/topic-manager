@@ -4,9 +4,11 @@ import {
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
+import AuthService from "../../services/AuthService";
 
 export default function MeetingVoteList({meetingList}) {
     const navigate = useNavigate();
+    const authService = new AuthService();
 
     const redirectMeetingVote = (meeting_id) => {
         navigate("/meeting/vote/" + meeting_id);
@@ -54,20 +56,23 @@ export default function MeetingVoteList({meetingList}) {
                 {meeting.topics.length} item(ns) de pauta.
               </Typography>
             </Box>
-            <Button
-              onClick={() => redirectMeetingVote(meeting.id)}
-              variant="contained"
-              color="primary"
-              sx={{
-                borderRadius: 2,
-                px: 3,
-                py: 1.2,
-                textTransform: "none",
-                fontWeight: 500
-              }}
-            >
-              Ver Pautas / Votar
-            </Button>
+            {
+              authService.isAdmin() ? null :
+              <Button
+                onClick={() => redirectMeetingVote(meeting.id)}
+                variant="contained"
+                color="primary"
+                sx={{
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1.2,
+                  textTransform: "none",
+                  fontWeight: 500
+                }}
+              >
+                Ver Pautas / Votar
+              </Button>
+            }
           </Box>
         ))}
     </Box>
