@@ -54,11 +54,11 @@ export default function MeetingManagement({meetingList, isRequesting}) {
     };
 
     const columns = [
-        { field: 'title', headerName: 'Título', flex: 0.25 },
+        { field: 'title', headerName: 'Título', flex: 0.4 },
         { 
         field: 'startDate', 
         headerName: 'Início', 
-        flex: 0.3,
+        flex: 0.25,
         renderCell: (params) => {
             const formatted = params.value ? formatDate(params.value) : '';
             return <div>{formatted}</div>;
@@ -67,18 +67,17 @@ export default function MeetingManagement({meetingList, isRequesting}) {
         { 
         field: 'endDate', 
         headerName: 'Fim', 
-        flex: 0.2, 
+        flex: 0.25, 
         align: 'center',
         renderCell: (params) => {
             const formatted = params.value ? formatDate(params.value) : '';
             return <div>{formatted}</div>;
         }
         },
-        { field: 'creator', headerName: 'Criador', flex: 0.35},
         { 
         field: 'actions', 
         headerName: 'Ações', 
-        flex: 0.35,
+        flex: 0.1,
         renderCell: (params) => {
             return <>
             <IconButton 
