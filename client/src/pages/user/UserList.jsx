@@ -88,13 +88,16 @@ export default function UserList() {
                 >
                     <EditIcon />
                 </IconButton>
-                <IconButton 
-                    color="error" 
-                    size="small"
-                    onClick={() => handleDeleteClick(params.row.id)}
-                >
-                    <DeleteIcon />
-                </IconButton>
+                {
+                    params.row.role === "ADMIN" ? null :
+                    <IconButton 
+                        color="error" 
+                        size="small"
+                        onClick={() => handleDeleteClick(params.row.id)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                }
                 </>;
             }
             }
