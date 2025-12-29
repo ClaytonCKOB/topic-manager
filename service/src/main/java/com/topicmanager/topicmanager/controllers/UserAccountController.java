@@ -38,8 +38,8 @@ public class UserAccountController {
         return ResponseEntity.ok(userAccountService.listActiveUsers().stream().map(user -> new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(), user.getActive())).toList());
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteUserAccount(@RequestParam Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUserAccount(@PathVariable Long id){
         userAccountService.delete(id);
         return ResponseEntity.ok().build();
     }

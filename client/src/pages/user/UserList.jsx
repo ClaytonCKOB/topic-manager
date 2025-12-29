@@ -67,6 +67,7 @@ export default function UserList() {
         } finally {
             setOpenDeleteModal(false);
             setUserId(null);
+            setUsers(users.filter(u => u.id !== userId));
         }
     };
 
