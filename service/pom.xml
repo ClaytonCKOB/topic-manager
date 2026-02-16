@@ -13,7 +13,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>topicmanager</name>
 	<description></description>
-	<url/>
+    <packaging>jar</packaging>
+    <url/>
 	<licenses>
 		<license/>
 	</licenses>
@@ -122,8 +123,10 @@
 					<cleanDisabled>false</cleanDisabled>
 				</configuration>
 			</plugin>
-		</plugins>
-
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
 	</build>
-
 </project>

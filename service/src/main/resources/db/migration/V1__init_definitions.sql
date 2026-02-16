@@ -70,4 +70,4 @@ CREATE TABLE meeting_participant (
 );
 
 INSERT INTO user_account (name, username, email, password, role, active, created_date)
-VALUES ('admin', 'admin', 'no-reply@topicmanager.com', '$2a$10$zPw/VBKlXzNYCnb7/kJnNO3sUx9ixeVOuRMXiFs1lckdXnzR8T3De', 0, true, NOW());
+VALUES ('admin', 'admin', 'no-reply@topicmanager.com', '$2a$10$lVnjip1o83LDG98yu6Ua6.3wREnXUYI64vU7T4eCBaQitWqYyc932', 0, true, NOW());
