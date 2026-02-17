@@ -5,3 +5,4 @@ client/node_modules/
 target/
 service/target/
 .env
+start.sh
