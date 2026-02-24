@@ -6,11 +6,13 @@ import com.topicmanager.topicmanager.entities.MeetingTopic;
 import com.topicmanager.topicmanager.entities.UserAccountInvite;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class NotificationService {
     private final JavaMailSender mailSender;
@@ -72,6 +74,7 @@ public class NotificationService {
         try {
             sendHtml(userAccountInvite.getEmail(), "You're invited to Topic Manager", htmlBody);
         } catch (MessagingException e) {
+            log.error("Failed to send invitation email", e.getMessage());
             throw new RuntimeException("Failed to send invitation email", e);
         }
     }

@@ -33,6 +33,15 @@ public class UserAccountInvite {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
 
+    public UserAccountInvite(Long sender_id, String email, UserAccountRole role) {
+        this.id = UUID.randomUUID().toString();
+        this.sender_id = sender_id;
+        this.email = email;
+        this.role = role;
+        this.active = true;
+        this.createdDate = LocalDateTime.now();
+    }
+
     public UserAccountInvite(UserInviteDTO userAccountInviteDTO) {
         this.id = UUID.randomUUID().toString();
         this.sender_id = userAccountInviteDTO.sender_id();
