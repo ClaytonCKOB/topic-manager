@@ -8,7 +8,6 @@ import ErrorMessage from "../../base/components/message/ErrorMessage";
 
 const Login = () => {
     const isSmallScreen = useMediaQuery('(max-width:600px) or (max-height:600px)');
-    const loginWidthPercentage = 100; //isSmallScreen ? 100 : 40;
     
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -71,7 +70,11 @@ const Login = () => {
                 width: "100vw",
                 height: "100vh",
                 padding: 0,
-                margin: 0
+                margin: 0,
+                backgroundColor: "#f5f5f5",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
             }}
         >
             <Box
@@ -79,33 +82,34 @@ const Login = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    width: `${loginWidthPercentage}%`,
-                    backgroundColor: "#f5f5f5",
+                    width: "100%",
                     height: "100%",
+                    padding: isSmallScreen ? 2 : 0,
                 }}
             >
                 <Box
                     sx={{
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "space-between",
+                        justifyContent: "center",
                         boxSizing: "border-box",
-                        maxWidth: "500px",
-                        height: "60%",
-                        gap: "15px",
-                        padding: "3rem",
+                        width: "100%",
+                        maxWidth: isSmallScreen ? "100%" : "400px",
+                        minHeight: isSmallScreen ? "auto" : "400px",
+                        gap: "32px",
+                        padding: isSmallScreen ? "2rem" : "3rem",
                         alignItems: "center",
                         borderRadius: "8px",
-                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                        backgroundColor: "white",
+                        boxShadow: isSmallScreen ? "none" : "0 4px 12px rgba(0, 0, 0, 0.1)",
+                        backgroundColor: isSmallScreen ? "transparent" : "white",
                     }}
                 >
                     <Typography
-                        variant="h4"
+                        variant={isSmallScreen ? "h5" : "h4"}
                         sx={{
                             fontWeight: "bold",
                             textAlign: "center",
-                            marginBottom: "20px",
+                            marginBottom: isSmallScreen ? "24px" : "60px",
                         }}
                     >
                         Topic Manager
@@ -133,7 +137,7 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             onFocus={() => setWrongCredentials(false)}
                             onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
-                            sx={{ width: "100%", marginTop: "20px" }}
+                            sx={{ width: "100%", marginTop: "24px" }}
                             slotProps={{
                                 input: {
                                     endAdornment: (
@@ -153,6 +157,7 @@ const Login = () => {
                                 },
                             }}
                             helperText={wrongCredentials ? "Usuário ou senha inválidos" : ""}
+                            fullWidth={isSmallScreen}
                         />
                     </Box>
                     <Button
@@ -160,11 +165,13 @@ const Login = () => {
                         variant="contained"
                         onClick={handleLogin}
                         sx={{ 
-                            width: "100%",
+                            width: isSmallScreen ? "100%" : "100%",
+                            minWidth: isSmallScreen ? "auto" : "200px",
                             height: "56px",
                             fontWeight: "bold",
                             textTransform: "uppercase",
                             color: "white",
+                            marginTop: "30px",
                         }}
                     >
                         {loading ? <CircularProgress color="inherit" size={24} /> : "Entrar"}
