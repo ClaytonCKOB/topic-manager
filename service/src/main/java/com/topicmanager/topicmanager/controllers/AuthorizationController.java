@@ -8,6 +8,7 @@ import com.topicmanager.topicmanager.repositories.UserAccountInviteRepository;
 import com.topicmanager.topicmanager.repositories.UserAccountRepository;
 import com.topicmanager.topicmanager.services.TokenService;
 import com.topicmanager.topicmanager.services.UserAccountInviteService;
+import com.topicmanager.topicmanager.services.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +31,9 @@ public class AuthorizationController {
 
     @Autowired
     private UserAccountInviteService userAccountInviteService;
+
+    @Autowired
+    private UserAccountService userAccountService;
 
     @Autowired
     TokenService tokenService;
@@ -92,6 +96,8 @@ public class AuthorizationController {
                 user = new UserAccount(data.username(), encryptedPassword, invite.role(), data.email(), data.name());
                 userAccountRepository.save(user);
             }
+
+            userAccountService.addUserToOpenMeetings(user);
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {
