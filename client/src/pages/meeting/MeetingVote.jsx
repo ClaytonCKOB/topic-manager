@@ -98,7 +98,7 @@ export default function MeetingVote() {
                 <Box
                     sx={{
                         backgroundColor: "white",
-                        borderRadius: 3,
+                        borderRadius: 1,
                         p: 3,
                         mb: 4,
                         boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
@@ -133,7 +133,7 @@ export default function MeetingVote() {
                 <Box
                     sx={{
                         backgroundColor: "white",
-                        borderRadius: 3,
+                        borderRadius: 1,
                         p: 3,
                         mb: 4,
                         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
@@ -177,7 +177,7 @@ export default function MeetingVote() {
                 <Box
                     sx={{
                         backgroundColor: "white",
-                        borderRadius: 3,
+                        borderRadius: 1,
                         p: 2,
                         mb: 3,
                         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",

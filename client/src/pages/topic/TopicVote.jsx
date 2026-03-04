@@ -34,7 +34,10 @@ export default function TopicVote({ topic, index, refreshTopics }) {
             setIsSaving(true);
             await topicService.saveVote(authService.getUserId(), topicId, comment, status);
             refreshTopics();
-            setTimeout(() => setIsSaving(false), 800);
+            setTimeout(() => {
+                setIsSaving(false);
+                setCollapsed(true);
+            }, 800);
 
         } catch (err) {
             console.error("Erro ao salvar voto:", err);
@@ -52,6 +55,10 @@ export default function TopicVote({ topic, index, refreshTopics }) {
         let currentComment = topic.votes.filter(vote => vote.user.id == authService.getUserId()).length > 0 ? topic.votes.filter(vote => vote.user.id == authService.getUserId())[0].comment : "";
         setSelectedVote(currentVote);
         setComment(currentComment);
+
+        if (currentVote !== null) {
+            setCollapsed(true);
+        }
     }, []);
 
     const hasVoted = selectedVote !== null;
@@ -67,7 +74,7 @@ export default function TopicVote({ topic, index, refreshTopics }) {
         key={topic.id || index}
         sx={{
             backgroundColor: "white",
-            borderRadius: 3,
+            borderRadius: 1,
             borderLeft: `6px solid #e0e0e0`,
             p: 3,
             boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
@@ -126,7 +133,7 @@ export default function TopicVote({ topic, index, refreshTopics }) {
                         color={color}
                         onClick={() => setSelectedVote(value)}
                         sx={{
-                            borderRadius: 3,
+                            borderRadius: 1,
                             px: 3,
                             py: 1.5,
                             fontWeight: 600,
@@ -175,7 +182,7 @@ export default function TopicVote({ topic, index, refreshTopics }) {
                         color="primary"
                         disabled={isSaving}
                         sx={{
-                            borderRadius: 3,
+                            borderRadius: 1,
                             px: 5,
                             py: 1.5,
                             fontWeight: 600,
