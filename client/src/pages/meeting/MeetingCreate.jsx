@@ -142,7 +142,6 @@ export default function MeetingCreate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
       <Box bgcolor="#f8fafc" minHeight="100vh">
-        {/* Header Section with Back Button */}
         <Box
           sx={{
             background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
@@ -176,7 +175,6 @@ export default function MeetingCreate() {
           </Typography>
         </Box>
 
-        {/* Content Section */}
         <Box p={4}>
           <Card sx={{display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', boxShadow: 'none'}}>
             <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8, maxWidth: 1300 }}>
