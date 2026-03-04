@@ -57,17 +57,22 @@ export default function TopicVote({ topic, index, refreshTopics }) {
     const hasVoted = selectedVote !== null;
     const voteLabel = hasVoted ? votes.find(v => v.value === selectedVote)?.label : "Pendente";
 
+    const getChipColor = () => {
+        if (selectedVote === null) return 'warning';
+        return votes.find(v => v.value === selectedVote)?.color || 'warning';
+    };
+
     return (
         <Box
         key={topic.id || index}
         sx={{
             backgroundColor: "white",
             borderRadius: 3,
-            borderLeft: `6px solid ${hasVoted ? '#10b981' : '#f59e0b'}`,
+            borderLeft: `6px solid #e0e0e0`,
             p: 3,
             boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
             position: "relative",
-            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+            transition: "all 0.3s ease",
             "&:hover": {
                 transform: "translateY(-2px)",
                 boxShadow: "0 4px 16px rgba(0,0,0,0.12)"
@@ -79,13 +84,15 @@ export default function TopicVote({ topic, index, refreshTopics }) {
                     <Typography variant="h6" fontWeight="bold">
                         {index + 1}. {topic.title}
                     </Typography>
-                    <Chip
-                        icon={hasVoted ? <CheckCircleIcon /> : <PendingIcon />}
-                        label={voteLabel}
-                        color={hasVoted ? "success" : "warning"}
-                        size="small"
-                        sx={{ fontWeight: 600 }}
-                    />
+                    {collapsed && (
+                        <Chip
+                            icon={hasVoted ? <CheckCircleIcon /> : <PendingIcon />}
+                            label={voteLabel}
+                            color={getChipColor()}
+                            size="small"
+                            sx={{ fontWeight: 600 }}
+                        />
+                    )}
                 </Box>
 
                 <IconButton

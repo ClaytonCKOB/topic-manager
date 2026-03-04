@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Button, LinearProgress} from "@mui/material";
+import { Box, Typography, Button, LinearProgress, Chip} from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import GroupIcon from '@mui/icons-material/Group';
 import PersonIcon from '@mui/icons-material/Person';
@@ -8,11 +8,14 @@ import { useEffect, useState } from "react";
 import TopicService from "../../services/TopicService";
 import { useNavigate, useParams } from "react-router-dom";
 import TopicVote from "../topic/TopicVote";
+import AuthService from "../../services/AuthService";
 
 export default function MeetingVote() {
     const [topics, setTopics] = useState([]);
     const [totalVotes, setTotalVotes] = useState({})
+    const [filterStatus, setFilterStatus] = useState('all');
     const topicService = new TopicService();
+    const authService = new AuthService();
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -33,6 +36,28 @@ export default function MeetingVote() {
     }, []);
 
     const voteProgress = totalVotes.total > 0 ? (totalVotes.voted / totalVotes.total) * 100 : 0;
+
+    const getUserVoteStatus = (topic) => {
+        const userVote = topic.votes.filter(vote => vote.user.id == authService.getUserId());
+        if (userVote.length === 0) return null;
+        return userVote[0].status;
+    };
+
+    const filteredTopics = topics.filter(topic => {
+        if (filterStatus === 'all') return true;
+        const voteStatus = getUserVoteStatus(topic);
+        if (filterStatus === 'pending') return voteStatus === null;
+        return voteStatus === parseInt(filterStatus);
+    });
+
+    const filterOptions = [
+        { label: "Todas", value: "all" },
+        { label: "Pendentes", value: "pending" },
+        { label: "Aprovadas", value: "0" },
+        { label: "Reprovadas", value: "1" },
+        { label: "Abstenções", value: "2" },
+        { label: "Diligências", value: "3" },
+    ];
 
     return <>
         <Box bgcolor="#f8fafc" minHeight="100vh">
@@ -105,7 +130,6 @@ export default function MeetingVote() {
                     </Typography>
                 </Box>
 
-                {/* Simple Stats Row */}
                 <Box
                     sx={{
                         backgroundColor: "white",
@@ -141,16 +165,56 @@ export default function MeetingVote() {
                     />
                 </Box>
 
-                <Typography variant="h5" fontWeight="bold" gutterBottom mb={3}>
-                    Pautas para Votação
-                </Typography>
-                <Grid container spacing={3}>
-                    {topics.map((topic, index) => (
-                        <Grid item xs={12} key={index}>
-                            <TopicVote topic={topic} index={index} refreshTopics={() => getTopics(id)}/>
-                        </Grid>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+                    <Typography variant="h5" fontWeight="bold">
+                        Pautas para Votação
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {filteredTopics.length} de {topics.length} pautas
+                    </Typography>
+                </Box>
+
+                <Box
+                    sx={{
+                        backgroundColor: "white",
+                        borderRadius: 3,
+                        p: 2,
+                        mb: 3,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                        display: "flex",
+                        gap: 1.5,
+                        flexWrap: "wrap",
+                        alignItems: "center"
+                    }}
+                >
+                    <Typography variant="body2" fontWeight="600" color="text.secondary">
+                        Filtrar:
+                    </Typography>
+                    {filterOptions.map(({ label, value }) => (
+                        <Chip
+                            key={value}
+                            label={label}
+                            onClick={() => setFilterStatus(value)}
+                            color={filterStatus === value ? "primary" : "default"}
+                            variant={filterStatus === value ? "filled" : "outlined"}
+                            sx={{
+                                fontWeight: filterStatus === value ? 600 : 400,
+                                cursor: "pointer",
+                                borderRadius: 1,
+                                transition: "all 0.2s ease",
+                                "&:hover": {
+                                    transform: "scale(1.05)"
+                                }
+                            }}
+                        />
                     ))}
-                </Grid>
+                </Box>
+
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    {filteredTopics.map((topic, index) => (
+                        <TopicVote key={index} topic={topic} index={topics.indexOf(topic)} refreshTopics={() => getTopics(id)}/>
+                    ))}
+                </Box>
             </Box>
         </Box>
     </>
