@@ -1,23 +1,23 @@
-import { Box, Grid, Typography, Button, IconButton} from "@mui/material"; 
+import { Box, Typography } from "@mui/material";
 
-import GroupIcon from '@mui/icons-material/Group';
-
-export default function TotalVotes({icon, votes, text}) {
-    return <>
-    <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", width: 0.2, padding: 2}}>
-        <Box mb={2}>
-            <GroupIcon/>
-        </Box>
-        <Box mb={2}>
-            <Typography>
-                {votes}
+export default function TotalVotes({ icon: Icon, votes, text, color = "primary" }) {
+    return (
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center"
+            }}
+        >
+            <Icon sx={{ fontSize: 32, color: `${color}.main`, mb: 1 }} />
+            <Typography variant="h4" fontWeight="bold" color="text.primary" mb={0.5}>
+                {votes || 0}
             </Typography>
-        </Box>
-        <Box>
-            <Typography>
+            <Typography variant="body2" color="text.secondary">
                 {text}
             </Typography>
         </Box>
-    </Box>
-    </>;
+    );
 }
