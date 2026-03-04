@@ -28,7 +28,7 @@ export default function Home() {
   };
 
   return (
-    <Box p={4} bgcolor="#f2f5f9" minHeight="100vh">
+    <Box p={4} bgcolor="#f8fafc" minHeight="100vh">
       <Box mt={5} mb={8} display="flex">
         <Box width={0.3}>
           <Logout/>
