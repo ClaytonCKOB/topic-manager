@@ -1,8 +1,8 @@
-import { 
+import {
   Box, Typography
 } from "@mui/material";
 import AuthService from "../services/AuthService";
-import Logout from "./user/Logout";
+import Header from "../base/components/header/Header";
 import MeetingManagement from "./meeting/MeetingManagement";
 import MeetingVoteList from "./meeting/MeetingVoteList";
 import UserManagement from "./user/UserManagement";
@@ -16,7 +16,7 @@ export default function Home() {
   const meetingService = new MeetingService();
   const authService = new AuthService();
 
-  useEffect(() => {    
+  useEffect(() => {
     setIsRequesting(true);
     getMeetingList();
     setIsRequesting(false);
@@ -24,26 +24,28 @@ export default function Home() {
 
   const getMeetingList = async (attr = {}) => {
       const data = await meetingService.list(attr);
-      setMeetingList(data || []); 
+      setMeetingList(data || []);
   };
 
   return (
-    <Box p={4} bgcolor="#f8fafc" minHeight="100vh">
-      <Box mt={5} mb={8} display="flex">
-        <Box width={0.3}>
-          <Logout/>
-          <Typography variant="h5" fontWeight="bold">
-            Bem-vindo(a), {authService.getName()}!
-          </Typography>
-          <UserManagement/>
+    <Box bgcolor="#f8fafc" minHeight="100vh">
+      <Header />
+
+      <Box p={4}>
+        <Box mt={5} mb={8} display="flex">
+          <Box width={0.3}>
+            <Typography variant="h5" fontWeight="bold">
+              Bem-vindo(a), {authService.getName()}!
+            </Typography>
+            <UserManagement/>
+          </Box>
+          <ActionItemList/>
         </Box>
-        <ActionItemList/>
+
+        <MeetingVoteList meetingList={meetingList}/>
+
+        <MeetingManagement meetingList={meetingList} setMeetingList={setMeetingList} isRequesting={isRequesting}/>
       </Box>
-
-      <MeetingVoteList meetingList={meetingList}/>
-
-      <MeetingManagement meetingList={meetingList} setMeetingList={setMeetingList} isRequesting={isRequesting}/>
-
     </Box>
   );
 }
