@@ -45,6 +45,7 @@ export default function ActionItemList() {
                             width: "300px",
                             minWidth: "300px",
                             height: "100%",
+                            minHeight: "200px",
                             boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                             "&:hover": {
                                 transform: "translateY(-4px)",

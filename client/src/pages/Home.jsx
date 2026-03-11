@@ -28,23 +28,34 @@ export default function Home() {
   };
 
   return (
-    <Box bgcolor="#f8fafc" minHeight="100vh">
+    <Box bgcolor="#f8fafc" height="100vh" display="flex" flexDirection="column" overflow="hidden">
       <Header />
-
-      <Box p={4}>
-        <Box mt={5} mb={8} display="flex">
-          <Box width={0.3}>
+      <Box p={4} display="flex" justifyContent="space-between" gap={4} flex={1} overflow="hidden">
+        <Box width={0.5} display="flex" flexDirection="column" gap={3} overflow="hidden">
+          <Box flexShrink={0}>
             <Typography variant="h5" fontWeight="bold">
               Bem-vindo(a), {authService.getName()}!
             </Typography>
-            <UserManagement/>
           </Box>
-          <ActionItemList/>
+
+          {authService.isAdmin() && (
+            <Box flexShrink={0}>
+              <UserManagement/>
+            </Box>
+          )}
+
+          <Box flexShrink={0}>
+            <ActionItemList/>
+          </Box>
+
+          <Box flex={1} overflow="hidden" display="flex" flexDirection="column">
+            <MeetingVoteList meetingList={meetingList}/>
+          </Box>
         </Box>
 
-        <MeetingVoteList meetingList={meetingList}/>
-
-        <MeetingManagement meetingList={meetingList} setMeetingList={setMeetingList} isRequesting={isRequesting}/>
+        <Box width={0.5} overflow="hidden" display="flex" flexDirection="column">
+          <MeetingManagement meetingList={meetingList} setMeetingList={setMeetingList} isRequesting={isRequesting}/>
+        </Box>
       </Box>
     </Box>
   );

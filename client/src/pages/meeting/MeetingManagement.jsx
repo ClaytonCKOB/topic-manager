@@ -2,11 +2,11 @@ import { useState } from "react"
 import MeetingService from "../../services/MeetingService";
 import { DataGrid } from "@mui/x-data-grid";
 import { 
-  Box, Typography, Button, IconButton, Dialog, DialogTitle, 
-  DialogContent, DialogActions 
+  Box, Typography, Button, IconButton
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from "@mui/icons-material/Delete";
 import formatDate from "../../utils/FormatDate";
 import { useNavigate } from "react-router-dom";
@@ -78,7 +78,7 @@ export default function MeetingManagement({meetingList, setMeetingList, isReques
         { 
         field: 'actions', 
         headerName: 'Ações', 
-        flex: 0.1,
+        flex: 0.15,
         renderCell: (params) => {
             return <>
             <IconButton 
@@ -86,9 +86,9 @@ export default function MeetingManagement({meetingList, setMeetingList, isReques
                 size="small"
                 onClick={() => redirectMeetingDetail(params.row.id)}
             >
-                <EditIcon />
+              {authService.canChangeMeeting() && new Date(params.row.endDate) > new Date()? <EditIcon /> : <SearchIcon/>}
             </IconButton>
-            { authService.isAdmin() && (
+            { authService.canChangeMeeting() && (
             <IconButton 
                 color="error" 
                 size="small"
@@ -134,23 +134,25 @@ export default function MeetingManagement({meetingList, setMeetingList, isReques
           }
         </Box>
 
-        <DataGrid
-          rows={meetingList}
-          columns={columns}
-          pageSize={25}
-          pageSizeOptions={[10, 25, 50, 100]}
-          disableRowSelectionOnClick
-          getRowId={(row) => row.id}
-          loading={isRequesting}
-          initialState={{
-            sorting: {
-              sortModel: [{ field: 'startDate', sort: 'desc' }],
-            },
-            pagination: {
-              paginationModel: { page: 0, pageSize: 10 },
-            }
-          }}
-        />
+        <Box height="65vh">
+          <DataGrid
+            rows={meetingList}
+            columns={columns}
+            pageSize={25}
+            pageSizeOptions={[10, 25, 50, 100]}
+            disableRowSelectionOnClick
+            getRowId={(row) => row.id}
+            loading={isRequesting}
+            initialState={{
+              sorting: {
+                sortModel: [{ field: 'startDate', sort: 'desc' }],
+              },
+              pagination: {
+                paginationModel: { page: 0, pageSize: 10 },
+              }
+            }}
+          />
+        </Box>
 
         <DeleteDialog 
           openDeleteModal={openDeleteModal}
