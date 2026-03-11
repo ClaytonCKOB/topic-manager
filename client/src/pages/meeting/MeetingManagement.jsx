@@ -113,8 +113,8 @@ export default function MeetingManagement({meetingList, setMeetingList, isReques
               Crie e gerencie as reuniões e suas pautas.
             </Typography>
           </Box>
-          { authService.isAdmin() &&
-            <Box display="flex" justifyContent="flex-end">
+          { authService.canChangeMeeting() &&
+            <Box display="flex" justifyContent="center" flexDirection="column">
               <Button
                 variant="contained"
                 color="primary"
