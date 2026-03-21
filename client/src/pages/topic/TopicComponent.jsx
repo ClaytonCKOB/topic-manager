@@ -6,8 +6,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileList from "../../base/components/files/FileList";
 import VoteList from "../../base/components/vote/VoteList";
 import AuthService from "../../services/AuthService";
+import DeleteDialog from "../../base/components/dialog/DeleteDialog";
+import { useState } from "react";
 
 export default function TopicComponent({setMeeting, topic, index, subIndex, isEditable, isSubTopic, backgroundColor = "white", isExpanded, setIsExpanded, hasSubtopics, subtopicsCount}) {
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
     const textColorStyle = {
         "& .MuiInputBase-input.Mui-disabled": {
             WebkitTextFillColor: "black",
@@ -28,6 +32,19 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
     };
 
     const onRemoveTopic = (index, subIndex) => {
+        // Check if topic/subtopic has content (title or files)
+        const hasContent = isSubTopic
+            ? (topic.title?.trim() || topic.files?.length > 0)
+            : (topic.title?.trim() || topic.files?.length > 0 || topic.subtopics?.length > 0);
+
+        if (hasContent) {
+            setOpenDeleteModal(true);
+        } else {
+            confirmRemoveTopic(index, subIndex);
+        }
+    };
+
+    const confirmRemoveTopic = (index, subIndex) => {
         if (isSubTopic) {
             setMeeting((prev) => ({
             ...prev,
@@ -43,6 +60,15 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             topics: prev.topics.filter((_, i) => i !== index),
             }));
         }
+        setOpenDeleteModal(false);
+    };
+
+    const handleCancelDelete = () => {
+        setOpenDeleteModal(false);
+    };
+
+    const handleConfirmDelete = () => {
+        confirmRemoveTopic(index, subIndex);
     };
 
     const onChangeTopicTitle = (index, subIndex, newTitle) => {
@@ -221,5 +247,10 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             : <></>
         }
         </Grid>
+        <DeleteDialog
+            openDeleteModal={openDeleteModal}
+            handleCancelDelete={handleCancelDelete}
+            handleConfirmDelete={handleConfirmDelete}
+        />
     </>;
 }
