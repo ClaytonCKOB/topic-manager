@@ -67,111 +67,85 @@ const Login = () => {
     return (
         <Box
             sx={{
+                position: "absolute",
+                background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                top: 0,
+                left: 0,
                 width: "100vw",
                 height: "100vh",
-                padding: 0,
-                margin: 0,
-                backgroundColor: "#f5f5f5",
+                overflow: "auto",
                 display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
+                justifyContent: "center",
+                padding: "2rem",
             }}
         >
             <Box
                 sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    backgroundColor: "white",
+                    borderRadius: "1px",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+                    maxWidth: 380,
                     width: "100%",
-                    height: "100%",
-                    padding: isSmallScreen ? 2 : 0,
+                    p: isSmallScreen ? "3rem" : "5rem",
                 }}
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        boxSizing: "border-box",
-                        width: "100%",
-                        maxWidth: isSmallScreen ? "100%" : "400px",
-                        minHeight: isSmallScreen ? "auto" : "400px",
-                        gap: "32px",
-                        padding: isSmallScreen ? "2rem" : "3rem",
-                        alignItems: "center",
-                        borderRadius: "8px",
-                        boxShadow: isSmallScreen ? "none" : "0 4px 12px rgba(0, 0, 0, 0.1)",
-                        backgroundColor: isSmallScreen ? "transparent" : "white",
-                    }}
-                >
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     <Typography
-                        variant={isSmallScreen ? "h5" : "h4"}
+                        variant="h4"
                         sx={{
                             fontWeight: "bold",
                             textAlign: "center",
-                            marginBottom: isSmallScreen ? "24px" : "60px",
+                            mb: 4,
                         }}
                     >
                         Topic Manager
                     </Typography>
 
-                    <Box>
-                        <TextField
-                            autoFocus
-                            autoComplete="username"
-                            error={wrongCredentials}
-                            label="Usuário"
-                            variant="outlined"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            onFocus={() => setWrongCredentials(false)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
-                            sx={{ width: "100%" }}
-                        />
-                        <TextField 
-                            error={wrongCredentials}
-                            label="Senha"
-                            variant="outlined"
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            onFocus={() => setWrongCredentials(false)}
-                            onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
-                            sx={{ width: "100%", marginTop: "24px" }}
-                            slotProps={{
-                                input: {
-                                    endAdornment: (
-                                        <IconButton
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            sx={{ padding: "10px", height: "40px", width: "40px" }}
-                                        >
-                                            <FontAwesomeIcon
-                                                size="xs"
-                                                icon={showPassword ? faEye : faEyeSlash}
-                                                color={wrongCredentials ? "darkred" : "gray"}
-                                            />
-                                        </IconButton>
-                                    ),
-                                    autoComplete: "new-password",
-                                    form: { autoComplete: "off" },
-                                },
-                            }}
-                            helperText={wrongCredentials ? "Usuário ou senha inválidos" : ""}
-                            fullWidth={isSmallScreen}
-                        />
-                    </Box>
+                    <TextField
+                        autoFocus
+                        autoComplete="username"
+                        error={wrongCredentials}
+                        label="Usuário"
+                        variant="outlined"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        onFocus={() => setWrongCredentials(false)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
+                        fullWidth
+                    />
+
+                    <TextField
+                        error={wrongCredentials}
+                        label="Senha"
+                        variant="outlined"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => setWrongCredentials(false)}
+                        onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
+                        fullWidth
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                        <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                                    </IconButton>
+                                ),
+                                autoComplete: "new-password",
+                                form: { autoComplete: "off" },
+                            },
+                        }}
+                        helperText={wrongCredentials ? "Usuário ou senha inválidos" : ""}
+                    />
+
                     <Button
                         type="submit"
                         variant="contained"
                         onClick={handleLogin}
-                        sx={{ 
-                            width: isSmallScreen ? "100%" : "100%",
-                            minWidth: isSmallScreen ? "auto" : "200px",
-                            height: "56px",
-                            fontWeight: "bold",
-                            textTransform: "uppercase",
-                            color: "white",
-                            marginTop: "30px",
+                        sx={{
+                            height: 56,
+                            mt: 3,
                         }}
                     >
                         {loading ? <CircularProgress color="inherit" size={24} /> : "Entrar"}
