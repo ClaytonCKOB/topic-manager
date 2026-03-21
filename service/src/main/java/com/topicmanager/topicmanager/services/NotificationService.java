@@ -6,17 +6,22 @@ import com.topicmanager.topicmanager.entities.MeetingTopic;
 import com.topicmanager.topicmanager.entities.UserAccountInvite;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class NotificationService {
     private final JavaMailSender mailSender;
 
     @Value("${application.domain}")
     private String domain;
+
+    @Value("${spring.mail.from}")
+    private String emailFrom;
 
     public NotificationService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -25,7 +30,7 @@ public class NotificationService {
     public void sendHtml(String to, String subject, String htmlBody) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom("no-reply@topicmanager.com");
+        helper.setFrom(emailFrom);
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
@@ -70,8 +75,9 @@ public class NotificationService {
         """.formatted(inviteLink, inviteLink);
 
         try {
-            sendHtml(userAccountInvite.getEmail(), "You're invited to Topic Manager", htmlBody);
+            sendHtml(userAccountInvite.getEmail(), "Você foi convidado para o Topic Manager", htmlBody);
         } catch (MessagingException e) {
+            log.error("Failed to send invitation email", e.getMessage());
             throw new RuntimeException("Failed to send invitation email", e);
         }
     }

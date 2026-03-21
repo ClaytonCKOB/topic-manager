@@ -97,6 +97,10 @@ export default function MeetingCreate() {
         throw new Error("Preencha todos os campos obrigatórios antes de salvar.");
       }
 
+      if (new Date(end) <= new Date(start)) {
+        throw new Error("O horário de fim deve ser após o horário de início.");
+      }
+
       if (!isDetail) {
         let savedMeeting = await meetingService.create(
           meeting.title, start, end, meeting.topics
@@ -141,54 +145,77 @@ export default function MeetingCreate() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-      <Box p={4} bgcolor="#f2f5f9" minHeight="100vh">
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<ArrowBackIcon />}
-          onClick={redirectHome}
-          sx={{ mb: 3 }}
+      <Box bgcolor="#f8fafc" minHeight="100vh">
+        <Box
+          sx={{
+            background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+            px: 4,
+            py: 3,
+            color: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+          }}
         >
-          Voltar
-        </Button>
+          <Button
+            variant="contained"
+            startIcon={<ArrowBackIcon />}
+            onClick={redirectHome}
+            sx={{
+              mb: 2,
+              bgcolor: "rgba(255,255,255,0.2)",
+              backdropFilter: "blur(10px)",
+              color: "white",
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.3)"
+              }
+            }}
+          >
+            Voltar
+          </Button>
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            {isDetail ? "Detalhes da Reunião" : "Nova Reunião"}
+          </Typography>
+          <Typography variant="body1" sx={{ opacity: 0.9 }}>
+            {isDetail ? "Visualize e edite informações da reunião" : "Configure os detalhes da nova reunião"}
+          </Typography>
+        </Box>
 
-        <Typography variant="h5" fontWeight="bold" gutterBottom>
-          {isDetail ? "Detalhes da Reunião" : "Nova Reunião"}
-        </Typography>
+        <Box p={4}>
+          <Card sx={{display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', boxShadow: 'none'}}>
+            <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8, maxWidth: 1300 }}>
+              <CardContent>
+                <MeetingGeneralSection
+                  meeting={meeting}
+                  setMeeting={setMeeting}
+                  isEditable={isMeetingEditable}
+                />
 
-        <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8 }}>
-          <CardContent>
-            <MeetingGeneralSection 
-              meeting={meeting}
-              setMeeting={setMeeting}
-              isEditable={isMeetingEditable}
-            />
-            
-            <TopicTotalizers topics={meeting.topics} />
+                <TopicTotalizers topics={meeting.topics} />
 
-            <TopicSection
-              meeting={meeting}
-              setMeeting={setMeeting}
-              isEditable={isMeetingEditable}
-            />
+                <TopicSection
+                  meeting={meeting}
+                  setMeeting={setMeeting}
+                  isEditable={isMeetingEditable}
+                />
 
-            <ParticipantSection
-              participants={meeting.participants}
-            />
-            {isMeetingEditable && (
-              <Box display="flex" justifyContent="flex-end">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={saveMeeting}
-                  sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-                >
-                  Salvar
-                </Button>
-              </Box>
-            )}
-          </CardContent>
-        </Card>
+                <ParticipantSection
+                  participants={meeting.participants}
+                />
+                {isMeetingEditable && (
+                  <Box display="flex" justifyContent="flex-end">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={saveMeeting}
+                      sx={{ borderRadius: 2, px: 4, py: 1.2 }}
+                    >
+                      Salvar
+                    </Button>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Card>
+        </Box>
         <ErrorMessage
           snackbar={snackbar}
           setSnackbar={setSnackbar}

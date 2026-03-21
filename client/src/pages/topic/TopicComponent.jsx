@@ -2,11 +2,16 @@ import { Typography, Button, TextField, Grid, IconButton, Input } from "@mui/mat
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileList from "../../base/components/files/FileList";
 import VoteList from "../../base/components/vote/VoteList";
 import AuthService from "../../services/AuthService";
+import DeleteDialog from "../../base/components/dialog/DeleteDialog";
+import { useState } from "react";
 
-export default function TopicComponent({setMeeting, topic, index, subIndex, isEditable, isSubTopic}) {
+export default function TopicComponent({setMeeting, topic, index, subIndex, isEditable, isSubTopic, backgroundColor = "white", isExpanded, setIsExpanded, hasSubtopics, subtopicsCount}) {
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
     const textColorStyle = {
         "& .MuiInputBase-input.Mui-disabled": {
             WebkitTextFillColor: "black",
@@ -27,6 +32,18 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
     };
 
     const onRemoveTopic = (index, subIndex) => {
+        const hasContent = isSubTopic
+            ? (topic.title?.trim() || topic.files?.length > 0)
+            : (topic.title?.trim() || topic.files?.length > 0 || topic.subtopics?.length > 0);
+
+        if (hasContent) {
+            setOpenDeleteModal(true);
+        } else {
+            confirmRemoveTopic(index, subIndex);
+        }
+    };
+
+    const confirmRemoveTopic = (index, subIndex) => {
         if (isSubTopic) {
             setMeeting((prev) => ({
             ...prev,
@@ -42,6 +59,15 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             topics: prev.topics.filter((_, i) => i !== index),
             }));
         }
+        setOpenDeleteModal(false);
+    };
+
+    const handleCancelDelete = () => {
+        setOpenDeleteModal(false);
+    };
+
+    const handleConfirmDelete = () => {
+        confirmRemoveTopic(index, subIndex);
     };
 
     const onChangeTopicTitle = (index, subIndex, newTitle) => {
@@ -129,11 +155,32 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
     };
 
     return <>
-    <Grid item key={subIndex ?? index} mb={3} p={3} sx={{ border: '1px solid gray', borderRadius: 2, width: isSubTopic ? 0.9 : 1 }}>
-        <Grid sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6" mb={2}>
-            Pauta {index + 1}{isSubTopic ? "." + (subIndex + 1) : ""} 
-            </Typography>
+    <Grid item key={subIndex ?? index} mb={3} p={3} sx={{
+        border: isSubTopic ? '1px solid #e0e0e0' : '1px solid #bdbdbd',
+        borderRadius: 2,
+        width: 1,
+        backgroundColor: backgroundColor,
+        transition: 'all 0.2s ease'
+    }}>
+        <Grid sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+            <Grid sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Typography variant="h6">
+                Pauta {index + 1}{isSubTopic ? "." + (subIndex + 1) : ""}
+                </Typography>
+
+                {!isSubTopic && hasSubtopics && (
+                    <IconButton
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        size="small"
+                        sx={{
+                            transition: "transform 0.3s ease",
+                            transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)"
+                        }}
+                    >
+                        <ExpandMoreIcon />
+                    </IconButton>
+                )}
+            </Grid>
             {
             isEditable ?
             <Grid>
@@ -173,6 +220,15 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
         />
 
         <VoteList votes={topic.votes} isVisible={!isEditable && authService.isAdmin()}/>
+
+        {!isSubTopic && hasSubtopics && !isExpanded && (
+            <Grid sx={{ mt: 2, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                <Typography variant="body2" color="text.secondary">
+                    {subtopicsCount} subpauta{subtopicsCount > 1 ? 's' : ''} oculta{subtopicsCount > 1 ? 's' : ''}
+                </Typography>
+            </Grid>
+        )}
+
         {
             isEditable ?
             <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
@@ -190,5 +246,10 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             : <></>
         }
         </Grid>
+        <DeleteDialog
+            openDeleteModal={openDeleteModal}
+            handleCancelDelete={handleCancelDelete}
+            handleConfirmDelete={handleConfirmDelete}
+        />
     </>;
 }

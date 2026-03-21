@@ -1,7 +1,11 @@
-import { Grid} from "@mui/material";
+import { Grid, Box } from "@mui/material";
+import { useState } from 'react';
 import TopicComponent from "./TopicComponent";
 
-export default function TopicCard({meeting, setMeeting, topic, index, isEditable}) {
+export default function TopicCard({setMeeting, topic, index, isEditable}) {
+  const [isExpanded, setIsExpanded] = useState(true);
+  const hasSubtopics = topic.subtopics && topic.subtopics.length > 0;
+
   return (
     <Grid key={index}>
       <TopicComponent
@@ -9,19 +13,53 @@ export default function TopicCard({meeting, setMeeting, topic, index, isEditable
         topic={topic}
         index={index}
         isEditable={isEditable}
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
+        hasSubtopics={hasSubtopics}
+        subtopicsCount={topic.subtopics?.length || 0}
       />
-      <Grid sx={{ display: 'flex', alignItems: 'end', flexDirection: 'column' }}>
-        {topic.subtopics?.map((subtopic, sub_index) => (
-          <TopicComponent 
-            setMeeting={setMeeting}
-            index={index}
-            subIndex={sub_index}
-            topic={subtopic}
-            isSubTopic={true}
-            isEditable={isEditable}
+
+      {hasSubtopics && isExpanded && (
+        <Box sx={{ position: 'relative', ml: 3 }}>
+          <Box
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: '2px',
+              backgroundColor: '#9e9e9e'
+            }}
           />
-        ))}
-      </Grid>
+
+          <Grid sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {topic.subtopics.map((subtopic, sub_index) => (
+              <Box key={sub_index} sx={{ position: 'relative', ml: 3 }}>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    left: -24,
+                    top: '24px',
+                    width: '24px',
+                    height: '2px',
+                    backgroundColor: '#9e9e9e'
+                  }}
+                />
+
+                <TopicComponent
+                  setMeeting={setMeeting}
+                  index={index}
+                  subIndex={sub_index}
+                  topic={subtopic}
+                  isSubTopic={true}
+                  isEditable={isEditable}
+                  backgroundColor="#fafafa"
+                />
+              </Box>
+            ))}
+          </Grid>
+        </Box>
+      )}
     </Grid>
   );
 }

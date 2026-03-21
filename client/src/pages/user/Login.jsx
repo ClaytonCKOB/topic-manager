@@ -8,7 +8,6 @@ import ErrorMessage from "../../base/components/message/ErrorMessage";
 
 const Login = () => {
     const isSmallScreen = useMediaQuery('(max-width:600px) or (max-height:600px)');
-    const loginWidthPercentage = 100; //isSmallScreen ? 100 : 40;
     
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -68,103 +67,85 @@ const Login = () => {
     return (
         <Box
             sx={{
+                position: "absolute",
+                background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                top: 0,
+                left: 0,
                 width: "100vw",
                 height: "100vh",
-                padding: 0,
-                margin: 0
+                overflow: "auto",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "2rem",
             }}
         >
             <Box
                 sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: `${loginWidthPercentage}%`,
-                    backgroundColor: "#f5f5f5",
-                    height: "100%",
+                    backgroundColor: "white",
+                    borderRadius: "1px",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+                    maxWidth: 380,
+                    width: "100%",
+                    p: isSmallScreen ? "3rem" : "5rem",
                 }}
             >
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        boxSizing: "border-box",
-                        maxWidth: "500px",
-                        height: "60%",
-                        gap: "15px",
-                        padding: "3rem",
-                        alignItems: "center",
-                        borderRadius: "8px",
-                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                        backgroundColor: "white",
-                    }}
-                >
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     <Typography
                         variant="h4"
                         sx={{
                             fontWeight: "bold",
                             textAlign: "center",
-                            marginBottom: "20px",
+                            mb: 4,
                         }}
                     >
                         Topic Manager
                     </Typography>
 
-                    <Box>
-                        <TextField
-                            autoFocus
-                            autoComplete="username"
-                            error={wrongCredentials}
-                            label="Usuário"
-                            variant="outlined"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            onFocus={() => setWrongCredentials(false)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
-                            sx={{ width: "100%" }}
-                        />
-                        <TextField 
-                            error={wrongCredentials}
-                            label="Senha"
-                            variant="outlined"
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            onFocus={() => setWrongCredentials(false)}
-                            onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
-                            sx={{ width: "100%", marginTop: "20px" }}
-                            slotProps={{
-                                input: {
-                                    endAdornment: (
-                                        <IconButton
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            sx={{ padding: "10px", height: "40px", width: "40px" }}
-                                        >
-                                            <FontAwesomeIcon
-                                                size="xs"
-                                                icon={showPassword ? faEye : faEyeSlash}
-                                                color={wrongCredentials ? "darkred" : "gray"}
-                                            />
-                                        </IconButton>
-                                    ),
-                                    autoComplete: "new-password",
-                                    form: { autoComplete: "off" },
-                                },
-                            }}
-                            helperText={wrongCredentials ? "Usuário ou senha inválidos" : ""}
-                        />
-                    </Box>
+                    <TextField
+                        autoFocus
+                        autoComplete="username"
+                        error={wrongCredentials}
+                        label="Usuário"
+                        variant="outlined"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        onFocus={() => setWrongCredentials(false)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
+                        fullWidth
+                    />
+
+                    <TextField
+                        error={wrongCredentials}
+                        label="Senha"
+                        variant="outlined"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => setWrongCredentials(false)}
+                        onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
+                        fullWidth
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                        <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                                    </IconButton>
+                                ),
+                                autoComplete: "new-password",
+                                form: { autoComplete: "off" },
+                            },
+                        }}
+                        helperText={wrongCredentials ? "Usuário ou senha inválidos" : ""}
+                    />
+
                     <Button
                         type="submit"
                         variant="contained"
                         onClick={handleLogin}
-                        sx={{ 
-                            width: "100%",
-                            height: "56px",
-                            fontWeight: "bold",
-                            textTransform: "uppercase",
-                            color: "white",
+                        sx={{
+                            height: 56,
+                            mt: 3,
                         }}
                     >
                         {loading ? <CircularProgress color="inherit" size={24} /> : "Entrar"}

@@ -17,8 +17,9 @@ public class UserAccountInviteController {
     UserAccountInviteService userAccountInviteService;
 
     @PostMapping
-    public ResponseEntity createInvite(@RequestBody UserInviteDTO userInviteDTO){
-        userAccountInviteService.create(userInviteDTO);
+    public ResponseEntity createInvite(@RequestBody List<UserInviteDTO> userInviteDTOList) throws Exception{
+        userAccountInviteService.create(userInviteDTOList);
+
         return ResponseEntity.ok().build();
     }
 

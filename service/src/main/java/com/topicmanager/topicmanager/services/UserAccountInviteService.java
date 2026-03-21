@@ -22,11 +22,28 @@ public class UserAccountInviteService {
         return userAccountInviteRepository.findAll();
     }
 
-    public void create(UserInviteDTO userAccountInviteDTO) {
-        UserAccountInvite userAccountInvite = new UserAccountInvite(userAccountInviteDTO);
-        userAccountInviteRepository.save(userAccountInvite);
+    public void create(List<UserInviteDTO> userInviteDTOList) throws RuntimeException {
+        Boolean hasErrorSendingEmail = false;
 
-        notificationService.sendInvitation(userAccountInvite);
+        for (UserInviteDTO userInviteDTO : userInviteDTOList) {
+            UserAccountInvite userAccountInvite = new UserAccountInvite(
+                userInviteDTO.sender_id(),
+                userInviteDTO.email(),
+                userInviteDTO.role()
+            );
+
+            try {
+                notificationService.sendInvitation(userAccountInvite);
+            } catch (Exception e) {
+                hasErrorSendingEmail = true;
+            }
+
+            userAccountInviteRepository.save(userAccountInvite);
+        }
+
+        if (hasErrorSendingEmail) {
+            throw new RuntimeException("Failed to send invitation email");
+        }
     }
 
     public UserInviteDTO getInvitation(String id) {
@@ -35,5 +52,14 @@ public class UserAccountInviteService {
 
 
         return new UserInviteDTO(userAccountInvite.getSender_id(), userAccountInvite.getEmail(), userAccountInvite.getRole());
+    }
+
+    public void expireInvitation(String id) {
+        UserAccountInvite userAccountInvite = userAccountInviteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Invite not found"));
+
+        userAccountInvite.setActive(false);
+
+        userAccountInviteRepository.save(userAccountInvite);
     }
 }

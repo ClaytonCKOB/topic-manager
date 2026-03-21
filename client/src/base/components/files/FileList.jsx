@@ -1,7 +1,29 @@
 import { IconButton, List, ListItem, ListItemText, Link } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteDialog from "../dialog/DeleteDialog";
+import { useState } from "react";
 
 export default function FileList({ files, isEditable, removeFile }) {
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [fileIndexToDelete, setFileIndexToDelete] = useState(null);
+
+  const handleDeleteClick = (fIndex) => {
+    setFileIndexToDelete(fIndex);
+    setOpenDeleteModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteModal(false);
+    setFileIndexToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (fileIndexToDelete !== null) {
+      removeFile(fileIndexToDelete);
+    }
+    setOpenDeleteModal(false);
+    setFileIndexToDelete(null);
+  };
 
   const downloadFile = (file) => {
     const byteCharacters = atob(file.fileData);
@@ -22,13 +44,23 @@ export default function FileList({ files, isEditable, removeFile }) {
   return (
     <>
       {files?.length > 0 && (
-        <List dense sx={{ backgroundColor: "#f9f9f9", mt: 2, mb: 2 }}>
+        <List
+          dense
+          sx={{
+            backgroundColor: "white",
+            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.08)",
+            border: "1px solid #e8e8e8",
+            borderRadius: "4px",
+            mt: 2,
+            mb: 2
+          }}
+        >
           {files.map((file, fIndex) => (
             <ListItem
               key={fIndex}
               secondaryAction={
                 isEditable ? (
-                  <IconButton edge="end" color="error" onClick={() => removeFile(fIndex)}>
+                  <IconButton edge="end" color="error" onClick={() => handleDeleteClick(fIndex)}>
                     <DeleteIcon />
                   </IconButton>
                 ) : null
@@ -50,6 +82,11 @@ export default function FileList({ files, isEditable, removeFile }) {
           ))}
         </List>
       )}
+      <DeleteDialog
+        openDeleteModal={openDeleteModal}
+        handleCancelDelete={handleCancelDelete}
+        handleConfirmDelete={handleConfirmDelete}
+      />
     </>
   );
 }

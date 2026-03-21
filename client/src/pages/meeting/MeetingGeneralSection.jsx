@@ -69,11 +69,18 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                         label="Hora"
                         value={meeting.endTime}
                         disabled={!isEditable}
+                        minTime={meeting.startTime}
                         sx={{WebkitTextFillColor: "black"}}
                         onChange={(time) =>
                         setMeeting((prev) => ({ ...prev, endTime: time }))
                         }
-                        slotProps={{ textField: { fullWidth: true } }}
+                        slotProps={{
+                            textField: {
+                                fullWidth: true,
+                                error: meeting.startTime && meeting.endTime && meeting.endTime <= meeting.startTime,
+                                helperText: meeting.startTime && meeting.endTime && meeting.endTime <= meeting.startTime ? "Fim deve ser após o início" : ""
+                            }
+                        }}
                     />
                 </Grid>
             </Grid>

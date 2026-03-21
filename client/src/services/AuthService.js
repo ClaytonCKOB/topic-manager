@@ -97,6 +97,15 @@ export default class AuthService {
         return localStorage.getItem("user_role") == 'ADMIN';
     }
 
+    isChefe = () => {
+        return localStorage.getItem("user_role") == 'CHEFE';
+    }
+
+    canChangeMeeting = () => {
+        const role = localStorage.getItem("user_role");
+        return role == 'ADMIN' || role == 'CHEFE';
+    }
+
     logout = () => {
         localStorage.setItem("token", null);
         localStorage.setItem("user_role", null);

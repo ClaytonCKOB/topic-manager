@@ -8,6 +8,7 @@ import com.topicmanager.topicmanager.repositories.UserAccountInviteRepository;
 import com.topicmanager.topicmanager.repositories.UserAccountRepository;
 import com.topicmanager.topicmanager.services.TokenService;
 import com.topicmanager.topicmanager.services.UserAccountInviteService;
+import com.topicmanager.topicmanager.services.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +31,9 @@ public class AuthorizationController {
 
     @Autowired
     private UserAccountInviteService userAccountInviteService;
+
+    @Autowired
+    private UserAccountService userAccountService;
 
     @Autowired
     TokenService tokenService;
@@ -81,6 +85,10 @@ public class AuthorizationController {
 
             UserInviteDTO invite = userAccountInviteService.getInvitation(data.invitation_id());
 
+            if (!invite.email().equalsIgnoreCase(data.email())) {
+                return ResponseEntity.badRequest().body("O email fornecido não corresponde ao convite.");
+            }
+
             String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
             UserAccount user = (UserAccount) userAccountRepository.findByUsername(data.username());
             if (user != null) {
@@ -92,6 +100,10 @@ public class AuthorizationController {
                 user = new UserAccount(data.username(), encryptedPassword, invite.role(), data.email(), data.name());
                 userAccountRepository.save(user);
             }
+
+            userAccountService.addUserToOpenMeetings(user);
+
+            userAccountInviteService.expireInvitation(data.invitation_id());
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {

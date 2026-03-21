@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register-invite").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/changelog/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/user-account-invite/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilterComponent, UsernamePasswordAuthenticationFilter.class)

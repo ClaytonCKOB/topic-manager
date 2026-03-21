@@ -79,7 +79,7 @@ export default function UserList() {
         { 
             field: 'actions', 
             headerName: 'Ações', 
-            flex: 0.35,
+            flex: 0.10,
             renderCell: (params) => {
                 return <>
                 <IconButton 

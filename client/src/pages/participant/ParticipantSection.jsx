@@ -14,9 +14,12 @@ export default function ParticipantSection({participants}) {
 
     return participants?.length > 0 && (
     <Grid
-        sx={{ border: '2px dotted gray' }}
+        sx={{
+            border: '2px solid transparent',
+            borderRadius: 1,
+            background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, rgba(44, 62, 80, 0.6) 0%, rgba(26, 26, 26, 0.6) 100%) border-box',
+        }}
         p={4}
-        borderRadius={2}
         mb={4}
     >
         <Grid

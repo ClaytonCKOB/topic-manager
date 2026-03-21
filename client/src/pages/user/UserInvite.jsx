@@ -16,7 +16,9 @@ export default function UserInvite({ openUserModal, setOpenUserModal }) {
 
     const handleSaveChanges = async () => {
         try {
-            if (email == null || email.length == 0) {
+            const emailList = email.split(',').map(e => e.trim()).filter(e => e.length > 0);
+            
+            if (emailList.length === 0) {
                 setSnackbar({
                     open: true,
                     message: "Preencha o email para envio do convite.",
@@ -25,7 +27,7 @@ export default function UserInvite({ openUserModal, setOpenUserModal }) {
 
             } else {
                 setLoading(true);
-                await userInviteService.sendInvitation(role, email);
+                await userInviteService.sendInvitation(role, emailList);
     
                 setOpenUserModal(false);
                 setLoading(false);
@@ -61,10 +63,11 @@ export default function UserInvite({ openUserModal, setOpenUserModal }) {
                 </Box>
                 <Box mb={3}>
                     <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                        E-mail
+                        E-mail (separados por vírgula)
                     </Typography>
                     <TextField
                         fullWidth
+                        placeholder="email1@exemplo.com, email2@exemplo.com"
                         value={email || ""}
                         onChange={(e) => setEmail(e.target.value)}
                     />

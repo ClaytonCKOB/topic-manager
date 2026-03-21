@@ -18,7 +18,9 @@ request.interceptors.request.use((config) => {
         config.headers.Authorization = `Bearer ${token}`;
     } else {
         authService.setToken(null);
-        window.location.href = "/login";
+        if (!window.location.pathname.startsWith("/register")) {
+            window.location.href = "/login";
+        }
     }
     return config;
 }, (error) => {
@@ -30,7 +32,9 @@ request.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             authService.setToken(null);
-            window.location.href = "/login";
+            if (!window.location.pathname.startsWith("/register")) {
+                window.location.href = "/login";
+            }
         }
         return Promise.reject(error);
     }

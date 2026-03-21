@@ -9,8 +9,7 @@ import UserInviteService from "../../services/UserInviteService";
 
 export default function Register() {
     const isSmallScreen = useMediaQuery('(max-width:600px) or (max-height:600px)');
-    const loginWidthPercentage = isSmallScreen ? 100 : 40;
-    
+
     const { id } = useParams();
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
@@ -91,12 +90,16 @@ export default function Register() {
         <Box
             sx={{
                 position: "absolute",
-                backgroundColor: "gray",
+                background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
                 top: 0,
                 left: 0,
                 width: "100vw",
                 height: "100vh",
-                overflow: "hidden",
+                overflow: "auto",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "2rem",
             }}
         >
             <Backdrop open={serverOffline} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
@@ -126,25 +129,29 @@ export default function Register() {
 
             <Box
                 sx={{
-                    display: "flex",
-                    justifyContent: "center",
                     backgroundColor: "white",
-                    width: `${loginWidthPercentage}%`,
-                    height: "100%",
+                    borderRadius: "1px",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+                    maxWidth: 450,
+                    width: "100%",
+                    p: isSmallScreen ? "2rem" : "3rem",
                 }}
             >
-                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", maxWidth: 400, width: "100%", gap: 2, p: "2rem" }}>
-                    <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>Criar Conta</Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}>
+                        Criar Conta
+                    </Typography>
 
-                    <TextField label="Nome" value={name} onChange={(e) => setName(e.target.value)} />
-                    <TextField label="Usuário" value={username} onChange={(e) => setUsername(e.target.value)} />
-                    <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <TextField label="Nome" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
+                    <TextField label="Usuário" value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
+                    <TextField label="Email" type="email" value={email} disabled onChange={(e) => setEmail(e.target.value)} fullWidth />
 
                     <TextField
                         label="Senha"
                         type={showPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        fullWidth
                         slotProps={{
                             input: {
                                 endAdornment: (
@@ -163,6 +170,7 @@ export default function Register() {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         error={passwordMismatch}
                         helperText={passwordMismatch ? "As senhas não coincidem" : ""}
+                        fullWidth
                         slotProps={{
                             input: {
                                 endAdornment: (
@@ -174,7 +182,7 @@ export default function Register() {
                         }}
                     />
 
-                    <Button variant="contained" sx={{ height: 56 }} onClick={handleRegister}>
+                    <Button variant="contained" sx={{ height: 56, mt: 1 }} onClick={handleRegister}>
                         {loading ? <CircularProgress color="inherit" size={24} /> : "Registrar"}
                     </Button>
 
