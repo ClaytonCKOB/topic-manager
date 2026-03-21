@@ -138,7 +138,7 @@ export default function Register() {
 
                     <TextField label="Nome" value={name} onChange={(e) => setName(e.target.value)} />
                     <TextField label="Usuário" value={username} onChange={(e) => setUsername(e.target.value)} />
-                    <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <TextField label="Email" type="email" value={email} disabled="true" onChange={(e) => setEmail(e.target.value)} />
 
                     <TextField
                         label="Senha"
