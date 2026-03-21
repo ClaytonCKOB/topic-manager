@@ -97,6 +97,10 @@ export default function MeetingCreate() {
         throw new Error("Preencha todos os campos obrigatórios antes de salvar.");
       }
 
+      if (new Date(end) <= new Date(start)) {
+        throw new Error("O horário de fim deve ser após o horário de início.");
+      }
+
       if (!isDetail) {
         let savedMeeting = await meetingService.create(
           meeting.title, start, end, meeting.topics
