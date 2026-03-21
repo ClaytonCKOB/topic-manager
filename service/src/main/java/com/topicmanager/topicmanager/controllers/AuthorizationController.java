@@ -103,6 +103,8 @@ public class AuthorizationController {
 
             userAccountService.addUserToOpenMeetings(user);
 
+            userAccountInviteService.expireInvitation(data.invitation_id());
+
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

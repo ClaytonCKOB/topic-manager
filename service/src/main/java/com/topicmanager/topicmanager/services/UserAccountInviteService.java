@@ -53,4 +53,13 @@ public class UserAccountInviteService {
 
         return new UserInviteDTO(userAccountInvite.getSender_id(), userAccountInvite.getEmail(), userAccountInvite.getRole());
     }
+
+    public void expireInvitation(String id) {
+        UserAccountInvite userAccountInvite = userAccountInviteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Invite not found"));
+
+        userAccountInvite.setActive(false);
+
+        userAccountInviteRepository.save(userAccountInvite);
+    }
 }
