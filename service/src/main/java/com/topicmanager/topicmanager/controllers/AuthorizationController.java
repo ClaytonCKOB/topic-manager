@@ -85,6 +85,10 @@ public class AuthorizationController {
 
             UserInviteDTO invite = userAccountInviteService.getInvitation(data.invitation_id());
 
+            if (!invite.email().equalsIgnoreCase(data.email())) {
+                return ResponseEntity.badRequest().body("O email fornecido não corresponde ao convite.");
+            }
+
             String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
             UserAccount user = (UserAccount) userAccountRepository.findByUsername(data.username());
             if (user != null) {
