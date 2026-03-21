@@ -55,6 +55,8 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           source: "client/dist/*"
           target: "/var/www/topicmanager/dist/"
+          strip_components: 2
+          rm: true
 
       - name: Restart backend
         uses: appleboy/ssh-action@v0.1.7
