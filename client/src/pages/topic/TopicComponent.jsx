@@ -32,7 +32,6 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
     };
 
     const onRemoveTopic = (index, subIndex) => {
-        // Check if topic/subtopic has content (title or files)
         const hasContent = isSubTopic
             ? (topic.title?.trim() || topic.files?.length > 0)
             : (topic.title?.trim() || topic.files?.length > 0 || topic.subtopics?.length > 0);
