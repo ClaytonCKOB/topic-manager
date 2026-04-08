@@ -98,7 +98,7 @@ public class MeetingService {
                 stream().
                 filter(p -> !topicVotes.stream().filter(v -> v.getUser().getId().equals(p.getUser().getId()) && v.getMeetingTopic().getMeeting().getId().equals(meeting.getId())).toList().isEmpty()).
                 forEach(participant -> {
-            meetingParticipants.add(new MeetingParticipantDTO(participant.getId().getUserAccountId(), participant.getId().getMeetingId(), participant.getUser().getUsername(), participant.getRole()));
+            meetingParticipants.add(new MeetingParticipantDTO(participant.getId().getUserAccountId(), participant.getId().getMeetingId(), participant.getUser().getUsername(), participant.getUser().getName(), participant.getRole()));
         });
 
         return new MeetingDTO(meeting.getId(), meeting.getTitle(), meeting.getStartDate(), meeting.getEndDate(), meeting.getTopics(), meetingParticipants);

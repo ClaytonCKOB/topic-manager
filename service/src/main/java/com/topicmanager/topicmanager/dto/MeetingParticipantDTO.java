@@ -6,6 +6,7 @@ public record MeetingParticipantDTO(
         Long id,
         Long meeting_id,
         String username,
+        String name,
         UserAccountRole role
 ) {
 }
