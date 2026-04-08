@@ -107,7 +107,7 @@ export default function MeetingVoteList({meetingList}) {
                 </Box>
               </Box>
               {
-                authService.isAdmin() ? null :
+                authService.isAdmin() || new Date(meeting.startDate) > new Date() ? null :
                 <Button
                   onClick={() => redirectMeetingVote(meeting.id)}
                   variant="contained"
