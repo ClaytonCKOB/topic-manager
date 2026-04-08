@@ -8,7 +8,7 @@ export default function ParticipantSection({participants}) {
     const [collapsed, setCollapsed] = useState(true);
     
     const columns = [
-        { field: 'username', headerName: 'Usuário', flex: 0.5},
+        { field: 'name', headerName: 'Usuário', flex: 0.5},
         { field: 'role', headerName: 'Função', align: 'center', flex: 0.25}
     ];
 

@@ -60,7 +60,7 @@ export default function MeetingCreate() {
 
         const now = new Date();
         const meetingEnded = end < now;
-        setIsMeetingEditable(authService.isAdmin() && !meetingEnded);
+        setIsMeetingEditable(authService.canChangeMeeting() && !meetingEnded);
       }
     } catch (error) {
       setSnackbar({
