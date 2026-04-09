@@ -44,8 +44,9 @@ export default function MeetingCreate() {
     try {
       const data = await meetingService.get(meetingId);
       if (data) {
-        const start = new Date(data.startDate);
-        const end = new Date(data.endDate);
+        const start = new Date(data.startDate.replace('T', ' ').replace(/-/g, '/'));
+        const end = new Date(data.endDate.replace('T', ' ').replace(/-/g, '/'));
+
         setMeeting({
           id: data.id,
           title: data.title || "",
@@ -85,7 +86,15 @@ export default function MeetingCreate() {
     combined.setMinutes(time.getMinutes());
     combined.setSeconds(0);
     combined.setMilliseconds(0);
-    return combined.toISOString().slice(0, -1);
+
+    const year = combined.getFullYear();
+    const month = String(combined.getMonth() + 1).padStart(2, '0');
+    const day = String(combined.getDate()).padStart(2, '0');
+    const hours = String(combined.getHours()).padStart(2, '0');
+    const minutes = String(combined.getMinutes()).padStart(2, '0');
+    const seconds = String(combined.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   };
 
   const saveMeeting = async () => {
@@ -129,6 +138,9 @@ export default function MeetingCreate() {
         }
       } else {
         await meetingService.update(meeting);
+
+        const updatedMeeting = await meetingService.get(meeting.id);
+        await topicService.uploadFilesForTopics(updatedMeeting.topics, meeting.topics);
       }
 
       redirectHome();

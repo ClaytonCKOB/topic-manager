@@ -110,4 +110,60 @@ export default class TopicService {
             throw error;
         }
     }
+
+    async uploadFilesForTopics(updatedTopics, localTopics) {
+        if (!updatedTopics?.length || !localTopics?.length) return;
+
+        for (let topicIndex = 0; topicIndex < updatedTopics.length; topicIndex++) {
+            const updatedTopic = updatedTopics[topicIndex];
+            const localTopic = localTopics[topicIndex];
+
+            if (localTopic.files && localTopic.files.length > 0) {
+                const newFiles = localTopic.files.filter(f => f instanceof File);
+                const existingFiles = localTopic.files.filter(f => f.id);
+
+                if (newFiles.length > 0) {
+                    await this.saveFiles(updatedTopic.id, newFiles);
+                }
+
+                for (const existingFile of existingFiles) {
+                    const blob = this.base64ToBlob(existingFile.fileData, existingFile.fileType);
+                    const file = new File([blob], existingFile.fileName, { type: existingFile.fileType });
+                    await this.saveFiles(updatedTopic.id, [file]);
+                }
+            }
+
+            if (updatedTopic.subtopics && updatedTopic.subtopics.length > 0) {
+                for (let subIndex = 0; subIndex < updatedTopic.subtopics.length; subIndex++) {
+                    const updatedSubtopic = updatedTopic.subtopics[subIndex];
+                    const localSubtopic = localTopic.subtopics?.[subIndex];
+
+                    if (localSubtopic?.files && localSubtopic.files.length > 0) {
+                        const newFiles = localSubtopic.files.filter(f => f instanceof File);
+                        const existingFiles = localSubtopic.files.filter(f => f.id);
+
+                        if (newFiles.length > 0) {
+                            await this.saveFiles(updatedSubtopic.id, newFiles);
+                        }
+
+                        for (const existingFile of existingFiles) {
+                            const blob = this.base64ToBlob(existingFile.fileData, existingFile.fileType);
+                            const file = new File([blob], existingFile.fileName, { type: existingFile.fileType });
+                            await this.saveFiles(updatedSubtopic.id, [file]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    base64ToBlob(base64, contentType) {
+        const byteCharacters = atob(base64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        return new Blob([byteArray], { type: contentType });
+    }
 }
