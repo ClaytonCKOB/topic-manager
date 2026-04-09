@@ -84,12 +84,24 @@ export default function MeetingVoteList({meetingList}) {
                   <Typography variant="h6" fontWeight="bold">
                     {meeting.title}
                   </Typography>
-                  <Chip
-                    label="Ativa"
-                    color="success"
-                    size="small"
-                    sx={{ fontWeight: 600 }}
-                  />
+                  {
+                    authService.isAdmin() || new Date(meeting.startDate) > new Date() ? 
+                    <Chip
+                      label="Agendada"
+                      sx={{
+                        bgcolor: "warning.main",
+                        color: "white",
+                        fontWeight: 600,
+                        px: 1
+                      }}
+                    /> :
+                      <Chip
+                        label="Ativa"
+                        color="success"
+                        size="small"
+                        sx={{ fontWeight: 600 }}
+                      />
+                  }
                 </Box>
 
                 <Box display="flex" alignItems="center" mb={1}>
