@@ -236,10 +236,9 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
                     Adicionar Anexo(s)
                     <Input
                     type="file"
-                    inputProps={{ accept: 'application/pdf' }}
+                    inputProps={{ accept: 'application/pdf', multiple: true }}
                     onChange={(e) => onAddTopicFiles(index, subIndex, e.target.files)}
                     sx={{ display: 'none' }}
-                    multiple
                     />
                 </Button>
             </Grid>
