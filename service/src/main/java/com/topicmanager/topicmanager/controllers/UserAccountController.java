@@ -4,6 +4,7 @@ import com.topicmanager.topicmanager.dto.UserDTO;
 import com.topicmanager.topicmanager.entities.UserAccount;
 import com.topicmanager.topicmanager.services.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +34,15 @@ public class UserAccountController {
         return ResponseEntity.ok(new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(), user.getActive()));
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<UserDTO>> getAllUserAccount() {
+//        return ResponseEntity.ok(userAccountService.listActiveUsers().stream().map(user -> new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(), user.getActive())).toList());
+//    }
+
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUserAccount() {
-        return ResponseEntity.ok(userAccountService.listActiveUsers().stream().map(user -> new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(), user.getActive())).toList());
+    @QueryMapping
+    public List<UserDTO> users() {
+        return userAccountService.listActiveUsers().stream().map(user -> new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(), user.getActive())).toList();
     }
 
     @DeleteMapping("/{id}")
