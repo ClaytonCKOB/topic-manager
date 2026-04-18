@@ -18,6 +18,11 @@ public class TopicVoteService {
     ActionItemService actionItemService;
 
     public void setTopicVote(TopicVoteDTO topicVote) {
+        // TODO: use constants
+        if (topicVote.status().equals(3) && (topicVote.comment() == null || topicVote.comment().trim().isEmpty())) {
+            throw new IllegalArgumentException("Comentário é obrigatório para votos de diligência");
+        }
+
         TopicVote existingTopicVote = topicVoteRepository.findByMeetingTopicIdAndUserId(topicVote.meeting_topic_id(), topicVote.user_account_id());
 
         if (existingTopicVote == null) {
@@ -29,7 +34,6 @@ public class TopicVoteService {
             topicVoteRepository.save(existingTopicVote);
         }
 
-        // TODO: use constants
         if (topicVote.status().equals(3)) {
             actionItemService.createActionItem(
                     topicVote.meeting_topic_id(),

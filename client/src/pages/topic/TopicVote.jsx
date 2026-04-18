@@ -152,19 +152,21 @@ export default function TopicVote({ topic, index, refreshTopics }) {
                 </Box>
 
                 {
-                    selectedVote == 3 ?
+                    selectedVote !== null ?
                     <Box mb={3}>
                         <Typography variant="subtitle1" fontWeight="600" mb={1}>
-                            Comentário / Justificativa
+                            Comentário / Justificativa {selectedVote === 3 ? "(obrigatório)" : "(opcional)"}
                         </Typography>
                         <TextField
-                        placeholder="Adicione um comentário (opcional)..."
+                        placeholder={selectedVote === 3 ? "Adicione um comentário..." : "Adicione um comentário (opcional)..."}
                         multiline
                         rows={3}
                         fullWidth
+                        required={selectedVote === 3}
                         variant="outlined"
                         value={comment}
                         onChange={(e) => {setComment(e.target.value)}}
+                        error={selectedVote === 3 && comment.trim() === ""}
                         sx={{
                             "& .MuiOutlinedInput-root": {
                                 borderRadius: 2
@@ -180,7 +182,7 @@ export default function TopicVote({ topic, index, refreshTopics }) {
                         variant="contained"
                         loading={isSaving}
                         color="primary"
-                        disabled={isSaving}
+                        disabled={isSaving || selectedVote === null || (selectedVote === 3 && comment.trim() === "")}
                         sx={{
                             borderRadius: 1,
                             px: 5,
