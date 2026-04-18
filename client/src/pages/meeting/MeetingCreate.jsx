@@ -13,7 +13,7 @@ import AuthService from '../../services/AuthService';
 import MeetingGeneralSection from './MeetingGeneralSection';
 import TopicService from '../../services/TopicService';
 import ErrorMessage from '../../base/components/message/ErrorMessage';
-import ParticipantSection from '../participant/ParticipantSection';
+import ParticipantVotesSection from '../participant/ParticipantVotesSection';
 import TopicTotalizers from '../topic/TopicTotalizers';
 
 export default function MeetingCreate() {
@@ -209,8 +209,9 @@ export default function MeetingCreate() {
                   isEditable={isMeetingEditable}
                 />
 
-                <ParticipantSection
+                <ParticipantVotesSection
                   participants={meeting.participants}
+                  topics={meeting.topics}
                 />
                 {isMeetingEditable && (
                   <Box display="flex" justifyContent="flex-end">
