@@ -235,7 +235,6 @@ export default function ParticipantVotesSection({ participants, topics }) {
                                 </Box>
                             </Box>
 
-                            {/* Expanded vote details */}
                             <Collapse in={expandedRows[participant.id]} timeout="auto" unmountOnExit>
                                 <Box sx={{ p: 3, pt: 2, backgroundColor: '#fafafa' }}>
                                     <DataGrid
