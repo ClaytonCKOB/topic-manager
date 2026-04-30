@@ -10,6 +10,7 @@ import com.topicmanager.topicmanager.entities.UserAccount;
 import com.topicmanager.topicmanager.repositories.MeetingRepository;
 import com.topicmanager.topicmanager.repositories.TopicVoteRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class MeetingService {
     @Autowired
     UserAccountService userAccountService;
 
+    @Transactional
     public Meeting createMeeting(MeetingCreationDTO meeting) {
         Meeting newMeeting = new Meeting(meeting);
 
@@ -49,7 +51,7 @@ public class MeetingService {
             meetingTopicService.createMeetingTopic(savedMeeting, topic);
         }
 
-        return newMeeting;
+        return savedMeeting;
     }
 
     public void updateMeeting(Long meetingId, MeetingCreationDTO meeting) {
@@ -96,7 +98,6 @@ public class MeetingService {
 
         meeting.getParticipants().
                 stream().
-                filter(p -> !topicVotes.stream().filter(v -> v.getUser().getId().equals(p.getUser().getId()) && v.getMeetingTopic().getMeeting().getId().equals(meeting.getId())).toList().isEmpty()).
                 forEach(participant -> {
             meetingParticipants.add(new MeetingParticipantDTO(participant.getId().getUserAccountId(), participant.getId().getMeetingId(), participant.getUser().getUsername(), participant.getUser().getName(), participant.getRole()));
         });

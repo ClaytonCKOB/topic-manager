@@ -1,17 +1,11 @@
-FROM maven:3.9-eclipse-temurin-24 AS builder
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+COPY target/topicmanager-0.0.1-SNAPSHOT.jar app.jar
 
-RUN mvn dependency:go-offline && mvn package -DskipTests
-
-FROM eclipse-temurin:24-jre-jammy
-
-WORKDIR /app
-
-COPY --from=builder /app/target/*.jar app.jar
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=5 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 EXPOSE 8080
 
