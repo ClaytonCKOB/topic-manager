@@ -4,5 +4,6 @@
 client/node_modules/
 target/
 service/target/
+postgres/
 .env
 start.sh
