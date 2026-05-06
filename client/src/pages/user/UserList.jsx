@@ -16,7 +16,8 @@ import UserInvite from "./UserInvite";
 export default function UserList() {
     const [users, setUsers] = useState([]);
     const [userId, setUserId] = useState(null);
-    const [isRequesting, setIsRequesting] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [openUserModal, setOpenUserModal] = useState(false);
     const [openUserInvitationModal, setOpenUserInvitationModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -31,14 +32,16 @@ export default function UserList() {
     const redirectHome = () => navigate("/home");
 
     const getUsers = async () => {
-        let data = await userService.list();
-        setUsers(data || []);
+        try {
+            let data = await userService.list();
+            setUsers(data || []);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     useEffect(() => {
-        setIsRequesting(true);
         getUsers();
-        setIsRequesting(false);
     }, []); 
 
     const handleDeleteClick = (userId) => {
@@ -53,10 +56,10 @@ export default function UserList() {
 
     const handleConfirmDelete = async () => {
         if (!userId) return;
+        setIsDeleting(true);
         try {
             await userService.delete(userId);
-            // await getMeetingList();
-
+            setUsers(users.filter(u => u.id !== userId));
         } catch (err) {
             console.error("Erro ao deletar usuário:", err);
             setSnackbar({
@@ -65,9 +68,9 @@ export default function UserList() {
                 severity: "error",
             });
         } finally {
+            setIsDeleting(false);
             setOpenDeleteModal(false);
             setUserId(null);
-            setUsers(users.filter(u => u.id !== userId));
         }
     };
 
@@ -149,7 +152,7 @@ export default function UserList() {
                 pageSizeOptions={[10, 25, 50, 100]}
                 disableRowSelectionOnClick
                 getRowId={(row) => row.id}
-                loading={isRequesting}
+                loading={isLoading || isDeleting}
                 initialState={{
                 sorting: {
                     sortModel: [{ field: 'name', sort: 'asc' }],
