@@ -4,6 +4,8 @@ import java.util.List;
 
 public record TopicCreationWithMeetingDTO(
 
+        Long id,
+
         String title,
 
         String description,

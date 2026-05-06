@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileList from "../../base/components/files/FileList";
 import VoteList from "../../base/components/vote/VoteList";
 import AuthService from "../../services/AuthService";
+import TopicService from "../../services/TopicService";
 import DeleteDialog from "../../base/components/dialog/DeleteDialog";
 import { useState } from "react";
 
@@ -20,12 +21,13 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
         },
     };
     const authService = new AuthService();
+    const topicService = new TopicService();
     const onAddSubTopic = (index) => {
         setMeeting((prev) => ({
         ...prev,
         topics: prev.topics.map((t, i) =>
             i === index
-            ? { ...t, subtopics: [...(t.subtopics || []), { title: "", files: [] }] }
+            ? { ...t, subtopics: [...(t.subtopics || []), { title: "", description: "", files: [] }] }
             : t
         ),
         }));
@@ -126,32 +128,51 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
 
     const onRemoveTopicFile = (index, subIndex, fileIndex) => {
         if (isSubTopic) {
+            const fileToRemove = topic.files[fileIndex];
+
+            // If file has ID, delete from backend
+            if (fileToRemove?.id) {
+                console.log("Deleting file with ID:", fileToRemove.id);
+                topicService.deleteFile(fileToRemove.id)
+                    .then(() => console.log("File deleted successfully:", fileToRemove.id))
+                    .catch(err => console.error("Error deleting file:", err));
+            }
+
             setMeeting((prev) => ({
-            ...prev,
-            topics: prev.topics.map((t, i) =>
-                i === index
-                ? {
-                    ...t,
-                    subtopics: t.subtopics.map((s, j) =>
-                        j === subIndex
-                        ? { ...s, files: s.files.filter((_, k) => k !== fileIndex) }
-                        : s
-                    ),
+                ...prev,
+                topics: prev.topics.map((t, i) =>
+                    i === index
+                    ? {
+                        ...t,
+                        subtopics: t.subtopics.map((s, j) =>
+                            j === subIndex
+                            ? { ...s, files: s.files.filter((_, k) => k !== fileIndex) }
+                            : s
+                        ),
                     }
-                : t
-            ),
+                    : t
+                ),
             }));
         } else {
+            const fileToRemove = topic.files[fileIndex];
+
+            // If file has ID, delete from backend
+            if (fileToRemove?.id) {
+                console.log("Deleting file with ID:", fileToRemove.id);
+                topicService.deleteFile(fileToRemove.id)
+                    .then(() => console.log("File deleted successfully:", fileToRemove.id))
+                    .catch(err => console.error("Error deleting file:", err));
+            }
+
             setMeeting((prev) => ({
-        ...prev,
-        topics: prev.topics.map((t, i) =>
-            i === index
-            ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) }
-            : t
-        ),
-        }));
+                ...prev,
+                topics: prev.topics.map((t, i) =>
+                    i === index
+                    ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) }
+                    : t
+                ),
+            }));
         }
-        
     };
 
     return <>
@@ -210,7 +231,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             minRows={2}
             placeholder={isSubTopic ? "Adicione a descrição da subpauta..." : "Adicione a descrição da pauta..."}
             fullWidth
-            value={topic.title}
+            value={topic.title || ""}
             onChange={(e) => onChangeTopicTitle(index, subIndex, e.target.value)}
         />
         <FileList

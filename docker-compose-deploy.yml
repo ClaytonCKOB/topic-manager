@@ -37,6 +37,8 @@ services:
   frontend:
     image: claytonckob/topicmanager-frontend:latest
     restart: always
+    ports:
+      - "80:80"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 

@@ -7,6 +7,7 @@ import com.topicmanager.topicmanager.services.MeetingTopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,19 @@ public class MeetingTopicFileController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{fileId}")
+    @Operation(summary = "Delete file", description = "Delete a meeting topic file by ID")
+    public ResponseEntity deleteTopicFile(
+            @Parameter(description = "File ID") @PathVariable Long fileId) {
+        try {
+            meetingTopicFileService.deleteTopicFile(fileId);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error deleting file: " + e.getMessage());
+        }
     }
 }
