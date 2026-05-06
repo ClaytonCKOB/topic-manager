@@ -1,5 +1,5 @@
 import {
-  Box, Typography
+  Box, Typography, CircularProgress
 } from "@mui/material";
 import AuthService from "../services/AuthService";
 import Header from "../base/components/header/Header";
@@ -12,19 +12,25 @@ import ActionItemList from "../base/components/action_item/ActionItemList";
 
 export default function Home() {
   const [meetingList, setMeetingList] = useState([]);
-  const [isRequesting, setIsRequesting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const meetingService = new MeetingService();
   const authService = new AuthService();
 
   useEffect(() => {
-    setIsRequesting(true);
-    getMeetingList();
-    setIsRequesting(false);
+    const loadMeetings = async () => {
+      try {
+        const data = await meetingService.list();
+        setMeetingList(data || []);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadMeetings();
   }, []);
 
   const getMeetingList = async (attr = {}) => {
-      const data = await meetingService.list(attr);
-      setMeetingList(data || []);
+    const data = await meetingService.list(attr);
+    setMeetingList(data || []);
   };
 
   return (
@@ -49,12 +55,18 @@ export default function Home() {
           </Box>
 
           <Box flex={1} overflow="hidden" display="flex" flexDirection="column">
-            <MeetingVoteList meetingList={meetingList}/>
+            {isLoading ? (
+              <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+                <CircularProgress />
+              </Box>
+            ) : (
+              <MeetingVoteList meetingList={meetingList}/>
+            )}
           </Box>
         </Box>
 
         <Box width={0.5} overflow="hidden" display="flex" flexDirection="column">
-          <MeetingManagement meetingList={meetingList} setMeetingList={setMeetingList} isRequesting={isRequesting}/>
+          <MeetingManagement meetingList={meetingList} setMeetingList={setMeetingList} isRequesting={isLoading}/>
         </Box>
       </Box>
     </Box>

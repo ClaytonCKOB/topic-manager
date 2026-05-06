@@ -10,7 +10,7 @@ export default function TopicSection({meeting, setMeeting, isEditable}) {
     const addNewTopic = () => {
         setMeeting((prev) => ({
         ...prev,
-        topics: [...prev.topics, { title: "", files: [], subtopics: [] }],
+        topics: [...prev.topics, { title: "", description: "", files: [], subtopics: [] }],
         }));
     };
 

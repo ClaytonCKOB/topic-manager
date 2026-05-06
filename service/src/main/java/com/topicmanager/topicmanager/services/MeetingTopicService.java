@@ -10,8 +10,8 @@ import com.topicmanager.topicmanager.repositories.MeetingTopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MeetingTopicService {
@@ -66,5 +66,94 @@ public class MeetingTopicService {
 
     public void deleteAllByMeeting(Meeting savedMeeting) {
         meetingTopicRepository.deleteByMeeting(savedMeeting);
+    }
+
+    public void syncMeetingTopics(Meeting meeting, List<TopicCreationWithMeetingDTO> incomingTopics) {
+        List<MeetingTopic> existingTopics = meetingTopicRepository.findByMeetingId(meeting.getId())
+                .stream()
+                .filter(t -> t.getParentTopic() == null)
+                .collect(Collectors.toList());
+
+        Map<Long, MeetingTopic> existingMap = existingTopics.stream()
+                .collect(Collectors.toMap(MeetingTopic::getId, t -> t));
+
+        Set<Long> processedIds = new HashSet<>();
+
+        for (TopicCreationWithMeetingDTO topicDTO : incomingTopics) {
+            if (topicDTO.id() != null && existingMap.containsKey(topicDTO.id())) {
+                MeetingTopic existingTopic = existingMap.get(topicDTO.id());
+                existingTopic.setTitle(topicDTO.title());
+                existingTopic.setDescription(topicDTO.description());
+
+                syncSubtopics(existingTopic, topicDTO.subtopics());
+
+                meetingTopicRepository.save(existingTopic);
+                processedIds.add(topicDTO.id());
+            } else {
+                createMeetingTopic(meeting, topicDTO);
+            }
+        }
+
+        for (MeetingTopic existingTopic : existingTopics) {
+            if (!processedIds.contains(existingTopic.getId())) {
+                if (!existingTopic.getVotes().isEmpty()) {
+                    throw new IllegalStateException(
+                            "Cannot delete topic '" + existingTopic.getTitle() +
+                                    "' because it has " + existingTopic.getVotes().size() + " votes"
+                    );
+                }
+                meetingTopicRepository.delete(existingTopic);
+            }
+        }
+    }
+
+    private void syncSubtopics(MeetingTopic parentTopic, List<SubtopicCreationWithMeetingDTO> incomingSubtopics) {
+        if (incomingSubtopics == null || incomingSubtopics.isEmpty()) {
+            for (MeetingTopic subtopic : parentTopic.getSubtopics()) {
+                if (!subtopic.getVotes().isEmpty()) {
+                    throw new IllegalStateException(
+                            "Cannot delete subtopic '" + subtopic.getTitle() + "' because it has votes"
+                    );
+                }
+            }
+            parentTopic.getSubtopics().clear();
+            return;
+        }
+
+        Map<Long, MeetingTopic> existingSubtopicsMap = parentTopic.getSubtopics().stream()
+                .collect(Collectors.toMap(MeetingTopic::getId, s -> s));
+
+        Set<Long> processedSubtopicIds = new HashSet<>();
+        List<MeetingTopic> updatedSubtopics = new ArrayList<>();
+
+        for (SubtopicCreationWithMeetingDTO subDTO : incomingSubtopics) {
+            if (subDTO.id() != null && existingSubtopicsMap.containsKey(subDTO.id())) {
+                MeetingTopic existingSubtopic = existingSubtopicsMap.get(subDTO.id());
+                existingSubtopic.setTitle(subDTO.title());
+                existingSubtopic.setDescription(subDTO.description());
+                updatedSubtopics.add(existingSubtopic);
+                processedSubtopicIds.add(subDTO.id());
+            } else {
+                MeetingTopic newSubtopic = new MeetingTopic();
+                newSubtopic.setMeeting(parentTopic.getMeeting());
+                newSubtopic.setParentTopic(parentTopic);
+                newSubtopic.setTitle(subDTO.title());
+                newSubtopic.setDescription(subDTO.description());
+                updatedSubtopics.add(newSubtopic);
+            }
+        }
+
+        for (MeetingTopic existingSub : parentTopic.getSubtopics()) {
+            if (!processedSubtopicIds.contains(existingSub.getId())) {
+                if (!existingSub.getVotes().isEmpty()) {
+                    throw new IllegalStateException(
+                            "Cannot delete subtopic '" + existingSub.getTitle() + "' because it has votes"
+                    );
+                }
+            }
+        }
+
+        parentTopic.getSubtopics().clear();
+        parentTopic.getSubtopics().addAll(updatedSubtopics);
     }
 }

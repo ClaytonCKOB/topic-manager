@@ -1,6 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { 
-  Box, Typography, Button, Card, CardContent
+import {
+  Box, Typography, Button, Card, CardContent, CircularProgress
 } from "@mui/material";
 import { useNavigate, useParams } from 'react-router-dom';
 import MeetingService from '../../services/MeetingService';
@@ -20,6 +20,7 @@ export default function MeetingCreate() {
   const { id } = useParams();
   const [isDetail, setIsDetail] = useState(false);
   const [isMeetingEditable, setIsMeetingEditable] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [meeting, setMeeting] = useState({
     title: "",
     description: "",
@@ -98,6 +99,7 @@ export default function MeetingCreate() {
   };
 
   const saveMeeting = async () => {
+    setIsSaving(true);
     try {
       const start = combineDateTime(meeting.startDate, meeting.startTime);
       const end = combineDateTime(meeting.startDate, meeting.endTime);
@@ -152,6 +154,8 @@ export default function MeetingCreate() {
         message: error.message || "Ocorreu um erro ao salvar a reunião.",
         severity: "error",
       });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -219,9 +223,11 @@ export default function MeetingCreate() {
                       variant="contained"
                       color="primary"
                       onClick={saveMeeting}
+                      disabled={isSaving}
+                      startIcon={isSaving && <CircularProgress size={20} color="inherit" />}
                       sx={{ borderRadius: 2, px: 4, py: 1.2 }}
                     >
-                      Salvar
+                      {isSaving ? 'Salvando...' : 'Salvar'}
                     </Button>
                   </Box>
                 )}

@@ -1,4 +1,4 @@
-import { Box, Typography, Button, LinearProgress, Chip} from "@mui/material";
+import { Box, Typography, Button, LinearProgress, Chip, CircularProgress} from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import GroupIcon from '@mui/icons-material/Group';
 import PersonIcon from '@mui/icons-material/Person';
@@ -14,6 +14,7 @@ export default function MeetingVote() {
     const [topics, setTopics] = useState([]);
     const [totalVotes, setTotalVotes] = useState({})
     const [filterStatus, setFilterStatus] = useState('all');
+    const [isLoading, setIsLoading] = useState(true);
     const topicService = new TopicService();
     const authService = new AuthService();
     const { id } = useParams();
@@ -24,11 +25,15 @@ export default function MeetingVote() {
     };
 
     const getTopics = async (meetingId) => {
-        let data = await topicService.getTopicsByMeetingId(meetingId);
-        let votes = await topicService.getTotalVotes(id);
+        try {
+            let data = await topicService.getTopicsByMeetingId(meetingId);
+            let votes = await topicService.getTotalVotes(id);
 
-        setTopics(data || []);
-        setTotalVotes(votes || {});
+            setTopics(data || []);
+            setTotalVotes(votes || {});
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -94,7 +99,12 @@ export default function MeetingVote() {
                 </Typography>
             </Box>
 
-            <Box px={4} py={4}>
+            {isLoading ? (
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+                    <CircularProgress size={60} />
+                </Box>
+            ) : (
+                <Box px={4} py={4}>
                 <Box
                     sx={{
                         backgroundColor: "white",
@@ -216,6 +226,7 @@ export default function MeetingVote() {
                     ))}
                 </Box>
             </Box>
+            )}
         </Box>
     </>
 }

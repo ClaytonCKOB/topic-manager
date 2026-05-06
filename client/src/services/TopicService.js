@@ -104,9 +104,19 @@ export default class TopicService {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             return response.data;
-            
+
         } catch (error) {
             console.error("Error uploading files:", error);
+            throw error;
+        }
+    }
+
+    async deleteFile(fileId) {
+        try {
+            const response = await request.delete(`/api/meeting-topic-file/${fileId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error deleting file:", error);
             throw error;
         }
     }
@@ -120,19 +130,11 @@ export default class TopicService {
 
             if (localTopic.files && localTopic.files.length > 0) {
                 const newFiles = localTopic.files.filter(f => f instanceof File);
-                const existingFiles = localTopic.files.filter(f => f.id);
 
                 if (newFiles.length > 0) {
                     await this.saveFiles(updatedTopic.id, newFiles);
                 }
-
-                for (const existingFile of existingFiles) {
-                    const blob = this.base64ToBlob(existingFile.fileData, existingFile.fileType);
-                    const file = new File([blob], existingFile.fileName, { type: existingFile.fileType });
-                    await this.saveFiles(updatedTopic.id, [file]);
-                }
             }
-
             if (updatedTopic.subtopics && updatedTopic.subtopics.length > 0) {
                 for (let subIndex = 0; subIndex < updatedTopic.subtopics.length; subIndex++) {
                     const updatedSubtopic = updatedTopic.subtopics[subIndex];
@@ -140,16 +142,9 @@ export default class TopicService {
 
                     if (localSubtopic?.files && localSubtopic.files.length > 0) {
                         const newFiles = localSubtopic.files.filter(f => f instanceof File);
-                        const existingFiles = localSubtopic.files.filter(f => f.id);
 
                         if (newFiles.length > 0) {
                             await this.saveFiles(updatedSubtopic.id, newFiles);
-                        }
-
-                        for (const existingFile of existingFiles) {
-                            const blob = this.base64ToBlob(existingFile.fileData, existingFile.fileType);
-                            const file = new File([blob], existingFile.fileName, { type: existingFile.fileType });
-                            await this.saveFiles(updatedSubtopic.id, [file]);
                         }
                     }
                 }

@@ -19,6 +19,7 @@ export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isLoadingInvite, setIsLoadingInvite] = useState(true);
     const [passwordMismatch, setPasswordMismatch] = useState(false);
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -41,6 +42,8 @@ export default function Register() {
                 message: "Erro ao buscar convite.",
                 severity: "error",
             });
+        } finally {
+            setIsLoadingInvite(false);
         }
     }
 
@@ -137,59 +140,65 @@ export default function Register() {
                     p: isSmallScreen ? "2rem" : "3rem",
                 }}
             >
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}>
-                        Criar Conta
-                    </Typography>
+                {isLoadingInvite ? (
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 400 }}>
+                        <CircularProgress size={60} />
+                    </Box>
+                ) : (
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}>
+                            Criar Conta
+                        </Typography>
 
-                    <TextField label="Nome" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
-                    <TextField label="Usuário" value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
-                    <TextField label="Email" type="email" value={email} disabled onChange={(e) => setEmail(e.target.value)} fullWidth />
+                        <TextField label="Nome" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
+                        <TextField label="Usuário" value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
+                        <TextField label="Email" type="email" value={email} disabled onChange={(e) => setEmail(e.target.value)} fullWidth />
 
-                    <TextField
-                        label="Senha"
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        fullWidth
-                        slotProps={{
-                            input: {
-                                endAdornment: (
-                                    <IconButton onClick={() => setShowPassword(!showPassword)}>
-                                        <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
-                                    </IconButton>
-                                )
-                            }
-                        }}
-                    />
+                        <TextField
+                            label="Senha"
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            fullWidth
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                            <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                                        </IconButton>
+                                    )
+                                }
+                            }}
+                        />
 
-                    <TextField
-                        label="Confirmar senha"
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        error={passwordMismatch}
-                        helperText={passwordMismatch ? "As senhas não coincidem" : ""}
-                        fullWidth
-                        slotProps={{
-                            input: {
-                                endAdornment: (
-                                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                                        <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
-                                    </IconButton>
-                                )
-                            }
-                        }}
-                    />
+                        <TextField
+                            label="Confirmar senha"
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            error={passwordMismatch}
+                            helperText={passwordMismatch ? "As senhas não coincidem" : ""}
+                            fullWidth
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                            <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
+                                        </IconButton>
+                                    )
+                                }
+                            }}
+                        />
 
-                    <Button variant="contained" sx={{ height: 56, mt: 1 }} onClick={handleRegister}>
-                        {loading ? <CircularProgress color="inherit" size={24} /> : "Registrar"}
-                    </Button>
+                        <Button variant="contained" sx={{ height: 56, mt: 1 }} onClick={handleRegister}>
+                            {loading ? <CircularProgress color="inherit" size={24} /> : "Registrar"}
+                        </Button>
 
-                    <Typography variant="body2" sx={{ mt: 1, textAlign: "center", cursor: "pointer" }} onClick={() => navigate("/")}>
-                        Já possui conta? Faça login
-                    </Typography>
-                </Box>
+                        <Typography variant="body2" sx={{ mt: 1, textAlign: "center", cursor: "pointer" }} onClick={() => navigate("/")}>
+                            Já possui conta? Faça login
+                        </Typography>
+                    </Box>
+                )}
             </Box>
 
             <ErrorMessage snackbar={snackbar} setSnackbar={setSnackbar} />
