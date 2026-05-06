@@ -130,7 +130,6 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
         if (isSubTopic) {
             const fileToRemove = topic.files[fileIndex];
 
-            // If file has ID, delete from backend
             if (fileToRemove?.id) {
                 console.log("Deleting file with ID:", fileToRemove.id);
                 topicService.deleteFile(fileToRemove.id)
@@ -156,7 +155,6 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
         } else {
             const fileToRemove = topic.files[fileIndex];
 
-            // If file has ID, delete from backend
             if (fileToRemove?.id) {
                 console.log("Deleting file with ID:", fileToRemove.id);
                 topicService.deleteFile(fileToRemove.id)
