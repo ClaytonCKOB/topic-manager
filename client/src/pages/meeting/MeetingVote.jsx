@@ -12,6 +12,7 @@ import AuthService from "../../services/AuthService";
 
 export default function MeetingVote() {
     const [topics, setTopics] = useState([]);
+    const [flatTopics, setFlatTopics] = useState([]);
     const [totalVotes, setTotalVotes] = useState({})
     const [filterStatus, setFilterStatus] = useState('all');
     const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +31,7 @@ export default function MeetingVote() {
             let votes = await topicService.getTotalVotes(id);
 
             setTopics(data || []);
+            setFlatTopics(topicService.flattenTopics(data || [], true));
             setTotalVotes(votes || {});
         } finally {
             setIsLoading(false);
@@ -48,7 +50,7 @@ export default function MeetingVote() {
         return userVote[0].status;
     };
 
-    const filteredTopics = topics.filter(topic => {
+    const filteredTopics = flatTopics.filter(topic => {
         if (filterStatus === 'all') return true;
         const voteStatus = getUserVoteStatus(topic);
         if (filterStatus === 'pending') return voteStatus === null;
@@ -222,7 +224,13 @@ export default function MeetingVote() {
 
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                     {filteredTopics.map((topic, index) => (
-                        <TopicVote key={index} topic={topic} index={topics.indexOf(topic)} refreshTopics={() => getTopics(id)}/>
+                        <TopicVote
+                            key={topic.id}
+                            topic={topic}
+                            sequence={topic.sequence}
+                            isParent={topic.isParent}
+                            refreshTopics={() => getTopics(id)}
+                        />
                     ))}
                 </Box>
             </Box>
