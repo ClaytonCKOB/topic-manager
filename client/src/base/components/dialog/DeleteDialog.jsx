@@ -1,10 +1,21 @@
 import { Typography, Button, Dialog, DialogContent, DialogActions, Box } from "@mui/material";
 
-export default function DeleteDialog({openDeleteModal, handleCancelDelete, handleConfirmDelete}) {
+export default function DeleteDialog({openDeleteModal, handleCancelDelete, handleConfirmDelete, message}) {
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleCancelDelete();
+        } else if (event.key === 'Backspace' || event.key === 'Delete') {
+            event.preventDefault();
+            handleConfirmDelete();
+        }
+    };
 
     return <Dialog
             open={openDeleteModal}
             onClose={handleCancelDelete}
+            onKeyDown={handleKeyDown}
             fullWidth
             maxWidth="sm"
         >
@@ -18,7 +29,7 @@ export default function DeleteDialog({openDeleteModal, handleCancelDelete, handl
                     }}
                 >
                     <Typography variant="body1" fontSize={18}>
-                        Tem certeza que deseja remover este item?
+                        {message || "Tem certeza que deseja remover este item?"}
                     </Typography>
                 </Box>
             </DialogContent>
@@ -26,6 +37,7 @@ export default function DeleteDialog({openDeleteModal, handleCancelDelete, handl
                 <Button
                     onClick={handleCancelDelete}
                     color="inherit"
+                    autoFocus
                     sx={{
                         borderRadius: 1,
                         px: 3,
@@ -34,7 +46,7 @@ export default function DeleteDialog({openDeleteModal, handleCancelDelete, handl
                         fontWeight: 600
                     }}
                 >
-                    Cancelar
+                    Cancelar (Enter)
                 </Button>
                 <Button
                     onClick={handleConfirmDelete}
