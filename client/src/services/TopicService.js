@@ -36,6 +36,34 @@ export default class TopicService {
         }
     }
 
+    flattenTopics(topics, includeSequence = true) {
+        const flatList = [];
+        topics?.forEach((topic, index) => {
+            if (includeSequence) {
+                flatList.push({
+                    ...topic,
+                    sequence: (index + 1).toString(),
+                    isParent: true
+                });
+            } else {
+                flatList.push(topic);
+            }
+
+            topic.subtopics?.forEach((subtopic, subIndex) => {
+                if (includeSequence) {
+                    flatList.push({
+                        ...subtopic,
+                        sequence: `${index + 1}.${subIndex + 1}`,
+                        isParent: false
+                    });
+                } else {
+                    flatList.push(subtopic);
+                }
+            });
+        });
+        return flatList;
+    }
+
     async getVotesByTopicId(topicId) {
         var response = {};
         try {
@@ -83,14 +111,16 @@ export default class TopicService {
         let topics = await this.getTopicsByMeetingId(meetingId);
 
         if (topics && topics.length) {
-            response.total = topics.length;
-            let votedByUser = topics.map( t => t.votes.filter(v => v.user.id == authService.getUserId()).length)
-                .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            
-            response.voted = votedByUser;
-            response.missing = topics.length - votedByUser;
-        }
+            const flatTopics = this.flattenTopics(topics, false);
 
+            response.total = flatTopics.length;
+            let votedByUser = flatTopics
+                .map(t => t.votes.filter(v => v.user.id == authService.getUserId()).length)
+                .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+            response.voted = votedByUser;
+            response.missing = flatTopics.length - votedByUser;
+        }
 
         return response;
     }
@@ -119,6 +149,36 @@ export default class TopicService {
             console.error("Error deleting file:", error);
             throw error;
         }
+    }
+
+    async bulkDeleteFiles(fileIds) {
+        const deletePromises = fileIds.map(fileId =>
+            this.deleteFile(fileId)
+                .then(() => ({ fileId, success: true }))
+                .catch(err => ({ fileId, success: false, error: err }))
+        );
+
+        const results = await Promise.allSettled(deletePromises);
+
+        const summary = {
+            success: [],
+            failed: []
+        };
+
+        results.forEach(result => {
+            if (result.status === 'fulfilled') {
+                const { fileId, success, error } = result.value;
+                if (success) {
+                    summary.success.push(fileId);
+                } else {
+                    summary.failed.push({ fileId, error });
+                }
+            }
+        });
+
+        console.log(`Bulk delete: ${summary.success.length} succeeded, ${summary.failed.length} failed`);
+
+        return summary;
     }
 
     async uploadFilesForTopics(updatedTopics, localTopics) {
@@ -160,5 +220,15 @@ export default class TopicService {
         }
         const byteArray = new Uint8Array(byteNumbers);
         return new Blob([byteArray], { type: contentType });
+    }
+
+    downloadFile(file) {
+        const blob = this.base64ToBlob(file.fileData, file.fileType);
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = file.fileName;
+        link.click();
+        URL.revokeObjectURL(link.href);
     }
 }
