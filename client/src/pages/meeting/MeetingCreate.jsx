@@ -21,6 +21,7 @@ export default function MeetingCreate() {
   const [isDetail, setIsDetail] = useState(false);
   const [isMeetingEditable, setIsMeetingEditable] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [meeting, setMeeting] = useState({
     title: "",
     description: "",
@@ -42,6 +43,7 @@ export default function MeetingCreate() {
   const redirectHome = () => navigate("/home");
 
   const getMeeting = async (meetingId) => {
+    setIsLoading(true);
     try {
       const data = await meetingService.get(meetingId);
       if (data) {
@@ -70,6 +72,8 @@ export default function MeetingCreate() {
         message: "Erro ao carregar a reunião.",
         severity: "error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -196,44 +200,50 @@ export default function MeetingCreate() {
         </Box>
 
         <Box p={4}>
-          <Card sx={{display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', boxShadow: 'none'}}>
-            <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8, maxWidth: 1300 }}>
-              <CardContent>
-                <MeetingGeneralSection
-                  meeting={meeting}
-                  setMeeting={setMeeting}
-                  isEditable={isMeetingEditable}
-                />
+          {isLoading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+              <CircularProgress size={60} />
+            </Box>
+          ) : (
+            <Card sx={{display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', boxShadow: 'none'}}>
+              <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8, maxWidth: 1300 }}>
+                <CardContent>
+                  <MeetingGeneralSection
+                    meeting={meeting}
+                    setMeeting={setMeeting}
+                    isEditable={isMeetingEditable}
+                  />
 
-                <TopicTotalizers topics={meeting.topics} />
+                  <TopicTotalizers topics={meeting.topics} />
 
-                <TopicSection
-                  meeting={meeting}
-                  setMeeting={setMeeting}
-                  isEditable={isMeetingEditable}
-                />
+                  <TopicSection
+                    meeting={meeting}
+                    setMeeting={setMeeting}
+                    isEditable={isMeetingEditable}
+                  />
 
-                <ParticipantVotesSection
-                  participants={meeting.participants}
-                  topics={meeting.topics}
-                />
-                {isMeetingEditable && (
-                  <Box display="flex" justifyContent="flex-end">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={saveMeeting}
-                      disabled={isSaving}
-                      startIcon={isSaving && <CircularProgress size={20} color="inherit" />}
-                      sx={{ borderRadius: 2, px: 4, py: 1.2 }}
-                    >
-                      {isSaving ? 'Salvando...' : 'Salvar'}
-                    </Button>
-                  </Box>
-                )}
-              </CardContent>
+                  <ParticipantVotesSection
+                    participants={meeting.participants}
+                    topics={meeting.topics}
+                  />
+                  {isMeetingEditable && (
+                    <Box display="flex" justifyContent="flex-end">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={saveMeeting}
+                        disabled={isSaving}
+                        startIcon={isSaving && <CircularProgress size={20} color="inherit" />}
+                        sx={{ borderRadius: 2, px: 4, py: 1.2 }}
+                      >
+                        {isSaving ? 'Salvando...' : 'Salvar'}
+                      </Button>
+                    </Box>
+                  )}
+                </CardContent>
+              </Card>
             </Card>
-          </Card>
+          )}
         </Box>
         <ErrorMessage
           snackbar={snackbar}
