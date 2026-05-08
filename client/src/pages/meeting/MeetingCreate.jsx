@@ -81,6 +81,11 @@ export default function MeetingCreate() {
     if (id) {
       setIsDetail(true);
       getMeeting(id);
+    } else {
+      // For new meeting creation, check if user has permission
+      // Only ADMIN and CHEFE can create meetings
+      const canEdit = authService.canChangeMeeting();
+      setIsMeetingEditable(canEdit);
     }
   }, [id]);
 
