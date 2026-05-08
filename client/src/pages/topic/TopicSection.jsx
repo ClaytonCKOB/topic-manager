@@ -1,4 +1,5 @@
 import { Typography, Button, Grid, IconButton } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from "react";
@@ -31,25 +32,9 @@ export default function TopicSection({meeting, setMeeting, isEditable}) {
         mb={!collapsed ? 3 : 0}
         >
         <Typography variant="h6">Pautas da Reunião</Typography>
-            <Grid sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                {
-                    isEditable && !collapsed ?
-                    <Button
-                    onClick={addNewTopic}
-                    variant="contained"
-                    color="primary"
-                    sx={{ borderRadius: 2 }}
-                    >
-                    Adicionar
-                    </Button>
-                    : <></>
-                }
-
-                <IconButton onClick={() => setCollapsed((prev) => !prev)}>
-                    {collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-                </IconButton>
-            </Grid>
-
+            <IconButton onClick={() => setCollapsed((prev) => !prev)}>
+                {collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+            </IconButton>
         </Grid>
 
         {!collapsed && meeting?.topics?.map((topic, index) => (
@@ -62,6 +47,32 @@ export default function TopicSection({meeting, setMeeting, isEditable}) {
                 isEditable={isEditable}
             />
         ))}
+
+        {!collapsed && isEditable && (
+            <Grid sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Button
+                    onClick={addNewTopic}
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<AddIcon />}
+                    sx={{
+                        borderRadius: 1,
+                        px: 4,
+                        py: 1.5,
+                        borderWidth: 2,
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        '&:hover': {
+                            borderWidth: 2,
+                            backgroundColor: 'rgba(25, 118, 210, 0.04)'
+                        }
+                    }}
+                >
+                    Adicionar Pauta
+                </Button>
+            </Grid>
+        )}
     </Grid>
     </>;
 }

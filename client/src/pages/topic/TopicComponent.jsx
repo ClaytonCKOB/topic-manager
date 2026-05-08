@@ -1,6 +1,5 @@
 import { Typography, Button, TextField, Grid, IconButton, Input } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileList from "../../base/components/files/FileList";
@@ -22,16 +21,6 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
     };
     const authService = new AuthService();
     const topicService = new TopicService();
-    const onAddSubTopic = (index) => {
-        setMeeting((prev) => ({
-        ...prev,
-        topics: prev.topics.map((t, i) =>
-            i === index
-            ? { ...t, subtopics: [...(t.subtopics || []), { title: "", description: "", files: [] }] }
-            : t
-        ),
-        }));
-    };
 
     const onRemoveTopic = (index, subIndex) => {
         const hasContent = isSubTopic
@@ -126,17 +115,26 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
         }
     };
 
-    const onRemoveTopicFile = (index, subIndex, fileIndex) => {
-        if (isSubTopic) {
-            const fileToRemove = topic.files[fileIndex];
+    const onRemoveTopicFile = async (index, subIndex, fileIndices) => {
+        const indicesToRemove = Array.isArray(fileIndices) ? fileIndices : [fileIndices];
 
-            if (fileToRemove?.id) {
-                console.log("Deleting file with ID:", fileToRemove.id);
-                topicService.deleteFile(fileToRemove.id)
-                    .then(() => console.log("File deleted successfully:", fileToRemove.id))
-                    .catch(err => console.error("Error deleting file:", err));
+        const fileIdsToDelete = indicesToRemove
+            .map(fileIndex => topic.files[fileIndex])
+            .filter(file => file?.id)
+            .map(file => file.id);
+
+        if (fileIdsToDelete.length > 0) {
+            try {
+                const result = await topicService.bulkDeleteFiles(fileIdsToDelete);
+                if (result.failed.length > 0) {
+                    console.error("Some files failed to delete:", result.failed);
+                }
+            } catch (err) {
+                console.error("Error in bulk delete:", err);
             }
+        }
 
+        if (isSubTopic) {
             setMeeting((prev) => ({
                 ...prev,
                 topics: prev.topics.map((t, i) =>
@@ -145,7 +143,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
                         ...t,
                         subtopics: t.subtopics.map((s, j) =>
                             j === subIndex
-                            ? { ...s, files: s.files.filter((_, k) => k !== fileIndex) }
+                            ? { ...s, files: s.files.filter((_, k) => !indicesToRemove.includes(k)) }
                             : s
                         ),
                     }
@@ -153,20 +151,11 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
                 ),
             }));
         } else {
-            const fileToRemove = topic.files[fileIndex];
-
-            if (fileToRemove?.id) {
-                console.log("Deleting file with ID:", fileToRemove.id);
-                topicService.deleteFile(fileToRemove.id)
-                    .then(() => console.log("File deleted successfully:", fileToRemove.id))
-                    .catch(err => console.error("Error deleting file:", err));
-            }
-
             setMeeting((prev) => ({
                 ...prev,
                 topics: prev.topics.map((t, i) =>
                     i === index
-                    ? { ...t, files: t.files.filter((_, j) => j !== fileIndex) }
+                    ? { ...t, files: t.files.filter((_, j) => !indicesToRemove.includes(j)) }
                     : t
                 ),
             }));
@@ -201,24 +190,11 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
                 )}
             </Grid>
             {
-            isEditable ?
-            <Grid>
-                {
-                    !isSubTopic ?
-                    <IconButton onClick={() => onAddSubTopic(index)}>
-                        <AddCircleOutlineIcon />
-                    </IconButton>
-                    : null
-                }
-                {
-                    isSubTopic || (!isSubTopic && index != 0) ?
-                    <IconButton color="error" size="small" onClick={() => onRemoveTopic(index, subIndex)}>
-                        <DeleteIcon />
-                    </IconButton>
-                    : null
-                }
-            </Grid>
-            : <></>
+            isEditable && (isSubTopic || index != 0) ?
+            <IconButton color="error" size="small" onClick={() => onRemoveTopic(index, subIndex)}>
+                <DeleteIcon />
+            </IconButton>
+            : null
             }
         </Grid>
 

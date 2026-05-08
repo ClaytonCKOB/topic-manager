@@ -1,10 +1,22 @@
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, Button } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
 import TopicComponent from "./TopicComponent";
 
 export default function TopicCard({setMeeting, topic, index, isEditable}) {
   const [isExpanded, setIsExpanded] = useState(true);
   const hasSubtopics = topic.subtopics && topic.subtopics.length > 0;
+
+  const onAddSubTopic = () => {
+    setMeeting((prev) => ({
+      ...prev,
+      topics: prev.topics.map((t, i) =>
+        i === index
+        ? { ...t, subtopics: [...(t.subtopics || []), { title: "", description: "", files: [] }] }
+        : t
+      ),
+    }));
+  };
 
   return (
     <Grid key={index}>
@@ -58,6 +70,31 @@ export default function TopicCard({setMeeting, topic, index, isEditable}) {
               </Box>
             ))}
           </Grid>
+        </Box>
+      )}
+
+      {isEditable && isExpanded && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3, ml: 3 }}>
+          <Button
+            onClick={onAddSubTopic}
+            variant="text"
+            color="primary"
+            size="small"
+            startIcon={<AddIcon />}
+            sx={{
+              textTransform: 'none',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              px: 2,
+              py: 0.5,
+              borderRadius: 1,
+              '&:hover': {
+                backgroundColor: 'rgba(25, 118, 210, 0.04)'
+              }
+            }}
+          >
+            Adicionar Subpauta
+          </Button>
         </Box>
       )}
     </Grid>
