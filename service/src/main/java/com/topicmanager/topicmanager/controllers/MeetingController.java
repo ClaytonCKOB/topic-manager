@@ -2,6 +2,7 @@ package com.topicmanager.topicmanager.controllers;
 
 import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.dto.MeetingDTO;
+import com.topicmanager.topicmanager.dto.MeetingListDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.services.MeetingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,12 +50,11 @@ public class MeetingController {
         return ResponseEntity.ok().build();
     }
 
-    // TODO: don't return meeting, but a dto instead
     @GetMapping
     @Operation(summary = "List all meetings", description = "Get a list of all meetings")
     @ApiResponse(responseCode = "200", description = "List retrieved successfully")
-    public ResponseEntity<List<Meeting>> getMeetingList() {
-        List<Meeting> meetingList = meetingService.getMeetingList();
+    public ResponseEntity<List<MeetingListDTO>> getMeetingList() {
+        List<MeetingListDTO> meetingList = meetingService.getMeetingList();
         return ResponseEntity.ok(meetingList);
     }
 

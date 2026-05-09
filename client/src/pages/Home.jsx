@@ -28,11 +28,6 @@ export default function Home() {
     loadMeetings();
   }, []);
 
-  const getMeetingList = async (attr = {}) => {
-    const data = await meetingService.list(attr);
-    setMeetingList(data || []);
-  };
-
   return (
     <Box bgcolor="#f8fafc" height="100vh" display="flex" flexDirection="column" overflow="hidden">
       <Header />

@@ -81,6 +81,9 @@ export default function MeetingCreate() {
     if (id) {
       setIsDetail(true);
       getMeeting(id);
+    } else {
+      const canEdit = authService.canChangeMeeting();
+      setIsMeetingEditable(canEdit);
     }
   }, [id]);
 

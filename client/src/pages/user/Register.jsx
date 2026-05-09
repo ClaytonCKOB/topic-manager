@@ -190,8 +190,14 @@ export default function Register() {
                             }}
                         />
 
-                        <Button variant="contained" sx={{ height: 56, mt: 1 }} onClick={handleRegister}>
-                            {loading ? <CircularProgress color="inherit" size={24} /> : "Registrar"}
+                        <Button
+                            variant="contained"
+                            sx={{ height: 56, mt: 1 }}
+                            onClick={handleRegister}
+                            disabled={loading}
+                            startIcon={loading && <CircularProgress size={20} color="inherit" />}
+                        >
+                            {loading ? 'Registrando...' : 'Registrar'}
                         </Button>
 
                         <Typography variant="body2" sx={{ mt: 1, textAlign: "center", cursor: "pointer" }} onClick={() => navigate("/")}>

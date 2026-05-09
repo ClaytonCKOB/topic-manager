@@ -172,6 +172,7 @@ export default function UserList() {
             openUserModal={openUserModal}
             setOpenUserModal={setOpenUserModal}
             userId={userId}
+            onUserSaved={getUsers}
         />
         <DeleteDialog 
             openDeleteModal={openDeleteModal}

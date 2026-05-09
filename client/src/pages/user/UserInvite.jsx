@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import UserInviteService from "../../services/UserInviteService";
 import ErrorMessage from "../../base/components/message/ErrorMessage";
@@ -128,6 +128,7 @@ export default function UserInvite({ openUserModal, setOpenUserModal }) {
                     color="primary"
                     variant="contained"
                     disabled={loading}
+                    startIcon={loading && <CircularProgress size={20} color="inherit" />}
                     sx={{
                         borderRadius: 1,
                         px: 4,
@@ -145,7 +146,7 @@ export default function UserInvite({ openUserModal, setOpenUserModal }) {
                         }
                     }}
                 >
-                    Enviar
+                    {loading ? 'Enviando...' : 'Enviar'}
                 </Button>
             </DialogActions>
             <ErrorMessage
