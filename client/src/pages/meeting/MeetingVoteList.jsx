@@ -114,7 +114,7 @@ export default function MeetingVoteList({meetingList}) {
                 <Box display="flex" alignItems="center">
                   <TopicIcon fontSize="small" sx={{ mr: 1, color: "text.secondary" }} />
                   <Typography variant="body2" color="text.secondary">
-                    {meeting.topics.length} item(ns) de pauta
+                    {meeting.topicCount} item(ns) de pauta
                   </Typography>
                 </Box>
               </Box>

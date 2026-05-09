@@ -2,6 +2,7 @@ package com.topicmanager.topicmanager.services;
 
 import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.dto.MeetingDTO;
+import com.topicmanager.topicmanager.dto.MeetingListDTO;
 import com.topicmanager.topicmanager.dto.MeetingParticipantDTO;
 import com.topicmanager.topicmanager.dto.TopicCreationWithMeetingDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
@@ -67,8 +68,17 @@ public class MeetingService {
         meetingTopicService.syncMeetingTopics(savedMeeting, meeting.topics());
     }
 
-    public List<Meeting> getMeetingList() {
-        return meetingRepository.findAll();
+    public List<MeetingListDTO> getMeetingList() {
+        List<Meeting> meetings = meetingRepository.findAll();
+        return meetings.stream()
+                .map(meeting -> new MeetingListDTO(
+                        meeting.getId(),
+                        meeting.getTitle(),
+                        meeting.getStartDate(),
+                        meeting.getEndDate(),
+                        meeting.getTopics() != null ? meeting.getTopics().size() : 0
+                ))
+                .toList();
     }
 
     public void deleteMeeting(Long id) {

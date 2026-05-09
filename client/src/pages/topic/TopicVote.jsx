@@ -77,7 +77,6 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
             borderRadius: 1,
             borderLeft: isParent ? `6px solid #1976d2` : `4px solid #9e9e9e`,
             p: 3,
-            ml: isParent ? 0 : 4,
             boxShadow: isParent ? "0 2px 8px rgba(0,0,0,0.08)" : "0 1px 4px rgba(0,0,0,0.05)",
             position: "relative",
             transition: "all 0.3s ease",
