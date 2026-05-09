@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import UserService from "../../services/UserService";
 import ErrorMessage from "../../base/components/message/ErrorMessage";
 
-export default function UserModal({ openUserModal, setOpenUserModal, userId }) {
+export default function UserModal({ openUserModal, setOpenUserModal, userId, onUserSaved }) {
     const [user, setUser] = useState({});
     const [isLoadingUser, setIsLoadingUser] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -45,6 +45,9 @@ export default function UserModal({ openUserModal, setOpenUserModal, userId }) {
                 await userService.update(user);
             }
             setOpenUserModal(false);
+            if (onUserSaved) {
+                onUserSaved();
+            }
 
         } catch (err) {
             console.error(err);
