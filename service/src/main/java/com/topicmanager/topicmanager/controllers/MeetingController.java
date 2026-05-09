@@ -1,5 +1,6 @@
 package com.topicmanager.topicmanager.controllers;
 
+import com.topicmanager.topicmanager.dto.MeetingBasicDTO;
 import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.dto.MeetingDTO;
 import com.topicmanager.topicmanager.dto.MeetingListDTO;
@@ -67,6 +68,18 @@ public class MeetingController {
     public ResponseEntity<MeetingDTO> getMeeting(
             @Parameter(description = "Meeting ID") @PathVariable Long id) {
         MeetingDTO meeting = meetingService.getMeetingById(id);
+        return ResponseEntity.ok(meeting);
+    }
+
+    @GetMapping("/{id}/basic")
+    @Operation(summary = "Get meeting basic info", description = "Get basic meeting information without topics and participants")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Meeting found"),
+            @ApiResponse(responseCode = "404", description = "Meeting not found")
+    })
+    public ResponseEntity<MeetingBasicDTO> getMeetingBasic(
+            @Parameter(description = "Meeting ID") @PathVariable Long id) {
+        MeetingBasicDTO meeting = meetingService.getMeetingBasic(id);
         return ResponseEntity.ok(meeting);
     }
 

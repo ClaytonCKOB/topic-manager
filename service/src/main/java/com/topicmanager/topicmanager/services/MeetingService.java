@@ -1,5 +1,6 @@
 package com.topicmanager.topicmanager.services;
 
+import com.topicmanager.topicmanager.dto.MeetingBasicDTO;
 import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.dto.MeetingDTO;
 import com.topicmanager.topicmanager.dto.MeetingListDTO;
@@ -95,10 +96,20 @@ public class MeetingService {
 
     }
 
+    public MeetingBasicDTO getMeetingBasic(Long id) {
+        Meeting meeting = meetingRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
+
+        return new MeetingBasicDTO(
+                meeting.getId(),
+                meeting.getTitle(),
+                meeting.getStartDate(),
+                meeting.getEndDate()
+        );
+    }
+
     private MeetingDTO getMeetingDTO(Meeting meeting) {
         List<MeetingParticipantDTO> meetingParticipants = new ArrayList<>();
-
-        List<TopicVote> topicVotes = topicVoteRepository.findAll();
 
         meeting.getParticipants().
                 stream().

@@ -22,6 +22,8 @@ export default function MeetingCreate() {
   const [isMeetingEditable, setIsMeetingEditable] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingBasic, setIsLoadingBasic] = useState(false);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [meeting, setMeeting] = useState({
     title: "",
     description: "",
@@ -43,36 +45,60 @@ export default function MeetingCreate() {
   const redirectHome = () => navigate("/home");
 
   const getMeeting = async (meetingId) => {
-    setIsLoading(true);
+    setIsLoadingBasic(true);
     try {
-      const data = await meetingService.get(meetingId);
-      if (data) {
-        const start = new Date(data.startDate.replace('T', ' ').replace(/-/g, '/'));
-        const end = new Date(data.endDate.replace('T', ' ').replace(/-/g, '/'));
+      const basicData = await meetingService.getBasic(meetingId);
+      if (basicData) {
+        const start = new Date(basicData.startDate.replace('T', ' ').replace(/-/g, '/'));
+        const end = new Date(basicData.endDate.replace('T', ' ').replace(/-/g, '/'));
 
-        setMeeting({
-          id: data.id,
-          title: data.title || "",
-          description: data.description || "",
+        setMeeting(prev => ({
+          ...prev,
+          id: basicData.id,
+          title: basicData.title || "",
           startDate: start,
           startTime: start,
           endTime: end,
-          topics: data.topics || [],
-          votes: data.votes,
-          participants: data.participants
-        });
+        }));
 
         const now = new Date();
         const meetingEnded = end < now;
         setIsMeetingEditable(authService.canChangeMeeting() && !meetingEnded);
       }
     } catch (error) {
+      console.error("Error loading basic meeting info:", error);
+    } finally {
+      setIsLoadingBasic(false);
+    }
+
+    setIsLoadingDetails(true);
+    try {
+      const fullData = await meetingService.get(meetingId);
+      if (fullData) {
+        const start = new Date(fullData.startDate.replace('T', ' ').replace(/-/g, '/'));
+        const end = new Date(fullData.endDate.replace('T', ' ').replace(/-/g, '/'));
+
+        setMeeting(prev => ({
+          ...prev,
+          id: fullData.id,
+          title: fullData.title || "",
+          description: fullData.description || "",
+          startDate: start,
+          startTime: start,
+          endTime: end,
+          topics: fullData.topics || [],
+          votes: fullData.votes,
+          participants: fullData.participants
+        }));
+      }
+    } catch (error) {
       setSnackbar({
         open: true,
-        message: "Erro ao carregar a reunião.",
+        message: "Erro ao carregar os detalhes da reunião.",
         severity: "error",
       });
     } finally {
+      setIsLoadingDetails(false);
       setIsLoading(false);
     }
   };
@@ -203,7 +229,7 @@ export default function MeetingCreate() {
         </Box>
 
         <Box p={4}>
-          {isLoading ? (
+          {isLoadingBasic ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
               <CircularProgress size={60} />
             </Box>
@@ -217,18 +243,32 @@ export default function MeetingCreate() {
                     isEditable={isMeetingEditable}
                   />
 
-                  <TopicTotalizers topics={meeting.topics} />
+                  {isLoadingDetails ? (
+                    <Box display="flex" justifyContent="center" alignItems="center" minHeight="40vh" mt={3}>
+                      <CircularProgress size={50} />
+                      <Typography variant="body1" sx={{ ml: 2 }}>
+                        Carregando tópicos e participantes...
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <>
+                      <TopicTotalizers topics={meeting.topics} />
 
-                  <TopicSection
-                    meeting={meeting}
-                    setMeeting={setMeeting}
-                    isEditable={isMeetingEditable}
-                  />
+                      <TopicSection
+                        meeting={meeting}
+                        setMeeting={setMeeting}
+                        isEditable={isMeetingEditable}
+                      />
 
-                  <ParticipantVotesSection
-                    participants={meeting.participants}
-                    topics={meeting.topics}
-                  />
+                      {authService.isAdmin() && (
+                        <ParticipantVotesSection
+                          participants={meeting.participants}
+                          topics={meeting.topics}
+                        />
+                      )}
+                    </>
+                  )}
+
                   {isMeetingEditable && (
                     <Box display="flex" justifyContent="flex-end">
                       <Button
