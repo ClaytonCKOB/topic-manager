@@ -63,7 +63,7 @@ export default function TopicTotalizers({topics}) {
     });
 
     const columns = [
-        { field: 'title', headerName: 'Pauta', flex: 0.5 },
+        { field: 'title', headerName: 'Item', flex: 0.5 },
         {
             field: 'conclusion',
             headerName: 'Conclusão',
@@ -95,7 +95,7 @@ export default function TopicTotalizers({topics}) {
         justifyContent="space-between"
         mb={!collapsed ? 3 : 0}
         >
-            <Typography variant="h6">Totalizadores das Pautas</Typography>  
+            <Typography variant="h6">Totalizadores das Itens</Typography>  
 
             <IconButton onClick={() => setCollapsed((prev) => !prev)}>
                 {collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon />}

@@ -89,7 +89,7 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
                     <Typography variant="h6" fontWeight={isParent ? "bold" : "600"} fontSize={isParent ? "1.25rem" : "1.1rem"}>
-                        Pauta {sequence}
+                        Item {sequence}
                     </Typography>
                     {topic.description && (
                         <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>

@@ -97,7 +97,7 @@ export default function MeetingVote() {
                     Progresso da Reunião
                 </Typography>
                 <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    Registre seus votos nas pautas abaixo
+                    Registre seus votos nas itens abaixo
                 </Typography>
             </Box>
 
@@ -179,10 +179,10 @@ export default function MeetingVote() {
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                     <Typography variant="h5" fontWeight="bold">
-                        Pautas para Votação
+                        Itens para Votação
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {filteredTopics.length} de {topics.length} pautas
+                        {filteredTopics.length} de {topics.length} itens
                     </Typography>
                 </Box>
 

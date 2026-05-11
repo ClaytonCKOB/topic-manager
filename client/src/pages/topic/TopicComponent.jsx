@@ -173,7 +173,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
         <Grid sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
             <Grid sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography variant="h6">
-                Pauta {index + 1}{isSubTopic ? "." + (subIndex + 1) : ""}
+                Item {index + 1}{isSubTopic ? "." + (subIndex + 1) : ""}
                 </Typography>
 
                 {!isSubTopic && hasSubtopics && (

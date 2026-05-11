@@ -93,7 +93,7 @@ export default function UserModal({ actionItem, removeActionItem, openUserModal,
                     </Box>
                     <Box width={0.5}>
                         <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-                            Pauta:
+                            Item:
                         </Typography>
                         <Typography mt={1} variant="subtitle1">
                             {actionItem.meetingTopicTitle}

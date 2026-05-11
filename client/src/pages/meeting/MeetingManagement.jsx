@@ -110,7 +110,7 @@ export default function MeetingManagement({meetingList, setMeetingList, isReques
               Gerenciamento de Reuniões
             </Typography>
             <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Crie e gerencie as reuniões e suas pautas.
+              Crie e gerencie as reuniões e suas itens.
             </Typography>
           </Box>
           { authService.canChangeMeeting() &&
