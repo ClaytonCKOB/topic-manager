@@ -53,7 +53,7 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
             setIsSaving(true);
             await topicService.saveVote(authService.getUserId(), topicId, comment, status);
             refreshTopics();
-            await loadPendingDiligencia(); // Reload diligência after saving
+            await loadPendingDiligencia();
             setTimeout(() => {
                 setIsSaving(false);
                 setCollapsed(true);
