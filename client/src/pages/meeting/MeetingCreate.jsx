@@ -1,4 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DownloadIcon from '@mui/icons-material/Download';
 import {
   Box, Typography, Button, Card, CardContent, CircularProgress
 } from "@mui/material";
@@ -15,6 +16,7 @@ import TopicService from '../../services/TopicService';
 import ErrorMessage from '../../base/components/message/ErrorMessage';
 import ParticipantVotesSection from '../participant/ParticipantVotesSection';
 import TopicTotalizers from '../topic/TopicTotalizers';
+import PdfGeneratorService from '../../services/PdfGeneratorService';
 
 export default function MeetingCreate() {
   const { id } = useParams();
@@ -24,6 +26,7 @@ export default function MeetingCreate() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingBasic, setIsLoadingBasic] = useState(false);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
   const [meeting, setMeeting] = useState({
     title: "",
@@ -42,6 +45,7 @@ export default function MeetingCreate() {
   const meetingService = new MeetingService();
   const authService = new AuthService();
   const topicService = new TopicService();
+  const pdfGenerator = new PdfGeneratorService();
   const navigate = useNavigate();
   const redirectHome = () => navigate("/home");
 
@@ -236,6 +240,45 @@ export default function MeetingCreate() {
     }
   };
 
+  const expandAllTopics = () => {
+    const allButtons = document.querySelectorAll('button');
+    allButtons.forEach(button => {
+      const hasExpandMoreIcon = button.querySelector('[data-testid="ExpandMoreIcon"]');
+      if (hasExpandMoreIcon) {
+        button.click();
+      }
+    });
+
+    setTimeout(() => {
+      const participantButtons = document.querySelectorAll('button');
+      participantButtons.forEach(button => {
+        const hasKeyboardArrowDown = button.querySelector('[data-testid="KeyboardArrowDownIcon"]');
+        if (hasKeyboardArrowDown) {
+          button.click();
+        }
+      });
+    }, 200);
+  };
+
+  const downloadPdf = async () => {
+    setIsGeneratingPdf(true);
+
+    try {
+      expandAllTopics();
+      await new Promise(resolve => setTimeout(resolve, 800));
+      await pdfGenerator.generateMeetingPdf(meeting);
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      setSnackbar({
+        open: true,
+        message: "Erro ao gerar PDF. Tente novamente.",
+        severity: "error",
+      });
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
       <Box bgcolor="#f8fafc" minHeight="100vh">
@@ -248,22 +291,42 @@ export default function MeetingCreate() {
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<ArrowBackIcon />}
-            onClick={redirectHome}
-            sx={{
-              mb: 2,
-              bgcolor: "rgba(255,255,255,0.2)",
-              backdropFilter: "blur(10px)",
-              color: "white",
-              "&:hover": {
-                bgcolor: "rgba(255,255,255,0.3)"
-              }
-            }}
-          >
-            Voltar
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+            <Button
+              variant="contained"
+              startIcon={<ArrowBackIcon />}
+              onClick={redirectHome}
+              sx={{
+                bgcolor: "rgba(255,255,255,0.2)",
+                backdropFilter: "blur(10px)",
+                color: "white",
+                "&:hover": {
+                  bgcolor: "rgba(255,255,255,0.3)"
+                }
+              }}
+            >
+              Voltar
+            </Button>
+
+            {isDetail && !isLoadingBasic && !isLoadingDetails && (
+              <Button
+                variant="contained"
+                startIcon={isGeneratingPdf ? <CircularProgress size={20} color="inherit" /> : <DownloadIcon />}
+                onClick={downloadPdf}
+                disabled={isGeneratingPdf}
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.2)",
+                  backdropFilter: "blur(10px)",
+                  color: "white",
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.3)"
+                  }
+                }}
+              >
+                {isGeneratingPdf ? 'Gerando PDF...' : 'Download PDF'}
+              </Button>
+            )}
+          </Box>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
             {isDetail ? "Detalhes da Reunião" : "Nova Reunião"}
           </Typography>
@@ -279,7 +342,7 @@ export default function MeetingCreate() {
             </Box>
           ) : (
             <Card sx={{display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', boxShadow: 'none'}}>
-              <Card sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8, maxWidth: 1300 }}>
+              <Card id="pdf-content" sx={{ mt: 3, p: 2, borderRadius: 3, boxShadow: 2, width: 0.8, maxWidth: 1300 }}>
                 <CardContent>
                   <MeetingGeneralSection
                     meeting={meeting}
@@ -298,18 +361,17 @@ export default function MeetingCreate() {
                     <>
                       <TopicTotalizers topics={meeting.topics} />
 
+                      <ParticipantVotesSection
+                        participants={meeting.participants}
+                        topics={meeting.topics}
+                      />
+
                       <TopicSection
                         meeting={meeting}
                         setMeeting={setMeeting}
                         isEditable={isMeetingEditable}
                       />
-
-                      {authService.isAdmin() && (
-                        <ParticipantVotesSection
-                          participants={meeting.participants}
-                          topics={meeting.topics}
-                        />
-                      )}
+                      
                     </>
                   )}
 
