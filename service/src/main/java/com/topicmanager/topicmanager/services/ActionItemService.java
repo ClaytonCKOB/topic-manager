@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ActionItemService {
@@ -70,5 +71,9 @@ public class ActionItemService {
         actionItemRepository.save(actionItem);
 
         notificationService.sendActionItem(actionItem);
+    }
+
+    public Optional<ActionItem> findPendingActionItemByTopic(Long topicId) {
+        return actionItemRepository.findByTopicIdAndCompletedFalse(topicId);
     }
 }

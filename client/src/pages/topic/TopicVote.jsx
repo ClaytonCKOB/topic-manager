@@ -1,4 +1,4 @@
-import { Box, Typography, Button, TextField, IconButton, Chip } from "@mui/material";
+import { Box, Typography, Button, TextField, IconButton, Chip, Alert, AlertTitle } from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -6,14 +6,18 @@ import PendingIcon from '@mui/icons-material/Pending';
 import { useEffect, useState } from "react";
 import TopicService from "../../services/TopicService";
 import AuthService from "../../services/AuthService";
+import ActionItemService from "../../services/ActionItemService";
 import FileList from "../../base/components/files/FileList";
 import ErrorMessage from "../../base/components/message/ErrorMessage";
+import formatDate from "../../utils/FormatDate";
 
 export default function TopicVote({ topic, sequence, isParent, refreshTopics }) {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedVote, setSelectedVote] = useState(null);
     const [comment, setComment] = useState("");
     const [isSaving, setIsSaving] = useState(false);
+    const [pendingDiligencia, setPendingDiligencia] = useState(null);
+    const [isLoadingDiligencia, setIsLoadingDiligencia] = useState(true);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: "",
@@ -29,11 +33,27 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
         { label: "Colocar em diligência", value: 3, color: "warning" },
     ];
 
+    const loadPendingDiligencia = async () => {
+        if (topic?.id) {
+            setIsLoadingDiligencia(true);
+            try {
+                const actionItemService = new ActionItemService();
+                const actionItem = await actionItemService.getPendingActionItemByTopic(topic.id);
+                setPendingDiligencia(actionItem);
+            } catch (error) {
+                console.error("Error loading pending diligência:", error);
+            } finally {
+                setIsLoadingDiligencia(false);
+            }
+        }
+    };
+
     const saveVote = async (topicId, comment, status) => {
         try {
             setIsSaving(true);
             await topicService.saveVote(authService.getUserId(), topicId, comment, status);
             refreshTopics();
+            await loadPendingDiligencia(); // Reload diligência after saving
             setTimeout(() => {
                 setIsSaving(false);
                 setCollapsed(true);
@@ -41,9 +61,12 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
 
         } catch (err) {
             console.error("Erro ao salvar voto:", err);
+
+            const errorMessage = err.response?.data?.message || err.message || "Erro ao salvar voto.";
+
             setSnackbar({
                 open: true,
-                message: "Erro ao salvar voto.",
+                message: errorMessage,
                 severity: "error",
             });
             setIsSaving(false);
@@ -61,8 +84,19 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
         }
     }, []);
 
+    useEffect(() => {
+        loadPendingDiligencia();
+    }, [topic?.id]);
+
     const hasVoted = selectedVote !== null;
     const voteLabel = hasVoted ? votes.find(v => v.value === selectedVote)?.label : "Pendente";
+
+    const userVote = topic.votes?.find(v => v.user.id == authService.getUserId());
+    const isMyOwnDiligencia = pendingDiligencia &&
+        userVote?.status === 3 &&
+        userVote?.user?.id == authService.getUserId();
+
+    const votingAllowed = !pendingDiligencia || isMyOwnDiligencia;
 
     const getChipColor = () => {
         if (selectedVote === null) return 'warning';
@@ -126,6 +160,32 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
                     removeFile={() => {}}
                 />
 
+                {!isLoadingDiligencia && pendingDiligencia && (
+                    <Alert severity="warning" sx={{ mb: 3, mt: 2 }}>
+                        <AlertTitle>Votação Bloqueada - Item em Diligência</AlertTitle>
+                        <Box sx={{ mt: 1 }}>
+                            <Typography variant="body2" sx={{ mb: 1 }}>
+                                Este item está em processo de correção/revisão.
+                                Novos votos serão permitidos após a conclusão da diligência.
+                            </Typography>
+                            <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1, mt: 2 }}>
+                                <Typography variant="subtitle2" color="text.secondary">
+                                    <strong>Criada por:</strong> {pendingDiligencia.sender.name}
+                                </Typography>
+                                <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                    <strong>Data:</strong> {formatDate(pendingDiligencia.createdDate)}
+                                </Typography>
+                                <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                    <strong>Responsável:</strong> {pendingDiligencia.actor.name}
+                                </Typography>
+                                <Typography variant="body2" sx={{ mt: 1.5 }}>
+                                    <strong>Motivo:</strong> {pendingDiligencia.comment}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Alert>
+                )}
+
                 <Box mb={3} mt={2}>
                     <Typography variant="subtitle1" fontWeight="600" mb={2}>
                         Seu Voto:
@@ -137,6 +197,7 @@ export default function TopicVote({ topic, sequence, isParent, refreshTopics }) 
                         variant={selectedVote === value ? "contained" : "outlined"}
                         color={color}
                         onClick={() => setSelectedVote(value)}
+                        disabled={!votingAllowed}
                         sx={{
                             borderRadius: 1,
                             px: 3,

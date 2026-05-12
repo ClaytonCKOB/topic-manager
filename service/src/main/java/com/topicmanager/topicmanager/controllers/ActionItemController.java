@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/action-item")
@@ -34,6 +35,15 @@ public class ActionItemController {
             @Parameter(description = "Action Item ID") @PathVariable Long actionItemId){
         actionItemService.completeActionItem(actionItemId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/topic/{topicId}")
+    @Operation(summary = "Get pending action item for topic", description = "Get pending action item (diligência) for a specific topic")
+    public ResponseEntity<ActionItem> getPendingActionItemByTopic(
+            @Parameter(description = "Topic ID") @PathVariable Long topicId) {
+        Optional<ActionItem> actionItem = actionItemService.findPendingActionItemByTopic(topicId);
+        return actionItem.map(ResponseEntity::ok)
+                         .orElseGet(() -> ResponseEntity.ok().build());
     }
 
 }
