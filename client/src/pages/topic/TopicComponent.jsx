@@ -3,7 +3,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileList from "../../base/components/files/FileList";
-import VoteList from "../../base/components/vote/VoteList";
 import AuthService from "../../services/AuthService";
 import TopicService from "../../services/TopicService";
 import DeleteDialog from "../../base/components/dialog/DeleteDialog";
@@ -213,8 +212,6 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
             isEditable={isEditable}
             removeFile={(fIndex) => {onRemoveTopicFile(index, subIndex, fIndex)}}
         />
-
-        <VoteList votes={topic.votes} isVisible={!isEditable && authService.isAdmin()}/>
 
         {!isSubTopic && hasSubtopics && !isExpanded && (
             <Grid sx={{ mt: 2, pt: 2, borderTop: '1px solid #e0e0e0' }}>
