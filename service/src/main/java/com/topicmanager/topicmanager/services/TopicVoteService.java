@@ -38,16 +38,12 @@ public class TopicVoteService {
                 && existingVote.getUser().getId().equals(topicVote.user_account_id());
 
             if (!isOriginalDiligenciaCreator) {
-                throw new IllegalArgumentException(
-                    "Não é possível votar neste tópico enquanto houver uma diligência pendente. " +
-                    "Aguarde a resolução da diligência para poder votar."
-                );
+                throw new IllegalArgumentException("Não é possível votar neste tópico enquanto houver uma diligência pendente. ");
             }
         }
 
         TopicVote existingTopicVote = topicVoteRepository.findByMeetingTopicIdAndUserId(topicVote.meeting_topic_id(), topicVote.user_account_id());
 
-        // Check if user is changing from diligência (status 3) to another status
         boolean wasInDiligencia = existingTopicVote != null && existingTopicVote.getStatus() == 3;
         boolean isLeavingDiligencia = wasInDiligencia && !topicVote.status().equals(3);
 
@@ -60,12 +56,10 @@ public class TopicVoteService {
             topicVoteRepository.save(existingTopicVote);
         }
 
-        // If changing from diligência to another status, complete the pending ActionItem
         if (isLeavingDiligencia && pendingDiligencia.isPresent()) {
             actionItemService.completeActionItem(pendingDiligencia.get().getId());
         }
 
-        // If voting for diligência, create new ActionItem
         if (topicVote.status().equals(3)) {
             actionItemService.createActionItem(
                     topicVote.meeting_topic_id(),
