@@ -226,7 +226,7 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
 
         {
             isEditable ?
-            <Grid sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 2 }}>
+            <Grid sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', paddingTop: 2 }}>
                 <Button component="label" variant="contained" startIcon={<AttachFileIcon />}>
                     Adicionar Anexo(s)
                     <Input
@@ -236,6 +236,16 @@ export default function TopicComponent({setMeeting, topic, index, subIndex, isEd
                     sx={{ display: 'none' }}
                     />
                 </Button>
+                {topic.files?.filter(f => !f.id).length > 0 && (
+                    <Typography
+                        variant="caption"
+                        color="warning.main"
+                        sx={{ display: 'block', mt: 0.5, fontStyle: 'italic' }}
+                    >
+                        {topic.files.filter(f => !f.id).length} arquivo(s) pendente(s).
+                        Clique em "Salvar" para enviar ao servidor.
+                    </Typography>
+                )}
             </Grid>
             : <></>
         }

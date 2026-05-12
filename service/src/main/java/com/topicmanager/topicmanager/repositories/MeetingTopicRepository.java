@@ -11,6 +11,8 @@ public interface MeetingTopicRepository extends JpaRepository<MeetingTopic, Long
 
     List<MeetingTopic> findByMeetingId(Long meetingId);
 
+    List<MeetingTopic> findByMeetingIdAndParentTopicIsNull(Long meetingId);
+
     @Transactional
     void deleteByMeeting(Meeting meeting);
 }

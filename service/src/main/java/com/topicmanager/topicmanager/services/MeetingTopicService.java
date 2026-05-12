@@ -61,7 +61,7 @@ public class MeetingTopicService {
     }
 
     public List<MeetingTopic> getMeetingTopicListByMeeting(Long meetingId) {
-        return meetingTopicRepository.findByMeetingId(meetingId);
+        return meetingTopicRepository.findByMeetingIdAndParentTopicIsNull(meetingId);
     }
 
     public void deleteAllByMeeting(Meeting savedMeeting) {

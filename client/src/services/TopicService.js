@@ -125,20 +125,67 @@ export default class TopicService {
         return response;
     }
 
-    async saveFiles(topicId, files) {
+    async saveFiles(topicId, files, onProgress) {
         const formData = new FormData();
         files.forEach(file => formData.append("file", file));
 
         try {
-            const response = await request.post(`/api/meeting-topic-file/${topicId}`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            const response = await request.post(
+                `/api/meeting-topic-file/${topicId}`,
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
+                        if (onProgress) {
+                            onProgress(percentCompleted);
+                        }
+                    }
+                }
+            );
             return response.data;
 
         } catch (error) {
             console.error("Error uploading files:", error);
             throw error;
         }
+    }
+
+    async uploadFilesWithProgress(topicId, files, updateFileProgress) {
+        const uploadPromises = files.map(async (file, fileIndex) => {
+            try {
+                updateFileProgress(fileIndex, 0, true);
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const response = await request.post(
+                    `/api/meeting-topic-file/${topicId}`,
+                    formData,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                        onUploadProgress: (progressEvent) => {
+                            const percentCompleted = Math.round(
+                                (progressEvent.loaded * 100) / progressEvent.total
+                            );
+                            updateFileProgress(fileIndex, percentCompleted, true);
+                        }
+                    }
+                );
+
+                updateFileProgress(fileIndex, 100, false);
+                return { success: true, fileIndex, data: response.data };
+
+            } catch (error) {
+                console.error(`Error uploading file ${fileIndex}:`, error);
+                updateFileProgress(fileIndex, 0, false, true);
+                return { success: false, fileIndex, error };
+            }
+        });
+
+        return await Promise.all(uploadPromises);
     }
 
     async deleteFile(fileId) {
