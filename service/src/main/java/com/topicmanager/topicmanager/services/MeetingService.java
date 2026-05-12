@@ -6,7 +6,9 @@ import com.topicmanager.topicmanager.dto.MeetingDTO;
 import com.topicmanager.topicmanager.dto.MeetingListDTO;
 import com.topicmanager.topicmanager.dto.MeetingParticipantDTO;
 import com.topicmanager.topicmanager.dto.TopicCreationWithMeetingDTO;
+import com.topicmanager.topicmanager.dto.VotingStatsDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
+import com.topicmanager.topicmanager.entities.MeetingTopic;
 import com.topicmanager.topicmanager.entities.TopicVote;
 import com.topicmanager.topicmanager.entities.UserAccount;
 import com.topicmanager.topicmanager.repositories.MeetingRepository;
@@ -118,5 +120,45 @@ public class MeetingService {
         });
 
         return new MeetingDTO(meeting.getId(), meeting.getTitle(), meeting.getStartDate(), meeting.getEndDate(), meeting.getTopics(), meetingParticipants);
+    }
+
+    public Meeting getMeeting(Long meetingId) {
+        return meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new EntityNotFoundException("Meeting not found with id: " + meetingId));
+    }
+
+    public VotingStatsDTO getVotingStats(Long meetingId) {
+        Meeting meeting = getMeeting(meetingId);
+
+        int totalParticipants = meeting.getParticipants().size();
+
+        List<MeetingTopic> allTopics = meetingTopicService.getMeetingTopicListByMeeting(meetingId);
+        List<MeetingTopic> flatTopics = new ArrayList<>();
+        flattenTopics(allTopics, flatTopics);
+        int totalTopics = flatTopics.size();
+
+        int totalVotesCast = flatTopics.stream()
+            .mapToInt(topic -> topic.getVotes().size())
+            .sum();
+
+        int totalExpectedVotes = totalParticipants * totalTopics;
+        int totalVotesPending = totalExpectedVotes - totalVotesCast;
+
+        return new VotingStatsDTO(
+            totalParticipants,
+            totalTopics,
+            totalExpectedVotes,
+            totalVotesCast,
+            totalVotesPending
+        );
+    }
+
+    private void flattenTopics(List<MeetingTopic> topics, List<MeetingTopic> result) {
+        for (MeetingTopic topic : topics) {
+            result.add(topic);
+            if (topic.getSubtopics() != null && !topic.getSubtopics().isEmpty()) {
+                flattenTopics(topic.getSubtopics(), result);
+            }
+        }
     }
 }

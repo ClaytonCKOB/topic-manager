@@ -110,4 +110,14 @@ export default class MeetingService {
             return response.data;
         }
     }
+
+    async getVotingStats(meetingId) {
+        try {
+            const response = await request.get(`/api/meeting/${meetingId}/voting-stats`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching voting stats:', error);
+            throw error;
+        }
+    }
 }

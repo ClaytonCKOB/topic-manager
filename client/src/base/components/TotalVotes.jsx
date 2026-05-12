@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export default function TotalVotes({ icon: Icon, votes, text, color = "primary" }) {
+export default function TotalVotes({ icon: Icon, votes, text, subtext, color = "primary" }) {
     return (
         <Box
             sx={{
@@ -18,6 +18,11 @@ export default function TotalVotes({ icon: Icon, votes, text, color = "primary" 
             <Typography variant="body2" color="text.secondary">
                 {text}
             </Typography>
+            {subtext && (
+                <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+                    {subtext}
+                </Typography>
+            )}
         </Box>
     );
 }
