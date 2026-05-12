@@ -34,4 +34,17 @@ export default class ActionItemService {
             return response.data;
         }
     }
+
+    async getPendingActionItemByTopic(topicId) {
+        try {
+            const response = await request.get(`/api/action-item/topic/${topicId}`);
+            return response.data;
+        } catch (error) {
+            if (error.response?.status === 404) {
+                return null;
+            }
+            console.error("Error fetching pending action item:", error);
+            throw error;
+        }
+    }
 }

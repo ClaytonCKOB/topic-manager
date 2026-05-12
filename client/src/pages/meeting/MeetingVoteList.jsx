@@ -47,7 +47,7 @@ export default function MeetingVoteList({meetingList}) {
             Próximas Reuniões para Votação
           </Typography>
           <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-            Veja as reuniões agendadas e registre seu voto nas pautas.
+            Veja as reuniões agendadas e registre seu voto nas itens.
           </Typography>
         </Box>
 
@@ -137,7 +137,7 @@ export default function MeetingVoteList({meetingList}) {
                     }
                   }}
                 >
-                  Ver Pautas / Votar
+                  Ver Itens / Votar
                 </Button>
               }
             </Box>

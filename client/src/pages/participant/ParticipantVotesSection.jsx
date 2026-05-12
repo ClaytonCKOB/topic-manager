@@ -104,7 +104,7 @@ export default function ParticipantVotesSection({ participants, topics }) {
     const voteColumns = [
         {
             field: 'sequence',
-            headerName: 'Pauta',
+            headerName: 'Item',
             width: 80,
             align: 'center',
             headerAlign: 'center'

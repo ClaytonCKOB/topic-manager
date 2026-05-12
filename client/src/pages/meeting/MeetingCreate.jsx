@@ -24,6 +24,7 @@ export default function MeetingCreate() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingBasic, setIsLoadingBasic] = useState(false);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({});
   const [meeting, setMeeting] = useState({
     title: "",
     description: "",
@@ -156,7 +157,32 @@ export default function MeetingCreate() {
             const localTopic = meeting.topics[topicIndex];
 
             if (localTopic.files && localTopic.files.length > 0) {
-              await topicService.saveFiles(savedTopic.id, localTopic.files);
+              const updateFileProgress = (fileIndex, progress, uploading, error = false) => {
+                setUploadProgress(prev => ({
+                  ...prev,
+                  [topicIndex]: {
+                    ...prev[topicIndex],
+                    [fileIndex]: { progress, uploading, error }
+                  }
+                }));
+
+                setMeeting(prev => {
+                  const newTopics = [...prev.topics];
+                  newTopics[topicIndex].files[fileIndex] = {
+                    ...newTopics[topicIndex].files[fileIndex],
+                    progress,
+                    uploading,
+                    error
+                  };
+                  return { ...prev, topics: newTopics };
+                });
+              };
+
+              await topicService.uploadFilesWithProgress(
+                savedTopic.id,
+                localTopic.files,
+                updateFileProgress
+              );
             }
 
             if (savedTopic.subtopics && savedTopic.subtopics.length > 0) {
@@ -165,7 +191,24 @@ export default function MeetingCreate() {
                 const localSubtopic = localTopic.subtopics?.[subIndex];
 
                 if (localSubtopic?.files && localSubtopic.files.length > 0) {
-                  await topicService.saveFiles(savedSubtopic.id, localSubtopic.files);
+                  const updateSubFileProgress = (fileIndex, progress, uploading, error = false) => {
+                    setMeeting(prev => {
+                      const newTopics = [...prev.topics];
+                      newTopics[topicIndex].subtopics[subIndex].files[fileIndex] = {
+                        ...newTopics[topicIndex].subtopics[subIndex].files[fileIndex],
+                        progress,
+                        uploading,
+                        error
+                      };
+                      return { ...prev, topics: newTopics };
+                    });
+                  };
+
+                  await topicService.uploadFilesWithProgress(
+                    savedSubtopic.id,
+                    localSubtopic.files,
+                    updateSubFileProgress
+                  );
                 }
               }
             }
@@ -178,6 +221,7 @@ export default function MeetingCreate() {
         await topicService.uploadFilesForTopics(updatedMeeting.topics, meeting.topics);
       }
 
+      setUploadProgress({});
       redirectHome();
 
     } catch (error) {

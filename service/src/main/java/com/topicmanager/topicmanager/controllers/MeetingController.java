@@ -4,6 +4,7 @@ import com.topicmanager.topicmanager.dto.MeetingBasicDTO;
 import com.topicmanager.topicmanager.dto.MeetingCreationDTO;
 import com.topicmanager.topicmanager.dto.MeetingDTO;
 import com.topicmanager.topicmanager.dto.MeetingListDTO;
+import com.topicmanager.topicmanager.dto.VotingStatsDTO;
 import com.topicmanager.topicmanager.entities.Meeting;
 import com.topicmanager.topicmanager.services.MeetingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -93,5 +94,17 @@ public class MeetingController {
             @Parameter(description = "Meeting ID") @PathVariable Long id) {
         meetingService.deleteMeeting(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{meetingId}/voting-stats")
+    @Operation(summary = "Get general voting statistics for a meeting", description = "Get aggregated voting statistics including total participants, expected votes, and votes cast")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Statistics retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Meeting not found")
+    })
+    public ResponseEntity<VotingStatsDTO> getVotingStats(
+            @Parameter(description = "Meeting ID") @PathVariable Long meetingId) {
+        VotingStatsDTO stats = meetingService.getVotingStats(meetingId);
+        return ResponseEntity.ok(stats);
     }
 }

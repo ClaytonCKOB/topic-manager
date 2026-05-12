@@ -3,9 +3,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import GroupIcon from '@mui/icons-material/Group';
 import PersonIcon from '@mui/icons-material/Person';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PendingIcon from '@mui/icons-material/Pending';
 import TotalVotes from "../../base/components/TotalVotes";
 import { useEffect, useState } from "react";
 import TopicService from "../../services/TopicService";
+import MeetingService from "../../services/MeetingService";
 import { useNavigate, useParams } from "react-router-dom";
 import TopicVote from "../topic/TopicVote";
 import AuthService from "../../services/AuthService";
@@ -13,10 +16,17 @@ import AuthService from "../../services/AuthService";
 export default function MeetingVote() {
     const [topics, setTopics] = useState([]);
     const [flatTopics, setFlatTopics] = useState([]);
-    const [totalVotes, setTotalVotes] = useState({})
+    const [totalVotes, setTotalVotes] = useState({
+        totalParticipants: 0,
+        totalTopics: 0,
+        totalExpectedVotes: 0,
+        totalVotesCast: 0,
+        totalVotesPending: 0
+    });
     const [filterStatus, setFilterStatus] = useState('all');
     const [isLoading, setIsLoading] = useState(true);
     const topicService = new TopicService();
+    const meetingService = new MeetingService();
     const authService = new AuthService();
     const { id } = useParams();
     const navigate = useNavigate();
@@ -27,12 +37,16 @@ export default function MeetingVote() {
 
     const getTopics = async (meetingId) => {
         try {
-            let data = await topicService.getTopicsByMeetingId(meetingId);
-            let votes = await topicService.getTotalVotes(id);
+            const [data, stats] = await Promise.all([
+                topicService.getTopicsByMeetingId(meetingId),
+                meetingService.getVotingStats(meetingId)
+            ]);
 
             setTopics(data || []);
             setFlatTopics(topicService.flattenTopics(data || [], true));
-            setTotalVotes(votes || {});
+            setTotalVotes(stats || {});
+        } catch (error) {
+            console.error("Error loading meeting data:", error);
         } finally {
             setIsLoading(false);
         }
@@ -42,7 +56,9 @@ export default function MeetingVote() {
         getTopics(id);
     }, []);
 
-    const voteProgress = totalVotes.total > 0 ? (totalVotes.voted / totalVotes.total) * 100 : 0;
+    const voteProgress = totalVotes.totalExpectedVotes > 0
+        ? (totalVotes.totalVotesCast / totalVotes.totalExpectedVotes) * 100
+        : 0;
 
     const getUserVoteStatus = (topic) => {
         const userVote = topic.votes.filter(vote => vote.user.id == authService.getUserId());
@@ -97,7 +113,7 @@ export default function MeetingVote() {
                     Progresso da Reunião
                 </Typography>
                 <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    Registre seus votos nas pautas abaixo
+                    Registre seus votos nas itens abaixo
                 </Typography>
             </Box>
 
@@ -138,7 +154,7 @@ export default function MeetingVote() {
                         }}
                     />
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                        {totalVotes.voted} de {totalVotes.total} votos registrados
+                        {totalVotes.totalVotesCast} de {totalVotes.totalExpectedVotes} votos registrados
                     </Typography>
                 </Box>
 
@@ -157,21 +173,22 @@ export default function MeetingVote() {
                 >
                     <TotalVotes
                         icon={GroupIcon}
-                        votes={totalVotes.total}
+                        votes={totalVotes.totalParticipants}
                         text="Votantes Totais"
                         color="primary"
                     />
                     <Box sx={{ width: "1px", height: "60px", bgcolor: "divider" }} />
                     <TotalVotes
-                        icon={HowToVoteIcon}
-                        votes={totalVotes.voted}
+                        icon={CheckCircleIcon}
+                        votes={totalVotes.totalVotesCast}
                         text="Votos Registrados"
+                        subtext={`de ${totalVotes.totalExpectedVotes} esperados`}
                         color="success"
                     />
                     <Box sx={{ width: "1px", height: "60px", bgcolor: "divider" }} />
                     <TotalVotes
-                        icon={PersonIcon}
-                        votes={totalVotes.missing}
+                        icon={PendingIcon}
+                        votes={totalVotes.totalVotesPending}
                         text="Votos Faltantes"
                         color="warning"
                     />
@@ -179,10 +196,10 @@ export default function MeetingVote() {
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                     <Typography variant="h5" fontWeight="bold">
-                        Pautas para Votação
+                        Itens para Votação
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {filteredTopics.length} de {topics.length} pautas
+                        {filteredTopics.length} de {topics.length} itens
                     </Typography>
                 </Box>
 

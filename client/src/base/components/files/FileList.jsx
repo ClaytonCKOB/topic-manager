@@ -1,4 +1,4 @@
-import { IconButton, List, ListItem, ListItemText, Link, Checkbox, Button, Box, Typography } from "@mui/material";
+import { IconButton, List, ListItem, ListItemText, Link, Checkbox, Button, Box, Typography, Chip, LinearProgress } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "../dialog/DeleteDialog";
 import TopicService from "../../../services/TopicService";
@@ -132,16 +132,34 @@ export default function FileList({ files, isEditable, removeFile }) {
                   />
                 )}
                 {file.id ? (
-                  <Link
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>
+                    <Link
                       component="button"
                       onClick={() => downloadFile(file)}
                       underline="hover"
                       sx={{ fontFamily: "Arial, sans-serif" }}
-                  >
-                    {file.fileName}
-                  </Link>
+                    >
+                      {file.fileName}
+                    </Link>
+                  </Box>
                 ) : (
-                  <ListItemText primary={file.name || file.fileName} />
+                  <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 0.5 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <ListItemText primary={file.name || file.fileName} />
+                      <Chip
+                        label="Pendente upload"
+                        size="small"
+                        color="warning"
+                        variant="outlined"
+                        sx={{ height: 20 }}
+                      />
+                    </Box>
+                    {file.uploading && (
+                      <Box sx={{ width: "100%", pr: 6 }}>
+                        <LinearProgress variant="determinate" value={file.progress || 0} />
+                      </Box>
+                    )}
+                  </Box>
                 )}
               </ListItem>
             ))}

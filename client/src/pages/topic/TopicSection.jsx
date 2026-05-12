@@ -31,7 +31,7 @@ export default function TopicSection({meeting, setMeeting, isEditable}) {
         justifyContent="space-between"
         mb={!collapsed ? 3 : 0}
         >
-        <Typography variant="h6">Pautas da Reunião</Typography>
+        <Typography variant="h6">Itens da Reunião</Typography>
             <IconButton onClick={() => setCollapsed((prev) => !prev)}>
                 {collapsed ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </IconButton>
@@ -69,7 +69,7 @@ export default function TopicSection({meeting, setMeeting, isEditable}) {
                         }
                     }}
                 >
-                    Adicionar Pauta
+                    Adicionar Item
                 </Button>
             </Grid>
         )}
