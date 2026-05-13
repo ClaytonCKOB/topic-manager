@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "meeting_participant")
 @Getter
@@ -39,6 +41,19 @@ public class MeetingParticipant {
         this.meeting = meeting;
         this.user = user;
         this.role = user.getRole();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MeetingParticipant that = (MeetingParticipant) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 
