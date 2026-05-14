@@ -49,6 +49,8 @@ export default function TopicTotalizers({topics}) {
                 status[vote.status]++;
             });
 
+            const total = status[0] + status[1] + status[2] + status[3];
+
             totalizer.push({
                 "id": topic.id,
                 "title": topic?.sequence + " " + topic.title,
@@ -56,10 +58,11 @@ export default function TopicTotalizers({topics}) {
                 "aprovado": status[0],
                 "reprovado": status[1],
                 "abstenho": status[2],
-                "diligencia": status[3]
+                "diligencia": status[3],
+                "total": total
             });
         }
-        
+
     });
 
     const columns = [
@@ -75,7 +78,18 @@ export default function TopicTotalizers({topics}) {
         { field: 'aprovado', headerName: 'Aprovado', flex: 0.15, cellClassName: 'centerCell' },
         { field: 'reprovado', headerName: 'Reprovado', flex: 0.15, cellClassName: 'centerCell' },
         { field: 'abstenho', headerName: 'Me abstenho', flex: 0.15, cellClassName: 'centerCell' },
-        { field: 'diligencia', headerName: 'Diligência', flex: 0.15, cellClassName: 'centerCell' }
+        { field: 'diligencia', headerName: 'Diligência', flex: 0.15, cellClassName: 'centerCell' },
+        {
+            field: 'total',
+            headerName: 'Total',
+            flex: 0.1,
+            cellClassName: 'centerCell',
+            renderCell: (params) => (
+                <Typography variant="body2" fontWeight="600">
+                    {params.value}
+                </Typography>
+            )
+        }
     ];
 
 
