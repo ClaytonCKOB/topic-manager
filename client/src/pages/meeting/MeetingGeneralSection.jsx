@@ -10,6 +10,13 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
         },
     };
 
+    const isSameDay = (date1, date2) => {
+        if (!date1 || !date2) return false;
+        return date1.toDateString() === date2.toDateString();
+    };
+
+    const sameDay = isSameDay(meeting.startDate, meeting.endDate);
+
     return <>
     <Grid container spacing={3} mb={5}>
         <Grid item xs={12} sx={{width: 0.5}}>
@@ -27,7 +34,7 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
     </Grid>
     <Grid container spacing={4} mb={5} sx={{display: "flex"}}>
         <Grid item xs={12} md={6}>
-            <Typography sx={{ mb: 1 }}>Data da Reunião</Typography>
+            <Typography sx={{ mb: 1 }}>Data de Início</Typography>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                 <DatePicker
@@ -41,11 +48,11 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                     slotProps={{ textField: { fullWidth: true } }}
                 />
                 </Grid>
-                
+
             </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-            <Typography sx={{ mb: 1 }}>Início da Reunião</Typography>
+            <Typography sx={{ mb: 1 }}>Hora de Início</Typography>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <TimePicker
@@ -62,14 +69,32 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
             </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-            <Typography sx={{ mb: 1 }}>Fim da Reunião</Typography>
+            <Typography sx={{ mb: 1 }}>Data de Término</Typography>
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <DatePicker
+                        label="Data"
+                        value={meeting.endDate}
+                        disabled={!isEditable}
+                        minDate={meeting.startDate}
+                        sx={{WebkitTextFillColor: "black"}}
+                        onChange={(date) =>
+                        setMeeting((prev) => ({ ...prev, endDate: date }))
+                        }
+                        slotProps={{ textField: { fullWidth: true } }}
+                    />
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid item xs={12} md={6}>
+            <Typography sx={{ mb: 1 }}>Hora de Término</Typography>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <TimePicker
                         label="Hora"
                         value={meeting.endTime}
                         disabled={!isEditable}
-                        minTime={meeting.startTime}
+                        minTime={sameDay ? meeting.startTime : undefined}
                         sx={{WebkitTextFillColor: "black"}}
                         onChange={(time) =>
                         setMeeting((prev) => ({ ...prev, endTime: time }))
@@ -77,8 +102,8 @@ export default function MeetingGeneralSection({meeting, setMeeting, isEditable})
                         slotProps={{
                             textField: {
                                 fullWidth: true,
-                                error: meeting.startTime && meeting.endTime && meeting.endTime <= meeting.startTime,
-                                helperText: meeting.startTime && meeting.endTime && meeting.endTime <= meeting.startTime ? "Fim deve ser após o início" : ""
+                                error: sameDay && meeting.startTime && meeting.endTime && meeting.endTime <= meeting.startTime,
+                                helperText: sameDay && meeting.startTime && meeting.endTime && meeting.endTime <= meeting.startTime ? "Fim deve ser após o início" : ""
                             }
                         }}
                     />

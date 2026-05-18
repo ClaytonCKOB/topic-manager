@@ -27,6 +27,10 @@ public class MeetingTopicService {
     }
 
     public void createMeetingTopic(Meeting meeting, TopicCreationWithMeetingDTO topic) {
+        if (topic.title() == null || topic.title().trim().isEmpty()) {
+            return;
+        }
+
         MeetingTopic newTopic = new MeetingTopic();
         newTopic.setMeeting(meeting);
         newTopic.setTitle(topic.title());
