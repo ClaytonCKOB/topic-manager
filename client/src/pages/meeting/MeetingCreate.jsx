@@ -33,6 +33,7 @@ export default function MeetingCreate() {
     description: "",
     startDate: null,
     startTime: null,
+    endDate: null,
     endTime: null,
     topics: [{}],
   });
@@ -63,6 +64,7 @@ export default function MeetingCreate() {
           title: basicData.title || "",
           startDate: start,
           startTime: start,
+          endDate: end,
           endTime: end,
         }));
 
@@ -90,6 +92,7 @@ export default function MeetingCreate() {
           description: fullData.description || "",
           startDate: start,
           startTime: start,
+          endDate: end,
           endTime: end,
           topics: fullData.topics || [],
           votes: fullData.votes,
@@ -140,14 +143,14 @@ export default function MeetingCreate() {
     setIsSaving(true);
     try {
       const start = combineDateTime(meeting.startDate, meeting.startTime);
-      const end = combineDateTime(meeting.startDate, meeting.endTime);
+      const end = combineDateTime(meeting.endDate, meeting.endTime);
 
-      if (!start || !end || !meeting.title) {
+      if (!start || !end || !meeting.title || !meeting.startDate || !meeting.endDate) {
         throw new Error("Preencha todos os campos obrigatórios antes de salvar.");
       }
 
       if (new Date(end) <= new Date(start)) {
-        throw new Error("O horário de fim deve ser após o horário de início.");
+        throw new Error("O horário de término deve ser após o horário de início.");
       }
 
       if (!isDetail) {

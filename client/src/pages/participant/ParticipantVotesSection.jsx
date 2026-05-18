@@ -9,7 +9,7 @@ import VoteComponent from "../../base/components/vote/VoteComponent";
 import formatDate from "../../utils/FormatDate";
 
 export default function ParticipantVotesSection({ participants, topics }) {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const [expandedRows, setExpandedRows] = useState({});
 
     const buildTopicList = () => {
